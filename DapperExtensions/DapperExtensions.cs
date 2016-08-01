@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using DapperExtensions.Sql;
 using DapperExtensions.Mapper;
+using DapperExtensions.Sql;
 
 namespace DapperExtensions
 {
@@ -16,22 +14,16 @@ namespace DapperExtensions
         private static Func<IDapperExtensionsConfiguration, IDapperImplementor> _instanceFactory;
         private static IDapperImplementor _instance;
         private static IDapperExtensionsConfiguration _configuration;
-        
+
         /// <summary>
         /// Gets or sets the default class mapper to use when generating class maps. If not specified, AutoClassMapper<T> is used.
         /// DapperExtensions.Configure(Type, IList<Assembly>, ISqlDialect) can be used instead to set all values at once
         /// </summary>
         public static Type DefaultMapper
         {
-            get
-            {
-                return _configuration.DefaultMapper;
-            }
+            get { return _configuration.DefaultMapper; }
 
-            set
-            {
-                Configure(value, _configuration.MappingAssemblies, _configuration.Dialect);
-            }
+            set { Configure(value, _configuration.MappingAssemblies, _configuration.Dialect); }
         }
 
         /// <summary>
@@ -40,17 +32,11 @@ namespace DapperExtensions
         /// </summary>
         public static ISqlDialect SqlDialect
         {
-            get
-            {
-                return _configuration.Dialect;
-            }
+            get { return _configuration.Dialect; }
 
-            set
-            {
-                Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, value);
-            }
+            set { Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, value); }
         }
-        
+
         /// <summary>
         /// Get or sets the Dapper Extensions Implementation Factory.
         /// </summary>
@@ -145,7 +131,7 @@ namespace DapperExtensions
         /// </summary>
         public static void Insert<T>(this IDbConnection connection, IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            Instance.Insert<T>(connection, entities, transaction, commandTimeout);
+            Instance.Insert(connection, entities, transaction, commandTimeout);
         }
 
         /// <summary>
@@ -156,7 +142,7 @@ namespace DapperExtensions
         /// </summary>
         public static dynamic Insert<T>(this IDbConnection connection, T entity, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            return Instance.Insert<T>(connection, entity, transaction, commandTimeout);
+            return Instance.Insert(connection, entity, transaction, commandTimeout);
         }
 
         /// <summary>
@@ -164,7 +150,7 @@ namespace DapperExtensions
         /// </summary>
         public static bool Update<T>(this IDbConnection connection, T entity, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            return Instance.Update<T>(connection, entity, transaction, commandTimeout);
+            return Instance.Update(connection, entity, transaction, commandTimeout);
         }
 
         /// <summary>
@@ -172,7 +158,7 @@ namespace DapperExtensions
         /// </summary>
         public static bool Delete<T>(this IDbConnection connection, T entity, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            return Instance.Delete<T>(connection, entity, transaction, commandTimeout);
+            return Instance.Delete(connection, entity, transaction, commandTimeout);
         }
 
         /// <summary>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Dapper;
 
 namespace DapperExtensions
@@ -37,7 +34,7 @@ namespace DapperExtensions
 
         public IEnumerable<T> Read<T>()
         {
-            SqlMapper.GridReader reader = _items.Dequeue();
+            var reader = _items.Dequeue();
             return reader.Read<T>();
         }
     }

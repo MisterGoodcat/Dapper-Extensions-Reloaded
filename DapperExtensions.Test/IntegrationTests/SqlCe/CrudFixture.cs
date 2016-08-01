@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using DapperExtensions.Test.Data;
@@ -16,7 +15,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void AddsEntityToDatabase_ReturnsKey()
             {
-                Person p = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
+                var p = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
                 int id = Db.Insert(p);
                 Assert.AreEqual(1, id);
                 Assert.AreEqual(1, p.Id);
@@ -25,7 +24,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void AddsEntityToDatabase_ReturnsCompositeKey()
             {
-                Multikey m = new Multikey { Key2 = "key", Value = "foo" };
+                var m = new Multikey { Key2 = "key", Value = "foo" };
                 var key = Db.Insert(m);
                 Assert.AreEqual(1, key.Key1);
                 Assert.AreEqual("key", key.Key2);
@@ -34,7 +33,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
             {
-                Animal a1 = new Animal { Name = "Foo" };
+                var a1 = new Animal { Name = "Foo" };
                 Db.Insert(a1);
 
                 var a2 = Db.Get<Animal>(a1.Id);
@@ -45,9 +44,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void AddsMultipleEntitiesToDatabase()
             {
-                Animal a1 = new Animal { Name = "Foo" };
-                Animal a2 = new Animal { Name = "Bar" };
-                Animal a3 = new Animal { Name = "Baz" };
+                var a1 = new Animal { Name = "Foo" };
+                var a2 = new Animal { Name = "Bar" };
+                var a3 = new Animal { Name = "Baz" };
 
                 Db.Insert<Animal>(new[] { a1, a2, a3 });
 
@@ -62,16 +61,16 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingKey_ReturnsEntity()
             {
-                Person p1 = new Person
-                                {
-                                    Active = true,
-                                    FirstName = "Foo",
-                                    LastName = "Bar",
-                                    DateCreated = DateTime.UtcNow
-                                };
+                var p1 = new Person
+                {
+                    Active = true,
+                    FirstName = "Foo",
+                    LastName = "Bar",
+                    DateCreated = DateTime.UtcNow
+                };
                 int id = Db.Insert(p1);
 
-                Person p2 = Db.Get<Person>(id);
+                var p2 = Db.Get<Person>(id);
                 Assert.AreEqual(id, p2.Id);
                 Assert.AreEqual("Foo", p2.FirstName);
                 Assert.AreEqual("Bar", p2.LastName);
@@ -80,10 +79,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingCompositeKey_ReturnsEntity()
             {
-                Multikey m1 = new Multikey { Key2 = "key", Value = "bar" };
+                var m1 = new Multikey { Key2 = "key", Value = "bar" };
                 var key = Db.Insert(m1);
 
-                Multikey m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
+                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
                 Assert.AreEqual(1, m2.Key1);
                 Assert.AreEqual("key", m2.Key2);
                 Assert.AreEqual("bar", m2.Value);
@@ -96,16 +95,16 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingKey_DeletesFromDatabase()
             {
-                Person p1 = new Person
-                                {
-                                    Active = true,
-                                    FirstName = "Foo",
-                                    LastName = "Bar",
-                                    DateCreated = DateTime.UtcNow
-                                };
+                var p1 = new Person
+                {
+                    Active = true,
+                    FirstName = "Foo",
+                    LastName = "Bar",
+                    DateCreated = DateTime.UtcNow
+                };
                 int id = Db.Insert(p1);
 
-                Person p2 = Db.Get<Person>(id);
+                var p2 = Db.Get<Person>(id);
                 Db.Delete(p2);
                 Assert.IsNull(Db.Get<Person>(id));
             }
@@ -113,10 +112,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingCompositeKey_DeletesFromDatabase()
             {
-                Multikey m1 = new Multikey { Key2 = "key", Value = "bar" };
+                var m1 = new Multikey { Key2 = "key", Value = "bar" };
                 var key = Db.Insert(m1);
 
-                Multikey m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
+                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
                 Db.Delete(m2);
                 Assert.IsNull(Db.Get<Multikey>(new { key.Key1, key.Key2 }));
             }
@@ -124,9 +123,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingPredicate_DeletesRows()
             {
-                Person p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-                Person p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-                Person p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
+                var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
+                var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
+                var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
                 Db.Insert(p1);
                 Db.Insert(p2);
                 Db.Insert(p3);
@@ -145,9 +144,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingObject_DeletesRows()
             {
-                Person p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-                Person p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-                Person p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
+                var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
+                var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
+                var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
                 Db.Insert(p1);
                 Db.Insert(p2);
                 Db.Insert(p3);
@@ -169,13 +168,13 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingKey_UpdatesEntity()
             {
-                Person p1 = new Person
-                                {
-                                    Active = true,
-                                    FirstName = "Foo",
-                                    LastName = "Bar",
-                                    DateCreated = DateTime.UtcNow
-                                };
+                var p1 = new Person
+                {
+                    Active = true,
+                    FirstName = "Foo",
+                    LastName = "Bar",
+                    DateCreated = DateTime.UtcNow
+                };
                 int id = Db.Insert(p1);
 
                 var p2 = Db.Get<Person>(id);
@@ -193,15 +192,15 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
             [Test]
             public void UsingCompositeKey_UpdatesEntity()
             {
-                Multikey m1 = new Multikey { Key2 = "key", Value = "bar" };
+                var m1 = new Multikey { Key2 = "key", Value = "bar" };
                 var key = Db.Insert(m1);
 
-                Multikey m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
+                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
                 m2.Key2 = "key";
                 m2.Value = "barz";
                 Db.Update(m2);
 
-                Multikey m3 = Db.Get<Multikey>(new { Key1 = 1, Key2 = "key" });
+                var m3 = Db.Get<Multikey>(new { Key1 = 1, Key2 = "key" });
                 Assert.AreEqual(1, m3.Key1);
                 Assert.AreEqual("key", m3.Key2);
                 Assert.AreEqual("barz", m3.Value);
@@ -219,7 +218,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
-                IEnumerable<Person> list = Db.GetList<Person>();
+                var list = Db.GetList<Person>();
                 Assert.AreEqual(4, list.Count());
             }
 
@@ -232,7 +231,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
                 var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
-                IEnumerable<Person> list = Db.GetList<Person>(predicate, null);
+                var list = Db.GetList<Person>(predicate, null);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "a" || p.FirstName == "c"));
             }
@@ -246,7 +245,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
                 var predicate = new { Active = true, FirstName = "c" };
-                IEnumerable<Person> list = Db.GetList<Person>(predicate, null);
+                var list = Db.GetList<Person>(predicate, null);
                 Assert.AreEqual(1, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "c"));
             }
@@ -264,12 +263,12 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 IList<ISort> sort = new List<ISort>
-                                    {
-                                        Predicates.Sort<Person>(p => p.LastName),
-                                        Predicates.Sort<Person>(p => p.FirstName)
-                                    };
+                {
+                    Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Sort<Person>(p => p.FirstName)
+                };
 
-                IEnumerable<Person> list = Db.GetPage<Person>(null, sort, 0, 2);
+                var list = Db.GetPage<Person>(null, sort, 0, 2);
                 Assert.AreEqual(2, list.Count());
                 Assert.AreEqual(id2, list.First().Id);
                 Assert.AreEqual(id1, list.Skip(1).First().Id);
@@ -285,12 +284,12 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
 
                 var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
                 IList<ISort> sort = new List<ISort>
-                                    {
-                                        Predicates.Sort<Person>(p => p.LastName),
-                                        Predicates.Sort<Person>(p => p.FirstName)
-                                    };
+                {
+                    Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Sort<Person>(p => p.FirstName)
+                };
 
-                IEnumerable<Person> list = Db.GetPage<Person>(predicate, sort, 0, 3);
+                var list = Db.GetPage<Person>(predicate, sort, 0, 3);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "Sigma" || p.FirstName == "Theta"));
             }
@@ -304,12 +303,12 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 IList<ISort> sort = new List<ISort>
-                                    {
-                                        Predicates.Sort<Person>(p => p.LastName),
-                                        Predicates.Sort<Person>(p => p.FirstName)
-                                    };
+                {
+                    Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Sort<Person>(p => p.FirstName)
+                };
 
-                IEnumerable<Person> list = Db.GetPage<Person>(null, sort, 1, 2);
+                var list = Db.GetPage<Person>(null, sort, 1, 2);
                 Assert.AreEqual(2, list.Count());
                 Assert.AreEqual(id4, list.First().Id);
                 Assert.AreEqual(id3, list.Skip(1).First().Id);
@@ -325,12 +324,12 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
 
                 var predicate = new { Active = true };
                 IList<ISort> sort = new List<ISort>
-                                    {
-                                        Predicates.Sort<Person>(p => p.LastName),
-                                        Predicates.Sort<Person>(p => p.FirstName)
-                                    };
+                {
+                    Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Sort<Person>(p => p.FirstName)
+                };
 
-                IEnumerable<Person> list = Db.GetPage<Person>(predicate, sort, 0, 3);
+                var list = Db.GetPage<Person>(predicate, sort, 0, 3);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "Sigma" || p.FirstName == "Theta"));
             }
@@ -347,7 +346,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-                int count = Db.Count<Person>(null);
+                var count = Db.Count<Person>(null);
                 Assert.AreEqual(4, count);
             }
 
@@ -360,7 +359,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
                 var predicate = Predicates.Field<Person>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
-                int count = Db.Count<Person>(predicate);
+                var count = Db.Count<Person>(predicate);
                 Assert.AreEqual(2, count);
             }
 
@@ -373,7 +372,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
                 var predicate = new { FirstName = new[] { "b", "d" } };
-                int count = Db.Count<Person>(predicate);
+                var count = Db.Count<Person>(predicate);
                 Assert.AreEqual(2, count);
             }
         }
@@ -393,7 +392,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlCe
                 Db.Insert(new Animal { Name = "Bar" });
                 Db.Insert(new Animal { Name = "Baz" });
 
-                GetMultiplePredicate predicate = new GetMultiplePredicate();
+                var predicate = new GetMultiplePredicate();
                 predicate.Add<Person>(null);
                 predicate.Add<Animal>(Predicates.Field<Animal>(a => a.Name, Operator.Like, "Ba%"));
                 predicate.Add<Person>(Predicates.Field<Person>(a => a.LastName, Operator.Eq, "c1"));

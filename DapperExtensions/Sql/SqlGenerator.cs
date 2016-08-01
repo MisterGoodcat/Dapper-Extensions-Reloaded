@@ -9,7 +9,7 @@ namespace DapperExtensions.Sql
     public interface ISqlGenerator
     {
         IDapperExtensionsConfiguration Configuration { get; }
-        
+
         string Select(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, IDictionary<string, object> parameters);
         string SelectPaged(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDictionary<string, object> parameters);
         string SelectSet(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int firstResult, int maxResults, IDictionary<string, object> parameters);
@@ -33,7 +33,7 @@ namespace DapperExtensions.Sql
             Configuration = configuration;
         }
 
-        public IDapperExtensionsConfiguration Configuration { get; private set; }
+        public IDapperExtensionsConfiguration Configuration { get; }
 
         public virtual string Select(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, IDictionary<string, object> parameters)
         {
@@ -42,7 +42,7 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("Parameters");
             }
 
-            StringBuilder sql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
+            var sql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
                 BuildSelectColumns(classMap),
                 GetTableName(classMap)));
             if (predicate != null)
@@ -72,7 +72,7 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("Parameters");
             }
 
-            StringBuilder innerSql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
+            var innerSql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
                 BuildSelectColumns(classMap),
                 GetTableName(classMap)));
             if (predicate != null)
@@ -81,10 +81,10 @@ namespace DapperExtensions.Sql
                     .Append(predicate.GetSql(this, parameters));
             }
 
-            string orderBy = sort.Select(s => GetColumnName(classMap, s.PropertyName, false) + (s.Ascending ? " ASC" : " DESC")).AppendStrings();
+            var orderBy = sort.Select(s => GetColumnName(classMap, s.PropertyName, false) + (s.Ascending ? " ASC" : " DESC")).AppendStrings();
             innerSql.Append(" ORDER BY " + orderBy);
 
-            string sql = Configuration.Dialect.GetPagingSql(innerSql.ToString(), page, resultsPerPage, parameters);
+            var sql = Configuration.Dialect.GetPagingSql(innerSql.ToString(), page, resultsPerPage, parameters);
             return sql;
         }
 
@@ -100,7 +100,7 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("Parameters");
             }
 
-            StringBuilder innerSql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
+            var innerSql = new StringBuilder(string.Format("SELECT {0} FROM {1}",
                 BuildSelectColumns(classMap),
                 GetTableName(classMap)));
             if (predicate != null)
@@ -109,10 +109,10 @@ namespace DapperExtensions.Sql
                     .Append(predicate.GetSql(this, parameters));
             }
 
-            string orderBy = sort.Select(s => GetColumnName(classMap, s.PropertyName, false) + (s.Ascending ? " ASC" : " DESC")).AppendStrings();
+            var orderBy = sort.Select(s => GetColumnName(classMap, s.PropertyName, false) + (s.Ascending ? " ASC" : " DESC")).AppendStrings();
             innerSql.Append(" ORDER BY " + orderBy);
 
-            string sql = Configuration.Dialect.GetSetSql(innerSql.ToString(), firstResult, maxResults, parameters);
+            var sql = Configuration.Dialect.GetSetSql(innerSql.ToString(), firstResult, maxResults, parameters);
             return sql;
         }
 
@@ -124,10 +124,10 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("Parameters");
             }
 
-            StringBuilder sql = new StringBuilder(string.Format("SELECT COUNT(*) AS {0}Total{1} FROM {2}",
-                                Configuration.Dialect.OpenQuote,
-                                Configuration.Dialect.CloseQuote,
-                                GetTableName(classMap)));
+            var sql = new StringBuilder(string.Format("SELECT COUNT(*) AS {0}Total{1} FROM {2}",
+                Configuration.Dialect.OpenQuote,
+                Configuration.Dialect.CloseQuote,
+                GetTableName(classMap)));
             if (predicate != null)
             {
                 sql.Append(" WHERE ")
@@ -136,7 +136,7 @@ namespace DapperExtensions.Sql
 
             return sql.ToString();
         }
-        
+
         public virtual string Insert(IClassMapper classMap)
         {
             var columns = classMap.Properties.Where(p => !(p.Ignored || p.IsReadOnly || p.KeyType == KeyType.Identity));
@@ -148,10 +148,10 @@ namespace DapperExtensions.Sql
             var columnNames = columns.Select(p => GetColumnName(classMap, p, false));
             var parameters = columns.Select(p => Configuration.Dialect.ParameterPrefix + p.Name);
 
-            string sql = string.Format("INSERT INTO {0} ({1}) VALUES ({2})",
-                                       GetTableName(classMap),
-                                       columnNames.AppendStrings(),
-                                       parameters.AppendStrings());
+            var sql = string.Format("INSERT INTO {0} ({1}) VALUES ({2})",
+                GetTableName(classMap),
+                columnNames.AppendStrings(),
+                parameters.AppendStrings());
 
             return sql;
         }
@@ -177,15 +177,15 @@ namespace DapperExtensions.Sql
             var setSql =
                 columns.Select(
                     p =>
-                    string.Format(
-                        "{0} = {1}{2}", GetColumnName(classMap, p, false), Configuration.Dialect.ParameterPrefix, p.Name));
+                        string.Format(
+                            "{0} = {1}{2}", GetColumnName(classMap, p, false), Configuration.Dialect.ParameterPrefix, p.Name));
 
             return string.Format("UPDATE {0} SET {1} WHERE {2}",
                 GetTableName(classMap),
                 setSql.AppendStrings(),
                 predicate.GetSql(this, parameters));
         }
-        
+
         public virtual string Delete(IClassMapper classMap, IPredicate predicate, IDictionary<string, object> parameters)
         {
             if (predicate == null)
@@ -198,11 +198,11 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("Parameters");
             }
 
-            StringBuilder sql = new StringBuilder(string.Format("DELETE FROM {0}", GetTableName(classMap)));
+            var sql = new StringBuilder(string.Format("DELETE FROM {0}", GetTableName(classMap)));
             sql.Append(" WHERE ").Append(predicate.GetSql(this, parameters));
             return sql.ToString();
         }
-        
+
         public virtual string IdentitySql(IClassMapper classMap)
         {
             return Configuration.Dialect.GetIdentitySql(GetTableName(classMap));
@@ -226,7 +226,7 @@ namespace DapperExtensions.Sql
 
         public virtual string GetColumnName(IClassMapper map, string propertyName, bool includeAlias)
         {
-            IPropertyMap propertyMap = map.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+            var propertyMap = map.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
             if (propertyMap == null)
             {
                 throw new ArgumentException(string.Format("Could not find '{0}' in Mapping.", propertyName));

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DapperExtensions.Mapper;
 using NUnit.Framework;
 
@@ -16,7 +13,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralization()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("robot");
                 Assert.AreEqual("robots", m.TableName);
             }
@@ -24,7 +21,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordEndsWithY()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("penny");
                 Assert.AreEqual("pennies", m.TableName);
             }
@@ -32,7 +29,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordEndsWithS()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("mess");
                 Assert.AreEqual("messes", m.TableName);
             }
@@ -40,7 +37,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordEndsWithF()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("life");
                 Assert.AreEqual("lives", m.TableName);
             }
@@ -48,7 +45,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordWithFe()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("leaf");
                 Assert.AreEqual("leaves", m.TableName);
             }
@@ -56,7 +53,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordContainsF()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("profile");
                 Assert.AreEqual("profiles", m.TableName);
             }
@@ -64,7 +61,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralizationWhenWordContainsFe()
             {
-                PluralizedAutoClassMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("effect");
                 Assert.AreEqual("effects", m.TableName);
             }
@@ -81,7 +78,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperPluralization()
             {
-                CustomPluralizedMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("Dog");
                 Assert.AreEqual("Dogs", m.TableName);
             }
@@ -89,7 +86,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void ReturnsProperResultsForExceptions()
             {
-                CustomPluralizedMapper<Foo> m = GetMapper<Foo>();
+                var m = GetMapper<Foo>();
                 m.Table("Person");
                 Assert.AreEqual("People", m.TableName);
             }

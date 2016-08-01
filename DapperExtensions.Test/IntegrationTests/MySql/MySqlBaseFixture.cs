@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Dapper;
 using DapperExtensions.Mapper;
 using DapperExtensions.Sql;
@@ -24,13 +21,13 @@ namespace DapperExtensions.Test.IntegrationTests.MySql
             var sqlGenerator = new SqlGeneratorImpl(config);
             Db = new Database(connection, sqlGenerator);
             var files = new List<string>
-                                {
-                                    ReadScriptFile("CreateFooTable"),
-                                    ReadScriptFile("CreateMultikeyTable"),
-                                    ReadScriptFile("CreatePersonTable"),
-                                    ReadScriptFile("CreateCarTable"),
-                                    ReadScriptFile("CreateAnimalTable")
-                                };
+            {
+                ReadScriptFile("CreateFooTable"),
+                ReadScriptFile("CreateMultikeyTable"),
+                ReadScriptFile("CreatePersonTable"),
+                ReadScriptFile("CreateCarTable"),
+                ReadScriptFile("CreateAnimalTable")
+            };
 
             foreach (var setupFile in files)
             {
@@ -40,9 +37,9 @@ namespace DapperExtensions.Test.IntegrationTests.MySql
 
         public string ReadScriptFile(string name)
         {
-            string fileName = GetType().Namespace + ".Sql." + name + ".sql";
-            using (Stream s = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
-            using (StreamReader sr = new StreamReader(s))
+            var fileName = GetType().Namespace + ".Sql." + name + ".sql";
+            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            using (var sr = new StreamReader(s))
             {
                 return sr.ReadToEnd();
             }

@@ -4,7 +4,6 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using Dapper;
 using DapperExtensions.Mapper;
@@ -20,9 +19,9 @@ namespace DapperExtensions.Test.IntegrationTests.Sqlite
         [SetUp]
         public virtual void Setup()
         {
-            string connectionString = string.Format("Data Source=.\\dapperTest_{0}.sqlite", Guid.NewGuid());
-            string[] connectionParts = connectionString.Split(';');
-            string file = connectionParts
+            var connectionString = string.Format("Data Source=.\\dapperTest_{0}.sqlite", Guid.NewGuid());
+            var connectionParts = connectionString.Split(';');
+            var file = connectionParts
                 .ToDictionary(k => k.Split('=')[0], v => v.Split('=')[1])
                 .Where(d => d.Key.Equals("Data Source", StringComparison.OrdinalIgnoreCase))
                 .Select(k => k.Value).Single();
@@ -32,19 +31,19 @@ namespace DapperExtensions.Test.IntegrationTests.Sqlite
                 File.Delete(file);
             }
 
-            SQLiteConnection connection = new SQLiteConnection(connectionString);
+            var connection = new SQLiteConnection(connectionString);
             var config = new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new SqliteDialect());
             var sqlGenerator = new SqlGeneratorImpl(config);
             Db = new Database(connection, sqlGenerator);
 
             var files = new List<string>
-                                {
-                                    ReadScriptFile("CreateAnimalTable"),
-                                    ReadScriptFile("CreateFooTable"),
-                                    ReadScriptFile("CreateMultikeyTable"),
-                                    ReadScriptFile("CreatePersonTable"),
-                                    ReadScriptFile("CreateCarTable")
-                                };
+            {
+                ReadScriptFile("CreateAnimalTable"),
+                ReadScriptFile("CreateFooTable"),
+                ReadScriptFile("CreateMultikeyTable"),
+                ReadScriptFile("CreatePersonTable"),
+                ReadScriptFile("CreateCarTable")
+            };
 
             foreach (var setupFile in files)
             {
@@ -55,13 +54,13 @@ namespace DapperExtensions.Test.IntegrationTests.Sqlite
         [TearDown]
         public void TearDown()
         {
-            string databaseName = Db.Connection.Database;
+            var databaseName = Db.Connection.Database;
             if (!File.Exists(databaseName))
             {
                 return;
             }
 
-            int i = 10;
+            var i = 10;
             while (IsDatabaseInUse(databaseName) && i > 0)
             {
                 i--;
@@ -79,7 +78,7 @@ namespace DapperExtensions.Test.IntegrationTests.Sqlite
             FileStream fs = null;
             try
             {
-                FileInfo fi = new FileInfo(databaseName);
+                var fi = new FileInfo(databaseName);
                 fs = fi.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
                 return false;
             }
@@ -98,9 +97,9 @@ namespace DapperExtensions.Test.IntegrationTests.Sqlite
 
         public string ReadScriptFile(string name)
         {
-            string fileName = GetType().Namespace + ".Sql." + name + ".sql";
-            using (Stream s = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
-            using (StreamReader sr = new StreamReader(s))
+            var fileName = GetType().Namespace + ".Sql." + name + ".sql";
+            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            using (var sr = new StreamReader(s))
             {
                 return sr.ReadToEnd();
             }

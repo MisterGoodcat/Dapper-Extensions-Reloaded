@@ -46,18 +46,12 @@ namespace DapperExtensions.Sql
 
         public virtual char ParameterPrefix
         {
-            get
-            {
-                return '@';
-            }
+            get { return '@'; }
         }
 
         public string EmptyExpression
         {
-            get
-            {
-                return "1=1";
-            }
+            get { return "1=1"; }
         }
 
         public virtual string GetTableName(string schemaName, string tableName, string alias)
@@ -67,7 +61,7 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("TableName", "tableName cannot be null or empty.");
             }
 
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(schemaName))
             {
                 result.AppendFormat(QuoteString(schemaName) + ".");
@@ -89,7 +83,7 @@ namespace DapperExtensions.Sql
                 throw new ArgumentNullException("ColumnName", "columnName cannot be null or empty.");
             }
 
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(prefix))
             {
                 result.AppendFormat(QuoteString(prefix) + ".");

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DapperExtensions.Sql;
 using NUnit.Framework;
 
@@ -55,21 +53,21 @@ namespace DapperExtensions.Test.Sql
             [Test]
             public void TableNameOnly_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName(null, "foo", null);
+                var result = Dialect.GetTableName(null, "foo", null);
                 Assert.AreEqual("[foo]", result);
             }
 
             [Test]
             public void SchemaAndTable_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName("bar", "foo", null);
+                var result = Dialect.GetTableName("bar", "foo", null);
                 Assert.AreEqual("[bar_foo]", result);
             }
 
             [Test]
             public void AllParams_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName("bar", "foo", "al");
+                var result = Dialect.GetTableName("bar", "foo", "al");
                 Assert.AreEqual("[bar_foo] AS [al]", result);
             }
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DapperExtensions.Sql;
-using DapperExtensions.Test.Helpers;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.Sql
@@ -66,7 +64,7 @@ namespace DapperExtensions.Test.Sql
             public void Select_ReturnsSql()
             {
                 var parameters = new Dictionary<string, object>();
-                string sql = "SELECT [column] FROM [schema].[table] LIMIT @Offset, @Count";
+                var sql = "SELECT [column] FROM [schema].[table] LIMIT @Offset, @Count";
                 var result = Dialect.GetPagingSql("SELECT [column] FROM [schema].[table]", 0, 10, parameters);
                 Assert.AreEqual(sql, result);
                 Assert.AreEqual(2, parameters.Count);

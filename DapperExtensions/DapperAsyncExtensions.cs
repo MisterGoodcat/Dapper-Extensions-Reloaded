@@ -22,15 +22,9 @@ namespace DapperExtensions
         /// </summary>
         public static Type DefaultMapper
         {
-            get
-            {
-                return _configuration.DefaultMapper;
-            }
+            get { return _configuration.DefaultMapper; }
 
-            set
-            {
-                Configure(value, _configuration.MappingAssemblies, _configuration.Dialect);
-            }
+            set { Configure(value, _configuration.MappingAssemblies, _configuration.Dialect); }
         }
 
         /// <summary>
@@ -39,15 +33,9 @@ namespace DapperExtensions
         /// </summary>
         public static ISqlDialect SqlDialect
         {
-            get
-            {
-                return _configuration.Dialect;
-            }
+            get { return _configuration.Dialect; }
 
-            set
-            {
-                Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, value);
-            }
+            set { Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, value); }
         }
 
         /// <summary>
@@ -118,7 +106,7 @@ namespace DapperExtensions
             _instance = null;
             _configuration = configuration;
         }
-        
+
         /// <summary>
         /// Configure DapperExtensions extension methods.
         /// </summary>
@@ -141,7 +129,7 @@ namespace DapperExtensions
         /// <summary>
         /// Executes a query for the specified id, returning the data typed as per T.
         /// </summary>
-        public static async Task<T> GetAsync<T>(this IDbConnection connection, dynamic id , IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static async Task<T> GetAsync<T>(this IDbConnection connection, dynamic id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             return await Instance.GetAsync<T>(connection, id, transaction, commandTimeout);
         }

@@ -1,8 +1,3 @@
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System;
-
 namespace DapperExtensions.Mapper
 {
     /// <summary>
@@ -12,7 +7,7 @@ namespace DapperExtensions.Mapper
     {
         public AutoClassMapper()
         {
-            Type type = typeof(T);
+            var type = typeof(T);
             Table(type.Name);
             AutoMap();
         }

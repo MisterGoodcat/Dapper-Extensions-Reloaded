@@ -24,7 +24,7 @@ namespace DapperExtensions.Test
         [Test]
         public void GetObjectValues_Returns_Dictionary_With_Property_Value_Pairs()
         {
-            Foo f = new Foo { Bar = 3, Baz = "Yum" };
+            var f = new Foo { Bar = 3, Baz = "Yum" };
 
             var dictionary = ReflectionHelper.GetObjectValues(f);
             Assert.AreEqual(3, dictionary["Bar"]);

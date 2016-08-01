@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace DapperExtensions.Mapper
@@ -60,7 +58,7 @@ namespace DapperExtensions.Mapper
         /// <summary>
         /// Gets the property info for the current property.
         /// </summary>
-        public PropertyInfo PropertyInfo { get; private set; }
+        public PropertyInfo PropertyInfo { get; }
 
         /// <summary>
         /// Fluently sets the column name for the property.

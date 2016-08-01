@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using DapperExtensions.Mapper;
-using DapperExtensions.Test.Data;
 using DapperExtensions.Test.Entities;
 using DapperExtensions.Test.Maps;
 using NUnit.Framework;
@@ -20,10 +18,10 @@ namespace DapperExtensions.Test.IntegrationTests
             [Test]
             public void GetMultiple_DoesNotDuplicate()
             {
-                List<Guid> list = new List<Guid>();
-                for (int i = 0; i < 1000; i++)
+                var list = new List<Guid>();
+                for (var i = 0; i < 1000; i++)
                 {
-                    Guid id = DapperExtensions.GetNextGuid();
+                    var id = DapperExtensions.GetNextGuid();
                     Assert.IsFalse(list.Contains(id));
                     list.Add(id);
                 }

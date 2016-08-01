@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using DapperExtensions.Mapper;
@@ -21,7 +20,7 @@ namespace DapperExtensions.Test.Mapper
         {
             Expression<Func<Foo, object>> expression = f => f.Bar;
             var pi = ReflectionHelper.GetProperty(expression) as PropertyInfo;
-            PropertyMap pm = new PropertyMap(pi);
+            var pm = new PropertyMap(pi);
             Assert.AreEqual("Bar", pm.Name);
             Assert.AreEqual("Bar", pm.ColumnName);
         }
@@ -31,7 +30,7 @@ namespace DapperExtensions.Test.Mapper
         {
             Expression<Func<Foo, object>> expression = f => f.Baz;
             var pi = ReflectionHelper.GetProperty(expression) as PropertyInfo;
-            PropertyMap pm = new PropertyMap(pi);
+            var pm = new PropertyMap(pi);
             pm.Column("X");
             Assert.AreEqual("Baz", pm.Name);
             Assert.AreEqual("X", pm.ColumnName);
@@ -42,7 +41,7 @@ namespace DapperExtensions.Test.Mapper
         {
             Expression<Func<Foo, object>> expression = f => f.Baz;
             var pi = ReflectionHelper.GetProperty(expression) as PropertyInfo;
-            PropertyMap pm = new PropertyMap(pi);
+            var pm = new PropertyMap(pi);
             pm.Column("X").Key(KeyType.Identity);
             Assert.AreEqual("Baz", pm.Name);
             Assert.AreEqual("X", pm.ColumnName);

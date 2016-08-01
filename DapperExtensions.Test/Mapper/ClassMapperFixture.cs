@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
@@ -219,7 +218,7 @@ namespace DapperExtensions.Test.Mapper
             [Test]
             public void DoesNotMapAlreadyMappedProperties()
             {
-                Mock<IPropertyMap> property = new Mock<IPropertyMap>();
+                var property = new Mock<IPropertyMap>();
                 property.SetupGet(p => p.Name).Returns("FooId");
                 property.SetupGet(p => p.KeyType).Returns(KeyType.Assigned);
 
@@ -255,7 +254,7 @@ namespace DapperExtensions.Test.Mapper
                 var mapper = new TestMapper<Foo>();
                 Func<Type, PropertyInfo, bool> canMap = (t, p) => ReflectionHelper.IsSimpleType(p.PropertyType);
                 mapper.TestProtected().RunMethod("AutoMap", canMap);
-                Assert.AreEqual(1, mapper.Properties.Count);                
+                Assert.AreEqual(1, mapper.Properties.Count);
             }
         }
 

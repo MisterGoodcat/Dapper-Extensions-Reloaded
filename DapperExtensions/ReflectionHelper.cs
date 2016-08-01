@@ -9,32 +9,32 @@ namespace DapperExtensions
 {
     public static class ReflectionHelper
     {
-        private static List<Type> _simpleTypes = new List<Type>
-                               {
-                                   typeof(byte),
-                                   typeof(sbyte),
-                                   typeof(short),
-                                   typeof(ushort),
-                                   typeof(int),
-                                   typeof(uint),
-                                   typeof(long),
-                                   typeof(ulong),
-                                   typeof(float),
-                                   typeof(double),
-                                   typeof(decimal),
-                                   typeof(bool),
-                                   typeof(string),
-                                   typeof(char),
-                                   typeof(Guid),
-                                   typeof(DateTime),
-                                   typeof(DateTimeOffset),
-                                   typeof(byte[])
-                               };
-        
+        private static readonly List<Type> _simpleTypes = new List<Type>
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
+            typeof(decimal),
+            typeof(bool),
+            typeof(string),
+            typeof(char),
+            typeof(Guid),
+            typeof(DateTime),
+            typeof(DateTimeOffset),
+            typeof(byte[])
+        };
+
         public static MemberInfo GetProperty(LambdaExpression lambda)
         {
             Expression expr = lambda;
-            for (; ; )
+            for (;;)
             {
                 switch (expr.NodeType)
                 {
@@ -45,8 +45,8 @@ namespace DapperExtensions
                         expr = ((UnaryExpression)expr).Operand;
                         break;
                     case ExpressionType.MemberAccess:
-                        MemberExpression memberExpression = (MemberExpression)expr;
-                        MemberInfo mi = memberExpression.Member;
+                        var memberExpression = (MemberExpression)expr;
+                        var mi = memberExpression.Member;
                         return mi;
                     default:
                         return null;
@@ -65,8 +65,8 @@ namespace DapperExtensions
 
             foreach (var propertyInfo in obj.GetType().GetProperties())
             {
-                string name = propertyInfo.Name;
-                object value = propertyInfo.GetValue(obj, null);
+                var name = propertyInfo.Name;
+                var value = propertyInfo.GetValue(obj, null);
                 result[name] = value;
             }
 
@@ -83,7 +83,7 @@ namespace DapperExtensions
 
         public static bool IsSimpleType(Type type)
         {
-            Type actualType = type;
+            var actualType = type;
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 actualType = type.GetGenericArguments()[0];

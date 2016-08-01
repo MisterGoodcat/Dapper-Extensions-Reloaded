@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using DapperExtensions.Mapper;
 using DapperExtensions.Sql;
 
@@ -37,16 +36,16 @@ namespace DapperExtensions
             Dialect = sqlDialect;
         }
 
-        public Type DefaultMapper { get; private set; }
-        public IList<Assembly> MappingAssemblies { get; private set; }
-        public ISqlDialect Dialect { get; private set; }
+        public Type DefaultMapper { get; }
+        public IList<Assembly> MappingAssemblies { get; }
+        public ISqlDialect Dialect { get; }
 
         public IClassMapper GetMap(Type entityType)
         {
             IClassMapper map;
             if (!_classMaps.TryGetValue(entityType, out map))
             {
-                Type mapType = GetMapType(entityType);
+                var mapType = GetMapType(entityType);
                 if (mapType == null)
                 {
                     mapType = DefaultMapper.MakeGenericType(entityType);
@@ -61,7 +60,7 @@ namespace DapperExtensions
 
         public IClassMapper GetMap<T>() where T : class
         {
-            return GetMap(typeof (T));
+            return GetMap(typeof(T));
         }
 
         public void ClearCache()
@@ -71,13 +70,13 @@ namespace DapperExtensions
 
         public Guid GetNextGuid()
         {
-            byte[] b = Guid.NewGuid().ToByteArray();
-            DateTime dateTime = new DateTime(1900, 1, 1);
-            DateTime now = DateTime.Now;
-            TimeSpan timeSpan = new TimeSpan(now.Ticks - dateTime.Ticks);
-            TimeSpan timeOfDay = now.TimeOfDay;
-            byte[] bytes1 = BitConverter.GetBytes(timeSpan.Days);
-            byte[] bytes2 = BitConverter.GetBytes((long)(timeOfDay.TotalMilliseconds / 3.333333));
+            var b = Guid.NewGuid().ToByteArray();
+            var dateTime = new DateTime(1900, 1, 1);
+            var now = DateTime.Now;
+            var timeSpan = new TimeSpan(now.Ticks - dateTime.Ticks);
+            var timeOfDay = now.TimeOfDay;
+            var bytes1 = BitConverter.GetBytes(timeSpan.Days);
+            var bytes2 = BitConverter.GetBytes((long)(timeOfDay.TotalMilliseconds / 3.333333));
             Array.Reverse(bytes1);
             Array.Reverse(bytes2);
             Array.Copy(bytes1, bytes1.Length - 2, b, b.Length - 6, 2);
@@ -89,16 +88,16 @@ namespace DapperExtensions
         {
             Func<Assembly, Type> getType = a =>
             {
-                Type[] types = a.GetTypes();
+                var types = a.GetTypes();
                 return (from type in types
-                        let interfaceType = type.GetInterface(typeof(IClassMapper<>).FullName)
-                        where
-                            interfaceType != null &&
-                            interfaceType.GetGenericArguments()[0] == entityType
-                        select type).SingleOrDefault();
+                    let interfaceType = type.GetInterface(typeof(IClassMapper<>).FullName)
+                    where
+                    interfaceType != null &&
+                    interfaceType.GetGenericArguments()[0] == entityType
+                    select type).SingleOrDefault();
             };
 
-            Type result = getType(entityType.Assembly);
+            var result = getType(entityType.Assembly);
             if (result != null)
             {
                 return result;

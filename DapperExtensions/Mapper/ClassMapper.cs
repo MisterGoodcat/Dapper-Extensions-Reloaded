@@ -1,9 +1,9 @@
-﻿using System.Numerics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Reflection;
 
 namespace DapperExtensions.Mapper
@@ -38,7 +38,7 @@ namespace DapperExtensions.Mapper
         /// <summary>
         /// A collection of properties that will map to columns in the database table.
         /// </summary>
-        public IList<IPropertyMap> Properties { get; private set; }
+        public IList<IPropertyMap> Properties { get; }
 
         public Type EntityType
         {
@@ -48,24 +48,24 @@ namespace DapperExtensions.Mapper
         public ClassMapper()
         {
             PropertyTypeKeyTypeMapping = new Dictionary<Type, KeyType>
-                                             {
-                                                 { typeof(byte), KeyType.Identity }, { typeof(byte?), KeyType.Identity },
-                                                 { typeof(sbyte), KeyType.Identity }, { typeof(sbyte?), KeyType.Identity },
-                                                 { typeof(short), KeyType.Identity }, { typeof(short?), KeyType.Identity },
-                                                 { typeof(ushort), KeyType.Identity }, { typeof(ushort?), KeyType.Identity },
-                                                 { typeof(int), KeyType.Identity }, { typeof(int?), KeyType.Identity },
-                                                 { typeof(uint), KeyType.Identity}, { typeof(uint?), KeyType.Identity },
-                                                 { typeof(long), KeyType.Identity }, { typeof(long?), KeyType.Identity },
-                                                 { typeof(ulong), KeyType.Identity }, { typeof(ulong?), KeyType.Identity },
-                                                 { typeof(BigInteger), KeyType.Identity }, { typeof(BigInteger?), KeyType.Identity },
-                                                 { typeof(Guid), KeyType.Guid }, { typeof(Guid?), KeyType.Guid },
-                                             };
+            {
+                { typeof(byte), KeyType.Identity }, { typeof(byte?), KeyType.Identity },
+                { typeof(sbyte), KeyType.Identity }, { typeof(sbyte?), KeyType.Identity },
+                { typeof(short), KeyType.Identity }, { typeof(short?), KeyType.Identity },
+                { typeof(ushort), KeyType.Identity }, { typeof(ushort?), KeyType.Identity },
+                { typeof(int), KeyType.Identity }, { typeof(int?), KeyType.Identity },
+                { typeof(uint), KeyType.Identity }, { typeof(uint?), KeyType.Identity },
+                { typeof(long), KeyType.Identity }, { typeof(long?), KeyType.Identity },
+                { typeof(ulong), KeyType.Identity }, { typeof(ulong?), KeyType.Identity },
+                { typeof(BigInteger), KeyType.Identity }, { typeof(BigInteger?), KeyType.Identity },
+                { typeof(Guid), KeyType.Guid }, { typeof(Guid?), KeyType.Guid }
+            };
 
             Properties = new List<IPropertyMap>();
             Table(typeof(T).Name);
         }
 
-        protected Dictionary<Type, KeyType> PropertyTypeKeyTypeMapping { get; private set; }
+        protected Dictionary<Type, KeyType> PropertyTypeKeyTypeMapping { get; }
 
         public virtual void Schema(string schemaName)
         {
@@ -84,8 +84,8 @@ namespace DapperExtensions.Mapper
 
         protected virtual void AutoMap(Func<Type, PropertyInfo, bool> canMap)
         {
-            Type type = typeof(T);
-            bool hasDefinedKey = Properties.Any(p => p.KeyType != KeyType.NotAKey);
+            var type = typeof(T);
+            var hasDefinedKey = Properties.Any(p => p.KeyType != KeyType.NotAKey);
             PropertyMap keyMap = null;
             foreach (var propertyInfo in type.GetProperties())
             {
@@ -99,7 +99,7 @@ namespace DapperExtensions.Mapper
                     continue;
                 }
 
-                PropertyMap map = Map(propertyInfo);
+                var map = Map(propertyInfo);
                 if (!hasDefinedKey)
                 {
                     if (string.Equals(map.PropertyInfo.Name, "id", StringComparison.InvariantCultureIgnoreCase))
@@ -127,7 +127,7 @@ namespace DapperExtensions.Mapper
         /// </summary>
         protected PropertyMap Map(Expression<Func<T, object>> expression)
         {
-            PropertyInfo propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
             return Map(propertyInfo);
         }
 
@@ -136,8 +136,8 @@ namespace DapperExtensions.Mapper
         /// </summary>
         protected PropertyMap Map(PropertyInfo propertyInfo)
         {
-            PropertyMap result = new PropertyMap(propertyInfo);
-            this.GuardForDuplicatePropertyMap(result);
+            var result = new PropertyMap(propertyInfo);
+            GuardForDuplicatePropertyMap(result);
             Properties.Add(result);
             return result;
         }
@@ -146,7 +146,7 @@ namespace DapperExtensions.Mapper
         {
             if (Properties.Any(p => p.Name.Equals(result.Name)))
             {
-                throw new ArgumentException(string.Format("Duplicate mapping for property {0} detected.",result.Name));
+                throw new ArgumentException(string.Format("Duplicate mapping for property {0} detected.", result.Name));
             }
         }
     }

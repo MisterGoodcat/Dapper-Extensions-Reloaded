@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DapperExtensions.Sql;
 using NUnit.Framework;
 
@@ -17,7 +16,7 @@ namespace DapperExtensions.Test.Sql
             public void Setup()
             {
                 Dialect = new TestDialect();
-            } 
+            }
         }
 
         [TestFixture]
@@ -55,7 +54,7 @@ namespace DapperExtensions.Test.Sql
                 Assert.IsFalse(Dialect.IsQuoted("foo\""));
             }
         }
-        
+
         [TestFixture]
         public class QuoteStringMethod : SqlDialectBaseFixtureBase
         {
@@ -134,28 +133,28 @@ namespace DapperExtensions.Test.Sql
             [Test]
             public void TableNameOnly_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName(null, "foo", null);
+                var result = Dialect.GetTableName(null, "foo", null);
                 Assert.AreEqual("\"foo\"", result);
             }
 
             [Test]
             public void SchemaAndTable_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName("bar", "foo", null);
+                var result = Dialect.GetTableName("bar", "foo", null);
                 Assert.AreEqual("\"bar\".\"foo\"", result);
             }
 
             [Test]
             public void AllParams_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetTableName("bar", "foo", "al");
+                var result = Dialect.GetTableName("bar", "foo", "al");
                 Assert.AreEqual("\"bar\".\"foo\" AS \"al\"", result);
             }
 
             [Test]
             public void ContainsQuotes_DoesNotAddExtraQuotes()
             {
-                string result = Dialect.GetTableName("\"bar\"", "\"foo\"", "\"al\"");
+                var result = Dialect.GetTableName("\"bar\"", "\"foo\"", "\"al\"");
                 Assert.AreEqual("\"bar\".\"foo\" AS \"al\"", result);
             }
         }
@@ -182,28 +181,28 @@ namespace DapperExtensions.Test.Sql
             [Test]
             public void ColumnNameOnly_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetColumnName(null, "foo", null);
+                var result = Dialect.GetColumnName(null, "foo", null);
                 Assert.AreEqual("\"foo\"", result);
             }
 
             [Test]
             public void PrefixColumnName_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetColumnName("bar", "foo", null);
+                var result = Dialect.GetColumnName("bar", "foo", null);
                 Assert.AreEqual("\"bar\".\"foo\"", result);
             }
 
             [Test]
             public void AllParams_ReturnsProperlyQuoted()
             {
-                string result = Dialect.GetColumnName("bar", "foo", "al");
+                var result = Dialect.GetColumnName("bar", "foo", "al");
                 Assert.AreEqual("\"bar\".\"foo\" AS \"al\"", result);
             }
 
             [Test]
             public void ContainsQuotes_DoesNotAddExtraQuotes()
             {
-                string result = Dialect.GetColumnName("\"bar\"", "\"foo\"", "\"al\"");
+                var result = Dialect.GetColumnName("\"bar\"", "\"foo\"", "\"al\"");
                 Assert.AreEqual("\"bar\".\"foo\" AS \"al\"", result);
             }
         }
