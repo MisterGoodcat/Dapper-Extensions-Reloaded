@@ -19,7 +19,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
         [SetUp]
         public virtual void Setup()
         {
-            var connection = new SqlConnection("Data Source=.;Initial Catalog=dapperTest;Integrated security=True;");
+            var connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
             var config = new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect());
             var sqlGenerator = new SqlGeneratorImpl(config);
             Db = new Database(connection, sqlGenerator);
