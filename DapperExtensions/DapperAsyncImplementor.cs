@@ -16,7 +16,7 @@ namespace DapperExtensions
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.Get{T}"/>.
         /// </summary>
-        Task<T> GetAsync<T>(IDbConnection connection, dynamic id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class;
+        Task<T> GetAsync<T>(IDbConnection connection, object id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class;
 
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.GetList{T}"/>.
@@ -26,7 +26,7 @@ namespace DapperExtensions
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.GetPage{T}"/>.
         /// </summary>
-        Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, object predicate = null, IList<ISort> sort = null, int page = 1, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class;
+        Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, object predicate = null, IList<ISort> sort = null, int page = 0, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class;
 
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.GetSet{T}"/>.
@@ -55,7 +55,7 @@ namespace DapperExtensions
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.Get{T}"/>.
         /// </summary>
-        public async Task<T> GetAsync<T>(IDbConnection connection, dynamic id, IDbTransaction transaction = null,
+        public async Task<T> GetAsync<T>(IDbConnection connection, object id, IDbTransaction transaction = null,
             int? commandTimeout = null) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
@@ -77,8 +77,7 @@ namespace DapperExtensions
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.GetPage{T}"/>.
         /// </summary>
-        public async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, object predicate = null, IList<ISort> sort = null, int page = 1,
-            int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, object predicate = null, IList<ISort> sort = null, int page = 0, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
             var wherePredicate = GetPredicate(classMap, predicate);

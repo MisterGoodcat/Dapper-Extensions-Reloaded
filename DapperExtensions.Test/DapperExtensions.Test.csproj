@@ -109,10 +109,12 @@
     <Compile Include="IntegrationTests\SqlCe\CrudFixture.cs" />
     <Compile Include="IntegrationTests\SqlCe\SqlCeBaseFixture.cs" />
     <Compile Include="IntegrationTests\SqlCe\TimerFixture.cs" />
+    <Compile Include="IntegrationTests\SqlServer\AsyncTestsFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\AttributeMapperFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\CrudFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\SqlServerBaseFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\TimerFixture.cs" />
+    <Compile Include="Mapper\AttributeClassMapperFixture.cs" />
     <Compile Include="Mapper\AutoClassMapperFixture.cs" />
     <Compile Include="Mapper\ClassMapperFixture.cs" />
     <Compile Include="Mapper\PluralizedAutoClassMapperFixture.cs" />
