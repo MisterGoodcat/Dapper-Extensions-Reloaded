@@ -57,9 +57,12 @@
     <Compile Include="Database.cs" />
     <Compile Include="GetMultiplePredicate.cs" />
     <Compile Include="GetMultipleResult.cs" />
+    <Compile Include="Mapper\AttributeClassMapper.cs" />
     <Compile Include="Mapper\AutoClassMapper.cs" />
     <Compile Include="Mapper\ClassMapper.cs" />
     <Compile Include="DapperExtensions.cs" />
+    <Compile Include="Mapper\DatabaseColumnAttribute.cs" />
+    <Compile Include="Mapper\DatabaseEntityAttribute.cs" />
     <Compile Include="Mapper\PluralizedAutoClassMapper.cs" />
     <Compile Include="Predicates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

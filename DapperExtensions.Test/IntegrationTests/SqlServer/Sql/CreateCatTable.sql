@@ -1,0 +1,11 @@
+﻿IF (OBJECT_ID('Cat') IS NOT NULL)
+BEGIN
+    DROP TABLE Cat
+END
+
+CREATE TABLE Cat (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(50),
+    DateCreated DATETIME,
+    Active BIT
+)

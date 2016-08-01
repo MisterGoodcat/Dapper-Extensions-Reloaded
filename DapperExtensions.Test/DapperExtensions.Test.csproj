@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Car.cs" />
+    <Compile Include="Data\FourLeggedFurryAnimal.cs" />
     <Compile Include="Helpers\DatabaseInfo.cs" />
     <Compile Include="Helpers\Protected.cs" />
     <Compile Include="IntegrationTests\MySql\CrudFixture.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="IntegrationTests\SqlCe\CrudFixture.cs" />
     <Compile Include="IntegrationTests\SqlCe\SqlCeBaseFixture.cs" />
     <Compile Include="IntegrationTests\SqlCe\TimerFixture.cs" />
+    <Compile Include="IntegrationTests\SqlServer\AttributeMapperFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\CrudFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\SqlServerBaseFixture.cs" />
     <Compile Include="IntegrationTests\SqlServer\TimerFixture.cs" />
@@ -174,6 +176,9 @@
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateFooTable.sql" />
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateMultikeyTable.sql" />
     <EmbeddedResource Include="IntegrationTests\MySql\Sql\CreateAnimalTable.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateCatTable.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

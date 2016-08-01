@@ -35,7 +35,7 @@ namespace DapperExtensions.Test.IntegrationTests
             public void NoMappingClass_ReturnsDefaultMapper()
             {
                 var mapper = DapperExtensions.GetMap<EntityWithoutMapper>();
-                Assert.AreEqual(typeof(AutoClassMapper<EntityWithoutMapper>), mapper.GetType());
+                Assert.AreEqual(typeof(AttributeClassMapper<EntityWithoutMapper>), mapper.GetType());
             }
 
             [Test]
@@ -61,7 +61,7 @@ namespace DapperExtensions.Test.IntegrationTests
 
                 DapperExtensions.SetMappingAssemblies(null);
                 mapper = DapperExtensions.GetMap<ExternallyMapped>();
-                Assert.AreEqual(typeof(AutoClassMapper<ExternallyMapped>), mapper.GetType());
+                Assert.AreEqual(typeof(AttributeClassMapper<ExternallyMapped>), mapper.GetType());
             }
 
             private class EntityWithoutMapper

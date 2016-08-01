@@ -9,7 +9,7 @@ namespace DapperExtensions
 {
     public static class DapperExtensions
     {
-        private readonly static object _lock = new object();
+        private static readonly object _lock = new object();
 
         private static Func<IDapperExtensionsConfiguration, IDapperImplementor> _instanceFactory;
         private static IDapperImplementor _instance;
@@ -82,7 +82,7 @@ namespace DapperExtensions
 
         static DapperExtensions()
         {
-            Configure(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect());
+            Configure(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect());
         }
 
         /// <summary>

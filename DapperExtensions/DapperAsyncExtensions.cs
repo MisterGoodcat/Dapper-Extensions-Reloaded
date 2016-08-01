@@ -86,7 +86,7 @@ namespace DapperExtensions
         /// </summary>
         static DapperAsyncExtensions()
         {
-            Configure(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect());
+            Configure(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect());
         }
 
         /// <summary>

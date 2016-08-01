@@ -17,7 +17,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
         public virtual void Setup()
         {
             var connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
-            var config = new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect());
+            var config = new DapperExtensionsConfiguration(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect());
             var sqlGenerator = new SqlGeneratorImpl(config);
             Db = new Database(connection, sqlGenerator);
             var files = new List<string>
@@ -26,7 +26,8 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 ReadScriptFile("CreateFooTable"),
                 ReadScriptFile("CreateMultikeyTable"),
                 ReadScriptFile("CreatePersonTable"),
-                ReadScriptFile("CreateCarTable")
+                ReadScriptFile("CreateCarTable"),
+                ReadScriptFile("CreateCatTable")
             };
 
             foreach (var setupFile in files)

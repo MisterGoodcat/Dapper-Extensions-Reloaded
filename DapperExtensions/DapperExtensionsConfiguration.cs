@@ -23,11 +23,9 @@ namespace DapperExtensions
     {
         private readonly ConcurrentDictionary<Type, IClassMapper> _classMaps = new ConcurrentDictionary<Type, IClassMapper>();
 
-        public DapperExtensionsConfiguration()
-            : this(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect())
+        public DapperExtensionsConfiguration() : this(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect())
         {
         }
-
 
         public DapperExtensionsConfiguration(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect)
         {
