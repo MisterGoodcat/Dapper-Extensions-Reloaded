@@ -38,16 +38,14 @@ namespace DapperExtensions.Test.Sql
             public void NullTableName_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Dialect.GetTableName(null, null, null));
-                Assert.AreEqual("TableName", ex.ParamName);
-                StringAssert.Contains("cannot be null", ex.Message);
+                Assert.AreEqual("tableName", ex.ParamName);
             }
 
             [Test]
             public void EmptyTableName_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Dialect.GetTableName(null, string.Empty, null));
-                Assert.AreEqual("TableName", ex.ParamName);
-                StringAssert.Contains("cannot be null", ex.Message);
+                Assert.AreEqual("tableName", ex.ParamName);
             }
 
             [Test]

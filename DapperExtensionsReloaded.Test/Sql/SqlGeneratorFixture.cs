@@ -42,8 +42,7 @@ namespace DapperExtensions.Test.Sql
                 var sort = new Sort();
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.Select(ClassMap.Object, null, null, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]
@@ -137,7 +136,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectPaged(ClassMap.Object, null, null, 0, 1, new Dictionary<string, object>()));
-                StringAssert.Contains("null or empty", ex.Message);
+                Assert.AreEqual("sort", ex.ParamName);
             }
 
             [Test]
@@ -145,8 +144,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort>(), 0, 1, new Dictionary<string, object>()));
-                StringAssert.Contains("null or empty", ex.Message);
-                Assert.AreEqual("Sort", ex.ParamName);
+                Assert.AreEqual("sort", ex.ParamName);
             }
 
             [Test]
@@ -155,8 +153,7 @@ namespace DapperExtensions.Test.Sql
                 var sort = new Sort();
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort> { sort }, 0, 1, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]
@@ -223,7 +220,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectSet(ClassMap.Object, null, null, 0, 1, new Dictionary<string, object>()));
-                StringAssert.Contains("null or empty", ex.Message);
+                Assert.AreEqual("sort", ex.ParamName);
             }
 
             [Test]
@@ -231,8 +228,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectSet(ClassMap.Object, null, new List<ISort>(), 0, 1, new Dictionary<string, object>()));
-                StringAssert.Contains("null or empty", ex.Message);
-                Assert.AreEqual("Sort", ex.ParamName);
+                Assert.AreEqual("sort", ex.ParamName);
             }
 
             [Test]
@@ -241,8 +237,7 @@ namespace DapperExtensions.Test.Sql
                 var sort = new Sort();
                 var ex = Assert.Throws<ArgumentNullException>(
                     () => Generator.Object.SelectSet(ClassMap.Object, null, new List<ISort> { sort }, 0, 1, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]
@@ -308,8 +303,7 @@ namespace DapperExtensions.Test.Sql
             public void WithNullParameters_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Count(ClassMap.Object, null, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]
@@ -486,8 +480,7 @@ namespace DapperExtensions.Test.Sql
             public void WithNullPredicate_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Update(ClassMap.Object, null, new Dictionary<string, object>()));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Predicate", ex.ParamName);
+                Assert.AreEqual("predicate", ex.ParamName);
             }
 
             [Test]
@@ -495,8 +488,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var predicate = new Mock<IPredicate>();
                 var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Update(ClassMap.Object, predicate.Object, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]
@@ -658,8 +650,7 @@ namespace DapperExtensions.Test.Sql
             public void WithNullPredicate_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Delete(ClassMap.Object, null, new Dictionary<string, object>()));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Predicate", ex.ParamName);
+                Assert.AreEqual("predicate", ex.ParamName);
             }
 
             [Test]
@@ -667,8 +658,7 @@ namespace DapperExtensions.Test.Sql
             {
                 var predicate = new Mock<IPredicate>();
                 var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Delete(ClassMap.Object, predicate.Object, null));
-                StringAssert.Contains("cannot be null", ex.Message);
-                Assert.AreEqual("Parameters", ex.ParamName);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]

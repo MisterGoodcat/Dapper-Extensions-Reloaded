@@ -17,7 +17,7 @@ namespace DapperExtensions.Sql
 
         public override string GetSetSql(string sql, int firstResult, int maxResults, IDictionary<string, object> parameters)
         {
-            var result = string.Format("{0} LIMIT @firstResult OFFSET @pageStartRowNbr", sql);
+            var result = $"{sql} LIMIT @firstResult OFFSET @pageStartRowNbr";
             parameters.Add("@firstResult", firstResult);
             parameters.Add("@maxResults", maxResults);
             return result;

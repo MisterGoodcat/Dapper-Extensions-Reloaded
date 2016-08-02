@@ -21,15 +21,15 @@ namespace DapperExtensions.Sql
         {
             if (string.IsNullOrEmpty(sql))
             {
-                throw new ArgumentNullException("SQL");
+                throw new ArgumentNullException(nameof(sql));
             }
 
             if (parameters == null)
             {
-                throw new ArgumentNullException("Parameters");
+                throw new ArgumentNullException(nameof(parameters));
             }
 
-            var result = string.Format("{0} LIMIT @Offset, @Count", sql);
+            var result = $"{sql} LIMIT @Offset, @Count";
             parameters.Add("@Offset", firstResult);
             parameters.Add("@Count", maxResults);
             return result;

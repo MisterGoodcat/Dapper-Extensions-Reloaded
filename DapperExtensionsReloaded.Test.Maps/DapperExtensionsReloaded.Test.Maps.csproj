@@ -5,15 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4C1A2C6C-A469-4C87-98D1-F1D517FA1ACF}</ProjectGuid>
+    <ProjectGuid>{87220EF9-8EE4-4EB0-829C-31C51BD7B750}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DapperExtensions</RootNamespace>
-    <AssemblyName>DapperExtensions</AssemblyName>
+    <RootNamespace>DapperExtensions.Test.Maps</RootNamespace>
+    <AssemblyName>DapperExtensionsReloaded.Test.Maps</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\basis\src\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,13 +34,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,34 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DapperAsyncExtensions.cs" />
-    <Compile Include="DapperAsyncImplementor.cs" />
-    <Compile Include="DapperExtensionsConfiguration.cs" />
-    <Compile Include="DapperImplementor.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="GetMultiplePredicate.cs" />
-    <Compile Include="GetMultipleResult.cs" />
-    <Compile Include="Mapper\AttributeClassMapper.cs" />
-    <Compile Include="Mapper\AutoClassMapper.cs" />
-    <Compile Include="Mapper\ClassMapper.cs" />
-    <Compile Include="DapperExtensions.cs" />
-    <Compile Include="Mapper\DatabaseColumnAttribute.cs" />
-    <Compile Include="Mapper\DatabaseEntityAttribute.cs" />
-    <Compile Include="Mapper\PluralizedAutoClassMapper.cs" />
-    <Compile Include="Predicates.cs" />
+    <Compile Include="ExternallyMappedMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Mapper\PropertyMap.cs" />
-    <Compile Include="ReflectionHelper.cs" />
-    <Compile Include="Sql\PostgreSqlDialect.cs" />
-    <Compile Include="Sql\SqlCeDialect.cs" />
-    <Compile Include="Sql\SqlDialectBase.cs" />
-    <Compile Include="Sql\SqlGenerator.cs" />
-    <Compile Include="Sql\MySqlDialect.cs" />
-    <Compile Include="Sql\SqliteDialect.cs" />
-    <Compile Include="Sql\SqlServerDialect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\DapperExtensionsReloaded.Test.Entities\DapperExtensionsReloaded.Test.Entities.csproj">
+      <Project>{DAFAEFFC-0E56-4FA5-923C-DE47E91B51D8}</Project>
+      <Name>DapperExtensions.Test.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DapperExtensionsReloaded\DapperExtensionsReloaded.csproj">
+      <Project>{4C1A2C6C-A469-4C87-98D1-F1D517FA1ACF}</Project>
+      <Name>DapperExtensionsReloaded</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -114,12 +114,9 @@ namespace DapperExtensions.Mapper
                 }
             }
 
-            if (keyMap != null)
-            {
-                keyMap.Key(PropertyTypeKeyTypeMapping.ContainsKey(keyMap.PropertyInfo.PropertyType)
-                    ? PropertyTypeKeyTypeMapping[keyMap.PropertyInfo.PropertyType]
-                    : KeyType.Assigned);
-            }
+            keyMap?.Key(PropertyTypeKeyTypeMapping.ContainsKey(keyMap.PropertyInfo.PropertyType)
+                            ? PropertyTypeKeyTypeMapping[keyMap.PropertyInfo.PropertyType]
+                            : KeyType.Assigned);
         }
 
         /// <summary>
@@ -146,7 +143,7 @@ namespace DapperExtensions.Mapper
         {
             if (Properties.Any(p => p.Name.Equals(result.Name)))
             {
-                throw new ArgumentException(string.Format("Duplicate mapping for property {0} detected.", result.Name));
+                throw new ArgumentException($"Duplicate mapping for property {result.Name} detected.");
             }
         }
     }

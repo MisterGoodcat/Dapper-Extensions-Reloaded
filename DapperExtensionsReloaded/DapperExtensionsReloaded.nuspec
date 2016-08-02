@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata schemaVersion="2">
+    <id>DapperExtensionsReloaded</id>
+    <version>1.5</version>
+    <authors>Thad Smith, Page Brooks, Jörg Battermann, Peter Kuhn</authors>
+    <owners>Peter Kuhn</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/MisterGoodcat/Dapper-Extensions</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A small library that complements Dapper by adding basic CRUD operations (Get, Insert, Update, Delete) for your POCOs. For more advanced querying scenarios, Dapper Extensions provides a predicate system. Forked from the Dapper-Extensions project.</description>
+    <releaseNotes>
+    1.5
+      * Update to .NET 4.5
+      * Update dependencies to latest versions
+      * Add attribute based mapper and make it default
+      * Fix minor bugs
+    Pre-1.5
+      * See original change log at the original author's repositories: Thad Smith, Page Brooks (https://github.com/tmsmith/Dapper-Extensions) and Jörg Battermann (https://github.com/jbattermann/Dapper-Extensions)
+	</releaseNotes>
+    <tags>orm sql micro-orm Data Dapper</tags>
+	<dependencies>
+      <dependency id="Dapper" version="1.50.2" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Core"/>
+      <frameworkAssembly assemblyName="System"/>
+      <frameworkAssembly assemblyName="System.Data"/>
+      <frameworkAssembly assemblyName="Microsoft.CSharp"/>
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+  	<file src="bin\Release\DapperExtensionsReloaded.dll" target="lib\net45" />
+    <file src="bin\Release\DapperExtensionsReloaded.pdb" target="lib\net45" />    
+  </files>  
+</package>

@@ -40,24 +40,21 @@ namespace DapperExtensions.Test.Sql
             public void NullSql_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Dialect.GetPagingSql(null, 0, 10, new Dictionary<string, object>()));
-                Assert.AreEqual("SQL", ex.ParamName);
-                StringAssert.Contains("cannot be null", ex.Message);
+                Assert.AreEqual("sql", ex.ParamName);
             }
 
             [Test]
             public void EmptySql_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Dialect.GetPagingSql(string.Empty, 0, 10, new Dictionary<string, object>()));
-                Assert.AreEqual("SQL", ex.ParamName);
-                StringAssert.Contains("cannot be null", ex.Message);
+                Assert.AreEqual("sql", ex.ParamName);
             }
 
             [Test]
             public void NullParameters_ThrowsException()
             {
                 var ex = Assert.Throws<ArgumentNullException>(() => Dialect.GetPagingSql("SELECT [schema].[column] FROM [schema].[table]", 0, 10, null));
-                Assert.AreEqual("Parameters", ex.ParamName);
-                StringAssert.Contains("cannot be null", ex.Message);
+                Assert.AreEqual("parameters", ex.ParamName);
             }
 
             [Test]

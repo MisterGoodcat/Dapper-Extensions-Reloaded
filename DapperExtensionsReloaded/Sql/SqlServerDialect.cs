@@ -7,15 +7,9 @@ namespace DapperExtensions.Sql
 {
     public class SqlServerDialect : SqlDialectBase
     {
-        public override char OpenQuote
-        {
-            get { return '['; }
-        }
+        public override char OpenQuote => '[';
 
-        public override char CloseQuote
-        {
-            get { return ']'; }
-        }
+        public override char CloseQuote => ']';
 
         public override string GetIdentitySql(string tableName)
         {
@@ -32,26 +26,21 @@ namespace DapperExtensions.Sql
         {
             if (string.IsNullOrEmpty(sql))
             {
-                throw new ArgumentNullException("SQL");
+                throw new ArgumentNullException(nameof(sql));
             }
 
             if (parameters == null)
             {
-                throw new ArgumentNullException("Parameters");
+                throw new ArgumentNullException(nameof(parameters));
             }
 
             var selectIndex = GetSelectEnd(sql) + 1;
-            var orderByClause = GetOrderByClause(sql);
-            if (orderByClause == null)
-            {
-                orderByClause = "ORDER BY CURRENT_TIMESTAMP";
-            }
-
+            var orderByClause = GetOrderByClause(sql) ?? "ORDER BY CURRENT_TIMESTAMP";
 
             var projectedColumns = GetColumnNames(sql).Aggregate(new StringBuilder(), (sb, s) => (sb.Length == 0 ? sb : sb.Append(", ")).Append(GetColumnName("_proj", s, null)), sb => sb.ToString());
             var newSql = sql
                 .Replace(" " + orderByClause, string.Empty)
-                .Insert(selectIndex, string.Format("ROW_NUMBER() OVER(ORDER BY {0}) AS {1}, ", orderByClause.Substring(9), GetColumnName(null, "_row_number", null)));
+                .Insert(selectIndex, $"ROW_NUMBER() OVER(ORDER BY {orderByClause.Substring(9)}) AS {GetColumnName(null, "_row_number", null)}, ");
 
             var result = string.Format("SELECT TOP({0}) {1} FROM ({2}) [_proj] WHERE {3} >= @_pageStartRow ORDER BY {3}",
                 maxResults, projectedColumns.Trim(), newSql, GetColumnName("_proj", "_row_number", null));
@@ -118,7 +107,7 @@ namespace DapperExtensions.Sql
                 return 6;
             }
 
-            throw new ArgumentException("SQL must be a SELECT statement.", "sql");
+            throw new ArgumentException("SQL must be a SELECT statement.", nameof(sql));
         }
 
         protected virtual IList<string> GetColumnNames(string sql)
