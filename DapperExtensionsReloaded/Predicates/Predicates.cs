@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using DapperExtensions.Internal;
@@ -84,7 +85,7 @@ namespace DapperExtensions.Predicates
             return new PredicateGroup(GetGenerator)
             {
                 Operator = op,
-                Predicates = predicate
+                Predicates = new List<IPredicate>(predicate)
             };
         }
 
@@ -135,6 +136,23 @@ namespace DapperExtensions.Predicates
             return new Sort
             {
                 PropertyName = propertyInfo.Name,
+                Ascending = ascending
+            };
+        }
+        
+        /// <summary>
+         /// Factory method that creates a new Sort which controls how the results will be sorted.
+         /// </summary>
+        public static ISort Sort(string propertyName, bool ascending = true)
+        {
+            if (string.IsNullOrWhiteSpace(propertyName))
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
+            return new Sort
+            {
+                PropertyName = propertyName,
                 Ascending = ascending
             };
         }
