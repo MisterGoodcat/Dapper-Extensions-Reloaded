@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
@@ -11,15 +12,16 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 {
     public class SqlServerBaseFixture
     {
-        protected IDatabase Db;
+        protected SqlConnection Connection { get; set; }
 
         [SetUp]
         public virtual void Setup()
         {
-            var connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
-            var config = new DapperExtensionsConfiguration(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect());
-            var sqlGenerator = new SqlGeneratorImpl(config);
-            Db = new Database(connection, sqlGenerator);
+            DapperExtensions.Configure(new DapperExtensionsConfiguration(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect()));
+
+            Connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
+            Connection.Open();
+
             var files = new List<string>
             {
                 ReadScriptFile("CreateAnimalTable"),
@@ -32,11 +34,18 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
             foreach (var setupFile in files)
             {
-                connection.Execute(setupFile);
+                Connection.Execute(setupFile);
             }
         }
 
-        public string ReadScriptFile(string name)
+        [TearDown]
+        public virtual void TearDown()
+        {
+            Connection?.Close();
+            Connection = null;
+        }
+        
+        private string ReadScriptFile(string name)
         {
             var fileName = GetType().Namespace + ".Sql." + name + ".sql";
             using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))

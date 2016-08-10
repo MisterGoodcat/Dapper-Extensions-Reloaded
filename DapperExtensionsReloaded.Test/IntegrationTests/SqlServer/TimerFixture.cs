@@ -22,7 +22,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     DateCreated = DateTime.Now,
                     Active = true
                 };
-                Db.Insert(p);
+                Connection.Insert(p);
                 var start = DateTime.Now;
                 var ids = new List<int>();
                 for (var i = 0; i < cnt; i++)
@@ -34,7 +34,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                         DateCreated = DateTime.Now,
                         Active = true
                     };
-                    Db.Insert(p2);
+                    Connection.Insert(p2);
                     ids.Add(p2.Id);
                 }
 
@@ -53,7 +53,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     DateCreated = DateTime.Now,
                     Active = true
                 };
-                Db.Insert(p);
+                Connection.Insert(p);
                 var start = DateTime.Now;
                 var ids = new List<int>();
                 for (var i = 0; i < cnt; i++)
@@ -65,7 +65,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                         DateCreated = DateTime.Now,
                         Active = true
                     };
-                    var id = Db.Insert(p2);
+                    var id = Connection.Insert(p2);
                     ids.Add(id);
                 }
 
@@ -78,13 +78,13 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void GuidKey_UsingEntity()
             {
                 var a = new Animal { Name = "Name" };
-                Db.Insert(a);
+                Connection.Insert(a);
                 var start = DateTime.Now;
                 var ids = new List<Guid>();
                 for (var i = 0; i < cnt; i++)
                 {
                     var a2 = new Animal { Name = "Name" + i };
-                    Db.Insert(a2);
+                    Connection.Insert(a2);
                     ids.Add(a2.Id);
                 }
 
@@ -97,13 +97,13 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void GuidKey_UsingReturnValue()
             {
                 var a = new Animal { Name = "Name" };
-                Db.Insert(a);
+                Connection.Insert(a);
                 var start = DateTime.Now;
                 var ids = new List<Guid>();
                 for (var i = 0; i < cnt; i++)
                 {
                     var a2 = new Animal { Name = "Name" + i };
-                    var id = Db.Insert(a2);
+                    var id = Connection.Insert(a2);
                     ids.Add(id);
                 }
 
@@ -116,14 +116,14 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void AssignKey_UsingEntity()
             {
                 var ca = new Car { Id = string.Empty.PadLeft(15, '0'), Name = "Name" };
-                Db.Insert(ca);
+                Connection.Insert(ca);
                 var start = DateTime.Now;
                 var ids = new List<string>();
                 for (var i = 0; i < cnt; i++)
                 {
                     var key = (i + 1).ToString().PadLeft(15, '0');
                     var ca2 = new Car { Id = key, Name = "Name" + i };
-                    Db.Insert(ca2);
+                    Connection.Insert(ca2);
                     ids.Add(ca2.Id);
                 }
 
@@ -136,14 +136,14 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void AssignKey_UsingReturnValue()
             {
                 var ca = new Car { Id = string.Empty.PadLeft(15, '0'), Name = "Name" };
-                Db.Insert(ca);
+                Connection.Insert(ca);
                 var start = DateTime.Now;
                 var ids = new List<string>();
                 for (var i = 0; i < cnt; i++)
                 {
                     var key = (i + 1).ToString().PadLeft(15, '0');
                     var ca2 = new Car { Id = key, Name = "Name" + i };
-                    var id = Db.Insert(ca2);
+                    var id = Connection.Insert(ca2);
                     ids.Add(id);
                 }
 

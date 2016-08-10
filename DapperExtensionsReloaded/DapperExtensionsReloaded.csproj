@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="DapperExtensionsConfiguration.cs" />
     <Compile Include="DapperImplementor.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="GetMultiplePredicate.cs" />
     <Compile Include="GetMultipleResult.cs" />
     <Compile Include="Mapper\AttributeClassMapper.cs" />

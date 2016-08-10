@@ -25,6 +25,11 @@ namespace DapperExtensions
         public static IFieldPredicate Field<T>(Expression<Func<T, object>> expression, Operator op, object value, bool not = false) where T : class
         {
             var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException("Could not retrieve property infor from lambda expression.", nameof(expression));
+            }
+
             return new FieldPredicate<T>
             {
                 PropertyName = propertyInfo.Name,
@@ -50,7 +55,17 @@ namespace DapperExtensions
             where T2 : class
         {
             var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException("Could not retrieve property infor from lambda expression.", nameof(expression));
+            }
+
             var propertyInfo2 = ReflectionHelper.GetProperty(expression2) as PropertyInfo;
+            if (propertyInfo2 == null)
+            {
+                throw new ArgumentException("Could not retrieve property infor from lambda expression.", nameof(expression2));
+            }
+
             return new PropertyPredicate<T, T2>
             {
                 PropertyName = propertyInfo.Name,
@@ -96,6 +111,11 @@ namespace DapperExtensions
             where T : class
         {
             var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException("Could not retrieve property infor from lambda expression.", nameof(expression));
+            }
+
             return new BetweenPredicate<T>
             {
                 Not = not,
@@ -110,6 +130,11 @@ namespace DapperExtensions
         public static ISort Sort<T>(Expression<Func<T, object>> expression, bool ascending = true)
         {
             var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException("Could not retrieve property infor from lambda expression.", nameof(expression));
+            }
+
             return new Sort
             {
                 PropertyName = propertyInfo.Name,
@@ -138,13 +163,13 @@ namespace DapperExtensions
             var map = sqlGenerator.Configuration.GetMap(entityType);
             if (map == null)
             {
-                throw new NullReferenceException(string.Format("Map was not found for {0}", entityType));
+                throw new NullReferenceException($"No map found for {entityType}");
             }
 
             var propertyMap = map.Properties.SingleOrDefault(p => p.Name == propertyName);
             if (propertyMap == null)
             {
-                throw new NullReferenceException(string.Format("{0} was not found for {1}", propertyName, entityType));
+                throw new NullReferenceException($"Property {propertyName} was not found for type {entityType}");
             }
 
             return sqlGenerator.GetColumnName(map, propertyMap, false);
@@ -197,7 +222,7 @@ namespace DapperExtensions
             var columnName = GetColumnName(typeof(T), sqlGenerator, PropertyName);
             if (Value == null)
             {
-                return string.Format("({0} IS {1}NULL)", columnName, Not ? "NOT " : string.Empty);
+                return $"({columnName} IS {(Not ? "NOT " : string.Empty)}NULL)";
             }
 
             if (Value is IEnumerable && !(Value is string))
@@ -215,11 +240,11 @@ namespace DapperExtensions
                 }
 
                 var paramStrings = @params.Aggregate(new StringBuilder(), (sb, s) => sb.Append((sb.Length != 0 ? ", " : string.Empty) + s), sb => sb.ToString());
-                return string.Format("({0} {1}IN ({2}))", columnName, Not ? "NOT " : string.Empty, paramStrings);
+                return $"({columnName} {(Not ? "NOT " : string.Empty)}IN ({paramStrings}))";
             }
 
             var parameterName = parameters.SetParameterName(PropertyName, Value, sqlGenerator.Configuration.Dialect.ParameterPrefix);
-            return string.Format("({0} {1} {2})", columnName, GetOperatorString(), parameterName);
+            return $"({columnName} {GetOperatorString()} {parameterName})";
         }
     }
 
@@ -238,7 +263,7 @@ namespace DapperExtensions
         {
             var columnName = GetColumnName(typeof(T), sqlGenerator, PropertyName);
             var columnName2 = GetColumnName(typeof(T2), sqlGenerator, PropertyName2);
-            return string.Format("({0} {1} {2})", columnName, GetOperatorString(), columnName2);
+            return $"({columnName} {GetOperatorString()} {columnName2})";
         }
     }
 
@@ -263,7 +288,7 @@ namespace DapperExtensions
             var columnName = GetColumnName(typeof(T), sqlGenerator, PropertyName);
             var propertyName1 = parameters.SetParameterName(PropertyName, Value.Value1, sqlGenerator.Configuration.Dialect.ParameterPrefix);
             var propertyName2 = parameters.SetParameterName(PropertyName, Value.Value2, sqlGenerator.Configuration.Dialect.ParameterPrefix);
-            return string.Format("({0} {1}BETWEEN {2} AND {3})", columnName, Not ? "NOT " : string.Empty, propertyName1, propertyName2);
+            return $"({columnName} {(Not ? "NOT " : string.Empty)}BETWEEN {propertyName1} AND {propertyName2})";
         }
 
         public BetweenValues Value { get; set; }
@@ -351,10 +376,7 @@ namespace DapperExtensions
         public string GetSql(ISqlGenerator sqlGenerator, IDictionary<string, object> parameters)
         {
             var mapSub = GetClassMapper(typeof(TSub), sqlGenerator.Configuration);
-            var sql = string.Format("({0}EXISTS (SELECT 1 FROM {1} WHERE {2}))",
-                Not ? "NOT " : string.Empty,
-                sqlGenerator.GetTableName(mapSub),
-                Predicate.GetSql(sqlGenerator, parameters));
+            var sql = $"({(Not ? "NOT " : string.Empty)}EXISTS (SELECT 1 FROM {sqlGenerator.GetTableName(mapSub)} WHERE {Predicate.GetSql(sqlGenerator, parameters)}))";
             return sql;
         }
 
@@ -363,7 +385,7 @@ namespace DapperExtensions
             var map = configuration.GetMap(type);
             if (map == null)
             {
-                throw new NullReferenceException(string.Format("Map was not found for {0}", type));
+                throw new NullReferenceException($"Map was not found for {type}");
             }
 
             return map;

@@ -106,7 +106,7 @@ namespace DapperExtensions.Test
 
                 Configuration.Verify();
 
-                StringAssert.StartsWith("Map was not found", ex.Message);
+                StringAssert.StartsWith("No map found for", ex.Message);
             }
 
             [Test]
@@ -125,7 +125,7 @@ namespace DapperExtensions.Test
                 Configuration.Verify();
                 classMapper.Verify();
 
-                StringAssert.StartsWith("Name was not found", ex.Message);
+                StringAssert.StartsWith("Property Name was not found for type", ex.Message);
             }
 
             [Test]

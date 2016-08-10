@@ -9,7 +9,7 @@ namespace DapperExtensions
 {
     public static class ReflectionHelper
     {
-        private static readonly List<Type> _simpleTypes = new List<Type>
+        private static readonly List<Type> SimpleTypes = new List<Type>
         {
             typeof(byte),
             typeof(sbyte),
@@ -89,12 +89,12 @@ namespace DapperExtensions
                 actualType = type.GetGenericArguments()[0];
             }
 
-            return _simpleTypes.Contains(actualType);
+            return SimpleTypes.Contains(actualType);
         }
 
         public static string GetParameterName(this IDictionary<string, object> parameters, string parameterName, char parameterPrefix)
         {
-            return string.Format("{0}{1}_{2}", parameterPrefix, parameterName, parameters.Count);
+            return $"{parameterPrefix}{parameterName}_{parameters.Count}";
         }
 
         public static string SetParameterName(this IDictionary<string, object> parameters, string parameterName, object value, char parameterPrefix)

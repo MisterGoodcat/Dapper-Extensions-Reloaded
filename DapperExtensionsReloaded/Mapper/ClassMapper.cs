@@ -16,6 +16,7 @@ namespace DapperExtensions.Mapper
         Type EntityType { get; }
     }
 
+    // ReSharper disable once UnusedTypeParameter => Marker interface
     public interface IClassMapper<T> : IClassMapper where T : class
     {
     }
@@ -40,10 +41,7 @@ namespace DapperExtensions.Mapper
         /// </summary>
         public IList<IPropertyMap> Properties { get; }
 
-        public Type EntityType
-        {
-            get { return typeof(T); }
-        }
+        public Type EntityType => typeof(T);
 
         public ClassMapper()
         {

@@ -43,12 +43,7 @@ namespace DapperExtensions
             IClassMapper map;
             if (!_classMaps.TryGetValue(entityType, out map))
             {
-                var mapType = GetMapType(entityType);
-                if (mapType == null)
-                {
-                    mapType = DefaultMapper.MakeGenericType(entityType);
-                }
-
+                var mapType = GetMapType(entityType) ?? DefaultMapper.MakeGenericType(entityType);
                 map = Activator.CreateInstance(mapType) as IClassMapper;
                 _classMaps[entityType] = map;
             }

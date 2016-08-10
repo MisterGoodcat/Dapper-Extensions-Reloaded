@@ -16,7 +16,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void AddsEntityToDatabase_ReturnsKey()
             {
                 var p = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-                int id = Db.Insert(p);
+                int id = Connection.Insert(p);
                 Assert.AreEqual(1, id);
                 Assert.AreEqual(1, p.Id);
             }
@@ -25,7 +25,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void AddsEntityToDatabase_ReturnsCompositeKey()
             {
                 var m = new Multikey { Key2 = "key", Value = "foo" };
-                var key = Db.Insert(m);
+                var key = Connection.Insert(m);
                 Assert.AreEqual(1, key.Key1);
                 Assert.AreEqual("key", key.Key2);
             }
@@ -34,9 +34,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
             {
                 var a1 = new Animal { Name = "Foo" };
-                Db.Insert(a1);
+                Connection.Insert(a1);
 
-                var a2 = Db.Get<Animal>(a1.Id);
+                var a2 = Connection.Get<Animal>(a1.Id);
                 Assert.AreNotEqual(Guid.Empty, a2.Id);
                 Assert.AreEqual(a1.Id, a2.Id);
             }
@@ -48,9 +48,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var a2 = new Animal { Name = "Bar" };
                 var a3 = new Animal { Name = "Baz" };
 
-                Db.Insert<Animal>(new[] { a1, a2, a3 });
+                Connection.Insert<Animal>(new[] { a1, a2, a3 });
 
-                var animals = Db.GetList<Animal>().ToList();
+                var animals = Connection.GetList<Animal>().ToList();
                 Assert.AreEqual(3, animals.Count);
             }
         }
@@ -68,9 +68,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     LastName = "Bar",
                     DateCreated = DateTime.UtcNow
                 };
-                int id = Db.Insert(p1);
+                int id = Connection.Insert(p1);
 
-                var p2 = Db.Get<Person>(id);
+                var p2 = Connection.Get<Person>(id);
                 Assert.AreEqual(id, p2.Id);
                 Assert.AreEqual("Foo", p2.FirstName);
                 Assert.AreEqual("Bar", p2.LastName);
@@ -80,9 +80,9 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void UsingCompositeKey_ReturnsEntity()
             {
                 var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Db.Insert(m1);
+                var key = Connection.Insert(m1);
 
-                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
+                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
                 Assert.AreEqual(1, m2.Key1);
                 Assert.AreEqual("key", m2.Key2);
                 Assert.AreEqual("bar", m2.Value);
@@ -102,22 +102,22 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     LastName = "Bar",
                     DateCreated = DateTime.UtcNow
                 };
-                int id = Db.Insert(p1);
+                int id = Connection.Insert(p1);
 
-                var p2 = Db.Get<Person>(id);
-                Db.Delete(p2);
-                Assert.IsNull(Db.Get<Person>(id));
+                var p2 = Connection.Get<Person>(id);
+                Connection.Delete(p2);
+                Assert.IsNull(Connection.Get<Person>(id));
             }
 
             [Test]
             public void UsingCompositeKey_DeletesFromDatabase()
             {
                 var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Db.Insert(m1);
+                var key = Connection.Insert(m1);
 
-                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
-                Db.Delete(m2);
-                Assert.IsNull(Db.Get<Multikey>(new { key.Key1, key.Key2 }));
+                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
+                Connection.Delete(m2);
+                Assert.IsNull(Connection.Get<Multikey>(new { key.Key1, key.Key2 }));
             }
 
             [Test]
@@ -126,18 +126,18 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
                 var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
                 var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
-                Db.Insert(p1);
-                Db.Insert(p2);
-                Db.Insert(p3);
+                Connection.Insert(p1);
+                Connection.Insert(p2);
+                Connection.Insert(p3);
 
-                var list = Db.GetList<Person>();
+                var list = Connection.GetList<Person>();
                 Assert.AreEqual(3, list.Count());
 
                 IPredicate pred = Predicates.Field<Person>(p => p.LastName, Operator.Eq, "Bar");
-                var result = Db.Delete<Person>(pred);
+                var result = Connection.Delete<Person>(pred);
                 Assert.IsTrue(result);
 
-                list = Db.GetList<Person>();
+                list = Connection.GetList<Person>();
                 Assert.AreEqual(1, list.Count());
             }
 
@@ -147,17 +147,17 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
                 var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
                 var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
-                Db.Insert(p1);
-                Db.Insert(p2);
-                Db.Insert(p3);
+                Connection.Insert(p1);
+                Connection.Insert(p2);
+                Connection.Insert(p3);
 
-                var list = Db.GetList<Person>();
+                var list = Connection.GetList<Person>();
                 Assert.AreEqual(3, list.Count());
 
-                var result = Db.Delete<Person>(new { LastName = "Bar" });
+                var result = Connection.Delete<Person>(new { LastName = "Bar" });
                 Assert.IsTrue(result);
 
-                list = Db.GetList<Person>();
+                list = Connection.GetList<Person>();
                 Assert.AreEqual(1, list.Count());
             }
         }
@@ -175,15 +175,15 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     LastName = "Bar",
                     DateCreated = DateTime.UtcNow
                 };
-                int id = Db.Insert(p1);
+                int id = Connection.Insert(p1);
 
-                var p2 = Db.Get<Person>(id);
+                var p2 = Connection.Get<Person>(id);
                 p2.FirstName = "Baz";
                 p2.Active = false;
 
-                Db.Update(p2);
+                Connection.Update(p2);
 
-                var p3 = Db.Get<Person>(id);
+                var p3 = Connection.Get<Person>(id);
                 Assert.AreEqual("Baz", p3.FirstName);
                 Assert.AreEqual("Bar", p3.LastName);
                 Assert.AreEqual(false, p3.Active);
@@ -193,14 +193,14 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             public void UsingCompositeKey_UpdatesEntity()
             {
                 var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Db.Insert(m1);
+                var key = Connection.Insert(m1);
 
-                var m2 = Db.Get<Multikey>(new { key.Key1, key.Key2 });
+                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
                 m2.Key2 = "key";
                 m2.Value = "barz";
-                Db.Update(m2);
+                Connection.Update(m2);
 
-                var m3 = Db.Get<Multikey>(new { Key1 = 1, Key2 = "key" });
+                var m3 = Connection.Get<Multikey>(new { Key1 = 1, Key2 = "key" });
                 Assert.AreEqual(1, m3.Key1);
                 Assert.AreEqual("key", m3.Key2);
                 Assert.AreEqual("barz", m3.Value);
@@ -213,25 +213,25 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingNullPredicate_ReturnsAll()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
-                var list = Db.GetList<Person>();
+                var list = Connection.GetList<Person>();
                 Assert.AreEqual(4, list.Count());
             }
 
             [Test]
             public void UsingPredicate_ReturnsMatching()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
                 var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
-                var list = Db.GetList<Person>(predicate, null);
+                var list = Connection.GetList<Person>(predicate, null);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "a" || p.FirstName == "c"));
             }
@@ -239,13 +239,13 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingObject_ReturnsMatching()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
                 var predicate = new { Active = true, FirstName = "c" };
-                var list = Db.GetList<Person>(predicate, null);
+                var list = Connection.GetList<Person>(predicate, null);
                 Assert.AreEqual(1, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "c"));
             }
@@ -257,10 +257,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingNullPredicate_ReturnsMatching()
             {
-                var id1 = Db.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id2 = Db.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id3 = Db.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
-                var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
+                var id1 = Connection.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id2 = Connection.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id3 = Connection.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
+                var id4 = Connection.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 IList<ISort> sort = new List<ISort>
                 {
@@ -268,7 +268,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     Predicates.Sort<Person>(p => p.FirstName)
                 };
 
-                var list = Db.GetPage<Person>(null, sort, 0, 2);
+                var list = Connection.GetPage<Person>(null, sort, 0, 2);
                 Assert.AreEqual(2, list.Count());
                 Assert.AreEqual(id2, list.First().Id);
                 Assert.AreEqual(id1, list.Skip(1).First().Id);
@@ -277,10 +277,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingPredicate_ReturnsMatching()
             {
-                var id1 = Db.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id2 = Db.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id3 = Db.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
-                var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
+                var id1 = Connection.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id2 = Connection.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id3 = Connection.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
+                var id4 = Connection.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
                 IList<ISort> sort = new List<ISort>
@@ -289,7 +289,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     Predicates.Sort<Person>(p => p.FirstName)
                 };
 
-                var list = Db.GetPage<Person>(predicate, sort, 0, 3);
+                var list = Connection.GetPage<Person>(predicate, sort, 0, 3);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "Sigma" || p.FirstName == "Theta"));
             }
@@ -297,10 +297,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void NotFirstPage_Returns_NextResults()
             {
-                var id1 = Db.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id2 = Db.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id3 = Db.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
-                var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
+                var id1 = Connection.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id2 = Connection.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id3 = Connection.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
+                var id4 = Connection.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 IList<ISort> sort = new List<ISort>
                 {
@@ -308,7 +308,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     Predicates.Sort<Person>(p => p.FirstName)
                 };
 
-                var list = Db.GetPage<Person>(null, sort, 1, 2);
+                var list = Connection.GetPage<Person>(null, sort, 1, 2);
                 Assert.AreEqual(2, list.Count());
                 Assert.AreEqual(id4, list.First().Id);
                 Assert.AreEqual(id3, list.Skip(1).First().Id);
@@ -317,10 +317,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingObject_ReturnsMatching()
             {
-                var id1 = Db.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id2 = Db.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
-                var id3 = Db.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
-                var id4 = Db.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
+                var id1 = Connection.Insert(new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id2 = Connection.Insert(new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
+                var id3 = Connection.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
+                var id4 = Connection.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
                 var predicate = new { Active = true };
                 IList<ISort> sort = new List<ISort>
@@ -329,7 +329,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                     Predicates.Sort<Person>(p => p.FirstName)
                 };
 
-                var list = Db.GetPage<Person>(predicate, sort, 0, 3);
+                var list = Connection.GetPage<Person>(predicate, sort, 0, 3);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "Sigma" || p.FirstName == "Theta"));
             }
@@ -341,38 +341,38 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void UsingNullPredicate_Returns_Count()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-                var count = Db.Count<Person>(null);
+                var count = Connection.Count<Person>(null);
                 Assert.AreEqual(4, count);
             }
 
             [Test]
             public void UsingPredicate_Returns_Count()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
                 var predicate = Predicates.Field<Person>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
-                var count = Db.Count<Person>(predicate);
+                var count = Connection.Count<Person>(predicate);
                 Assert.AreEqual(2, count);
             }
 
             [Test]
             public void UsingObject_Returns_Count()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
                 var predicate = new { FirstName = new[] { "b", "d" } };
-                var count = Db.Count<Person>(predicate);
+                var count = Connection.Count<Person>(predicate);
                 Assert.AreEqual(2, count);
             }
         }
@@ -383,21 +383,21 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             [Test]
             public void ReturnsItems()
             {
-                Db.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
-                Db.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
-                Db.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
+                Connection.Insert(new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
+                Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
+                Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-                Db.Insert(new Animal { Name = "Foo" });
-                Db.Insert(new Animal { Name = "Bar" });
-                Db.Insert(new Animal { Name = "Baz" });
+                Connection.Insert(new Animal { Name = "Foo" });
+                Connection.Insert(new Animal { Name = "Bar" });
+                Connection.Insert(new Animal { Name = "Baz" });
 
                 var predicate = new GetMultiplePredicate();
                 predicate.Add<Person>(null);
                 predicate.Add<Animal>(Predicates.Field<Animal>(a => a.Name, Operator.Like, "Ba%"));
                 predicate.Add<Person>(Predicates.Field<Person>(a => a.LastName, Operator.Eq, "c1"));
 
-                var result = Db.GetMultiple(predicate);
+                var result = Connection.GetMultiple(predicate);
                 var people = result.Read<Person>().ToList();
                 var animals = result.Read<Animal>().ToList();
                 var people2 = result.Read<Person>().ToList();

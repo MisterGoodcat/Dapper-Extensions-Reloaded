@@ -1,4 +1,0 @@
-﻿CREATE TABLE Car (
-    Id NVARCHAR(15) PRIMARY KEY,
-    Name NVARCHAR(50)
-)
