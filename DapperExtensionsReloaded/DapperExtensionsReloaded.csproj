@@ -50,8 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DapperAsyncExtensions.cs" />
-    <Compile Include="DapperAsyncImplementor.cs" />
     <Compile Include="DapperExtensionsConfiguration.cs" />
     <Compile Include="DapperImplementor.cs" />
     <Compile Include="Database.cs" />

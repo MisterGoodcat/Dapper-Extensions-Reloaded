@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
+using System.Threading.Tasks;
 using DapperExtensions.Mapper;
 using DapperExtensions.Sql;
 
@@ -9,32 +10,30 @@ namespace DapperExtensions
 {
     public static class DapperExtensions
     {
-        private static readonly object _lock = new object();
+        private static readonly object Lock = new object();
 
-        private static Func<IDapperExtensionsConfiguration, IDapperImplementor> _instanceFactory;
-        private static IDapperImplementor _instance;
-        private static IDapperExtensionsConfiguration _configuration;
+        private static Func<IDapperExtensionsConfiguration, IDapperImplementor> s_instanceFactory;
+        private static IDapperImplementor s_instance;
+        private static IDapperExtensionsConfiguration s_configuration;
 
         /// <summary>
-        /// Gets or sets the default class mapper to use when generating class maps. If not specified, AutoClassMapper<T> is used.
-        /// DapperExtensions.Configure(Type, IList<Assembly>, ISqlDialect) can be used instead to set all values at once
+        /// Gets or sets the default class mapper to use when generating class maps. If not specified, AutoClassMapper&lt;T&gt; is used.
+        /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
         /// </summary>
         public static Type DefaultMapper
         {
-            get { return _configuration.DefaultMapper; }
-
-            set { Configure(value, _configuration.MappingAssemblies, _configuration.Dialect); }
+            get { return s_configuration.DefaultMapper; }
+            set { Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect); }
         }
 
         /// <summary>
         /// Gets or sets the type of sql to be generated.
-        /// DapperExtensions.Configure(Type, IList<Assembly>, ISqlDialect) can be used instead to set all values at once
+        /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
         /// </summary>
         public static ISqlDialect SqlDialect
         {
-            get { return _configuration.Dialect; }
-
-            set { Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, value); }
+            get { return s_configuration.Dialect; }
+            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value); }
         }
 
         /// <summary>
@@ -44,17 +43,12 @@ namespace DapperExtensions
         {
             get
             {
-                if (_instanceFactory == null)
-                {
-                    _instanceFactory = config => new DapperImplementor(new SqlGeneratorImpl(config));
-                }
-
-                return _instanceFactory;
+                return s_instanceFactory ?? (s_instanceFactory = config => new DapperImplementor(new SqlGeneratorImpl(config)));
             }
             set
             {
-                _instanceFactory = value;
-                Configure(_configuration.DefaultMapper, _configuration.MappingAssemblies, _configuration.Dialect);
+                s_instanceFactory = value;
+                Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect);
             }
         }
 
@@ -65,18 +59,18 @@ namespace DapperExtensions
         {
             get
             {
-                if (_instance == null)
+                if (s_instance == null)
                 {
-                    lock (_lock)
+                    lock (Lock)
                     {
-                        if (_instance == null)
+                        if (s_instance == null)
                         {
-                            _instance = InstanceFactory(_configuration);
+                            s_instance = InstanceFactory(s_configuration);
                         }
                     }
                 }
 
-                return _instance;
+                return s_instance;
             }
         }
 
@@ -91,19 +85,16 @@ namespace DapperExtensions
         /// <param name="assemblies"></param>
         public static void SetMappingAssemblies(IList<Assembly> assemblies)
         {
-            Configure(_configuration.DefaultMapper, assemblies, _configuration.Dialect);
+            Configure(s_configuration.DefaultMapper, assemblies, s_configuration.Dialect);
         }
 
         /// <summary>
         /// Configure DapperExtensions extension methods.
         /// </summary>
-        /// <param name="defaultMapper"></param>
-        /// <param name="mappingAssemblies"></param>
-        /// <param name="sqlDialect"></param>
         public static void Configure(IDapperExtensionsConfiguration configuration)
         {
-            _instance = null;
-            _configuration = configuration;
+            s_instance = null;
+            s_configuration = configuration;
         }
 
         /// <summary>
@@ -226,6 +217,48 @@ namespace DapperExtensions
         public static void ClearCache()
         {
             Instance.SqlGenerator.Configuration.ClearCache();
+        }
+
+        /// <summary>
+        /// Executes a query using the specified predicate, returning an integer that represents the number of rows that match the query.
+        /// </summary>
+        public static async Task<int> CountAsync<T>(this IDbConnection connection, object predicate = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.CountAsync<T>(connection, predicate, transaction, commandTimeout);
+        }
+
+        /// <summary>
+        /// Executes a query for the specified id, returning the data typed as per T.
+        /// </summary>
+        public static async Task<T> GetAsync<T>(this IDbConnection connection, object id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.GetAsync<T>(connection, id, transaction, commandTimeout);
+        }
+
+        /// <summary>
+        /// Executes a select query using the specified predicate, returning an IEnumerable data typed as per T.
+        /// </summary>
+        public static async Task<IEnumerable<T>> GetListAsync<T>(this IDbConnection connection, object predicate = null, IList<ISort> sort = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.GetListAsync<T>(connection, predicate, sort, transaction, commandTimeout);
+        }
+
+        /// <summary>
+        /// Executes a select query using the specified predicate, returning an IEnumerable data typed as per T.
+        /// Data returned is dependent upon the specified page and resultsPerPage.
+        /// </summary>
+        public static async Task<IEnumerable<T>> GetPageAsync<T>(this IDbConnection connection, object predicate = null, IList<ISort> sort = null, int page = 0, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.GetPageAsync<T>(connection, predicate, sort, page, resultsPerPage, transaction, commandTimeout);
+        }
+
+        /// <summary>
+        /// Executes a select query using the specified predicate, returning an IEnumerable data typed as per T.
+        /// Data returned is dependent upon the specified firstResult and maxResults.
+        /// </summary>
+        public static async Task<IEnumerable<T>> GetSetAsync<T>(this IDbConnection connection, object predicate = null, IList<ISort> sort = null, int firstResult = 1, int maxResults = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.GetSetAsync<T>(connection, predicate, sort, firstResult, maxResults, transaction, commandTimeout);
         }
 
         /// <summary>
