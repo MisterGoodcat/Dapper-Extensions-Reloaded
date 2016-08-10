@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using DapperExtensions.Sql;
+using DapperExtensions.Internal.Sql;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.Sql
 {
     [TestFixture]
-    public class SqlDialectBaseFixture
+    internal class SqlDialectBaseFixture
     {
         public abstract class SqlDialectBaseFixtureBase
         {
@@ -203,7 +203,7 @@ namespace DapperExtensions.Test.Sql
             }
         }
 
-        public class TestDialect : SqlDialectBase
+        internal class TestDialect : SqlDialectBase
         {
             public override string GetIdentitySql(string tableName)
             {

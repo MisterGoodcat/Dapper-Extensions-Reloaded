@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DapperExtensions.Predicates;
 using DapperExtensions.Test.Data;
 using NUnit.Framework;
 
@@ -19,15 +20,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 int id = Connection.Insert(p);
                 Assert.AreEqual(1, id);
                 Assert.AreEqual(1, p.Id);
-            }
-
-            [Test]
-            public void AddsEntityToDatabase_ReturnsCompositeKey()
-            {
-                var m = new Multikey { Key2 = "key", Value = "foo" };
-                var key = Connection.Insert(m);
-                Assert.AreEqual(1, key.Key1);
-                Assert.AreEqual("key", key.Key2);
             }
 
             [Test]
@@ -75,18 +67,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Assert.AreEqual("Foo", p2.FirstName);
                 Assert.AreEqual("Bar", p2.LastName);
             }
-
-            [Test]
-            public void UsingCompositeKey_ReturnsEntity()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
-                Assert.AreEqual(1, m2.Key1);
-                Assert.AreEqual("key", m2.Key2);
-                Assert.AreEqual("bar", m2.Value);
-            }
         }
 
         [TestFixture]
@@ -108,18 +88,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Delete(p2);
                 Assert.IsNull(Connection.Get<Person>(id));
             }
-
-            [Test]
-            public void UsingCompositeKey_DeletesFromDatabase()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
-                Connection.Delete(m2);
-                Assert.IsNull(Connection.Get<Multikey>(new { key.Key1, key.Key2 }));
-            }
-
+            
             [Test]
             public void UsingPredicate_DeletesRows()
             {
@@ -133,7 +102,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var list = Connection.GetList<Person>();
                 Assert.AreEqual(3, list.Count());
 
-                IPredicate pred = Predicates.Field<Person>(p => p.LastName, Operator.Eq, "Bar");
+                IPredicate pred = Predicates.Predicates.Field<Person>(p => p.LastName, Operator.Eq, "Bar");
                 var result = Connection.Delete<Person>(pred);
                 Assert.IsTrue(result);
 
@@ -188,23 +157,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Assert.AreEqual("Bar", p3.LastName);
                 Assert.AreEqual(false, p3.Active);
             }
-
-            [Test]
-            public void UsingCompositeKey_UpdatesEntity()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.Get<Multikey>(new { key.Key1, key.Key2 });
-                m2.Key2 = "key";
-                m2.Value = "barz";
-                Connection.Update(m2);
-
-                var m3 = Connection.Get<Multikey>(new { Key1 = 1, Key2 = "key" });
-                Assert.AreEqual(1, m3.Key1);
-                Assert.AreEqual("key", m3.Key2);
-                Assert.AreEqual("barz", m3.Value);
-            }
         }
 
         [TestFixture]
@@ -230,7 +182,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow });
                 Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow });
 
-                var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
+                var predicate = Predicates.Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
                 var list = Connection.GetList<Person>(predicate, null);
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.FirstName == "a" || p.FirstName == "c"));
@@ -264,8 +216,8 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<Person>(p => p.LastName),
-                    Predicates.Sort<Person>(p => p.FirstName)
+                    Predicates.Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Predicates.Sort<Person>(p => p.FirstName)
                 };
 
                 var list = Connection.GetPage<Person>(null, sort, 0, 2);
@@ -282,11 +234,11 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var id3 = Connection.Insert(new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
                 var id4 = Connection.Insert(new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
 
-                var predicate = Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
+                var predicate = Predicates.Predicates.Field<Person>(f => f.Active, Operator.Eq, true);
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<Person>(p => p.LastName),
-                    Predicates.Sort<Person>(p => p.FirstName)
+                    Predicates.Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Predicates.Sort<Person>(p => p.FirstName)
                 };
 
                 var list = Connection.GetPage<Person>(predicate, sort, 0, 3);
@@ -304,8 +256,8 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<Person>(p => p.LastName),
-                    Predicates.Sort<Person>(p => p.FirstName)
+                    Predicates.Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Predicates.Sort<Person>(p => p.FirstName)
                 };
 
                 var list = Connection.GetPage<Person>(null, sort, 1, 2);
@@ -325,8 +277,8 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var predicate = new { Active = true };
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<Person>(p => p.LastName),
-                    Predicates.Sort<Person>(p => p.FirstName)
+                    Predicates.Predicates.Sort<Person>(p => p.LastName),
+                    Predicates.Predicates.Sort<Person>(p => p.FirstName)
                 };
 
                 var list = Connection.GetPage<Person>(predicate, sort, 0, 3);
@@ -358,7 +310,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Insert(new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
                 Connection.Insert(new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-                var predicate = Predicates.Field<Person>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
+                var predicate = Predicates.Predicates.Field<Person>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
                 var count = Connection.Count<Person>(predicate);
                 Assert.AreEqual(2, count);
             }
@@ -394,8 +346,8 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 var predicate = new GetMultiplePredicate();
                 predicate.Add<Person>(null);
-                predicate.Add<Animal>(Predicates.Field<Animal>(a => a.Name, Operator.Like, "Ba%"));
-                predicate.Add<Person>(Predicates.Field<Person>(a => a.LastName, Operator.Eq, "c1"));
+                predicate.Add<Animal>(Predicates.Predicates.Field<Animal>(a => a.Name, Operator.Like, "Ba%"));
+                predicate.Add<Person>(Predicates.Predicates.Field<Person>(a => a.LastName, Operator.Eq, "c1"));
 
                 var result = Connection.GetMultiple(predicate);
                 var people = result.Read<Person>().ToList();

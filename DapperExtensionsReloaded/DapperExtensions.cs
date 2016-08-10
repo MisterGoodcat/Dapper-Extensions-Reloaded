@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
+using DapperExtensions.Internal;
+using DapperExtensions.Internal.Sql;
 using DapperExtensions.Mapper;
-using DapperExtensions.Sql;
+using DapperExtensions.Mapper.Internal;
+using DapperExtensions.Predicates;
 
 namespace DapperExtensions
 {
@@ -20,7 +23,7 @@ namespace DapperExtensions
         /// Gets or sets the default class mapper to use when generating class maps. If not specified, AutoClassMapper&lt;T&gt; is used.
         /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
         /// </summary>
-        public static Type DefaultMapper
+        internal static Type DefaultMapper
         {
             get { return s_configuration.DefaultMapper; }
             set { Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect); }
@@ -30,7 +33,7 @@ namespace DapperExtensions
         /// Gets or sets the type of sql to be generated.
         /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
         /// </summary>
-        public static ISqlDialect SqlDialect
+        internal static ISqlDialect SqlDialect
         {
             get { return s_configuration.Dialect; }
             set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value); }
@@ -39,7 +42,7 @@ namespace DapperExtensions
         /// <summary>
         /// Get or sets the Dapper Extensions Implementation Factory.
         /// </summary>
-        public static Func<IDapperExtensionsConfiguration, IDapperImplementor> InstanceFactory
+        internal static Func<IDapperExtensionsConfiguration, IDapperImplementor> InstanceFactory
         {
             get
             {
@@ -55,7 +58,7 @@ namespace DapperExtensions
         /// <summary>
         /// Gets the Dapper Extensions Implementation
         /// </summary>
-        private static IDapperImplementor Instance
+        internal static IDapperImplementor Instance
         {
             get
             {
@@ -83,7 +86,7 @@ namespace DapperExtensions
         /// Add other assemblies that Dapper Extensions will search if a mapping is not found in the same assembly of the POCO.
         /// </summary>
         /// <param name="assemblies"></param>
-        public static void SetMappingAssemblies(IList<Assembly> assemblies)
+        internal static void SetMappingAssemblies(IList<Assembly> assemblies)
         {
             Configure(s_configuration.DefaultMapper, assemblies, s_configuration.Dialect);
         }
@@ -91,7 +94,7 @@ namespace DapperExtensions
         /// <summary>
         /// Configure DapperExtensions extension methods.
         /// </summary>
-        public static void Configure(IDapperExtensionsConfiguration configuration)
+        internal static void Configure(IDapperExtensionsConfiguration configuration)
         {
             s_instance = null;
             s_configuration = configuration;
@@ -103,7 +106,7 @@ namespace DapperExtensions
         /// <param name="defaultMapper"></param>
         /// <param name="mappingAssemblies"></param>
         /// <param name="sqlDialect"></param>
-        public static void Configure(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect)
+        internal static void Configure(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect)
         {
             Configure(new DapperExtensionsConfiguration(defaultMapper, mappingAssemblies, sqlDialect));
         }
@@ -206,7 +209,7 @@ namespace DapperExtensions
         /// Gets the appropriate mapper for the specified type T. 
         /// If the mapper for the type is not yet created, a new mapper is generated from the mapper type specifed by DefaultMapper.
         /// </summary>
-        public static IClassMapper GetMap<T>() where T : class
+        internal static IClassMapper GetMap<T>() where T : class
         {
             return Instance.SqlGenerator.Configuration.GetMap<T>();
         }
@@ -265,7 +268,7 @@ namespace DapperExtensions
         /// Generates a COMB Guid which solves the fragmented index issue.
         /// See: http://davybrion.com/blog/2009/05/using-the-guidcomb-identifier-strategy
         /// </summary>
-        public static Guid GetNextGuid()
+        internal static Guid GetNextGuid()
         {
             return Instance.SqlGenerator.Configuration.GetNextGuid();
         }

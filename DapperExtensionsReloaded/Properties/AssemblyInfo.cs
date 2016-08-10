@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("DapperExtensions")]
+[assembly: AssemblyTitle("DapperExtensionsReloaded")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DapperExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2012")]
+[assembly: AssemblyProduct("DapperExtensionsReloaded")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -25,8 +25,6 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("792b61ca-432b-4db2-a5b3-d2fb5043d0ed")]
-[assembly: InternalsVisibleTo("DapperExtensions.Test")]
-[assembly: InternalsVisibleTo("DapperExtensions.Test.SQLite")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -43,3 +41,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.4.3.0")]
 [assembly: AssemblyInformationalVersion("1.4.3")]
 [assembly: CLSCompliant(true)]
+
+[assembly: InternalsVisibleTo("DapperExtensionsReloaded.Test")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

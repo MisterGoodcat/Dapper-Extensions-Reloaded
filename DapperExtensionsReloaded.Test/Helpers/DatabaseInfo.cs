@@ -1,9 +1,9 @@
 ﻿using System.Data;
-using DapperExtensions.Sql;
+using DapperExtensions.Internal.Sql;
 
 namespace DapperExtensions.Test.Helpers
 {
-    public class DatabaseInfo
+    internal class DatabaseInfo
     {
         public IDbConnection Connection { get; set; }
         public ISqlDialect Dialect { get; set; }

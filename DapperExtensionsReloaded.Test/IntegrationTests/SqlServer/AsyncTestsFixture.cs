@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DapperExtensions.Predicates;
 using DapperExtensions.Test.Data;
 using NUnit.Framework;
 
@@ -19,15 +20,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 int id = Connection.Insert(p);
                 Assert.AreEqual(1, id);
                 Assert.AreEqual(1, p.Id);
-            }
-
-            [Test]
-            public void AddsEntityToDatabase_ReturnsCompositeKey()
-            {
-                var m = new Multikey { Key2 = "key", Value = "foo" };
-                var key = Connection.Insert(m);
-                Assert.AreEqual(1, key.Key1);
-                Assert.AreEqual("key", key.Key2);
             }
 
             [Test]
@@ -73,18 +65,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Assert.AreEqual(id, p2.Id);
                 Assert.AreEqual("Foo", p2.HowItsCalled);
             }
-
-            [Test]
-            public void UsingCompositeKey_ReturnsEntity()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.GetAsync<Multikey>(new { key.Key1, key.Key2 }).GetAwaiter().GetResult();
-                Assert.AreEqual(1, m2.Key1);
-                Assert.AreEqual("key", m2.Key2);
-                Assert.AreEqual("bar", m2.Value);
-            }
         }
 
         [TestFixture]
@@ -107,17 +87,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             }
 
             [Test]
-            public void UsingCompositeKey_DeletesFromDatabase()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.GetAsync<Multikey>(new { key.Key1, key.Key2 }).GetAwaiter().GetResult();
-                Connection.Delete(m2);
-                Assert.IsNull(Connection.GetAsync<Multikey>(new { key.Key1, key.Key2 }).GetAwaiter().GetResult());
-            }
-
-            [Test]
             public void UsingPredicate_DeletesRows()
             {
                 var p1 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
@@ -130,7 +99,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var list = Connection.GetListAsync<FourLeggedFurryAnimal>().GetAwaiter().GetResult();
                 Assert.AreEqual(3, list.Count());
 
-                IPredicate pred = Predicates.Field<FourLeggedFurryAnimal>(p => p.HowItsCalled, Operator.Eq, "Foo2");
+                IPredicate pred = Predicates.Predicates.Field<FourLeggedFurryAnimal>(p => p.HowItsCalled, Operator.Eq, "Foo2");
                 var result = Connection.Delete<FourLeggedFurryAnimal>(pred);
                 Assert.IsTrue(result);
 
@@ -183,23 +152,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Assert.AreEqual("Baz", p3.HowItsCalled);
                 Assert.AreEqual(false, p3.Active);
             }
-
-            [Test]
-            public void UsingCompositeKey_UpdatesEntity()
-            {
-                var m1 = new Multikey { Key2 = "key", Value = "bar" };
-                var key = Connection.Insert(m1);
-
-                var m2 = Connection.GetAsync<Multikey>(new { key.Key1, key.Key2 }).GetAwaiter().GetResult();
-                m2.Key2 = "key";
-                m2.Value = "barz";
-                Connection.Update(m2);
-
-                var m3 = Connection.GetAsync<Multikey>(new { Key1 = 1, Key2 = "key" }).GetAwaiter().GetResult();
-                Assert.AreEqual(1, m3.Key1);
-                Assert.AreEqual("key", m3.Key2);
-                Assert.AreEqual("barz", m3.Value);
-            }
         }
 
         [TestFixture]
@@ -225,7 +177,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Insert(new FourLeggedFurryAnimal { Active = true, HowItsCalled = "c", DateCreated = DateTime.UtcNow });
                 Connection.Insert(new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow });
 
-                var predicate = Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
+                var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
                 var list = Connection.GetListAsync<FourLeggedFurryAnimal>(predicate, null).GetAwaiter().GetResult();
                 Assert.AreEqual(2, list.Count());
                 Assert.IsTrue(list.All(p => p.HowItsCalled == "a" || p.HowItsCalled == "c"));
@@ -266,7 +218,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+                    Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
                 };
 
                 var list = Connection.GetPageAsync<FourLeggedFurryAnimal>(null, sort).GetAwaiter().GetResult();
@@ -285,7 +237,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+                    Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
                 };
 
                 var list = Connection.GetPageAsync<FourLeggedFurryAnimal>(null, sort, 0, 2).GetAwaiter().GetResult();
@@ -302,10 +254,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var id3 = Connection.Insert(new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta",  DateCreated = DateTime.UtcNow });
                 var id4 = Connection.Insert(new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
-                var predicate = Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
+                var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+                    Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
                 };
 
                 var list = Connection.GetPageAsync<FourLeggedFurryAnimal>(predicate, sort, 0, 3).GetAwaiter().GetResult();
@@ -323,7 +275,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+                    Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
                 };
 
                 var list = Connection.GetPageAsync<FourLeggedFurryAnimal>(null, sort, 1, 2).GetAwaiter().GetResult();
@@ -343,7 +295,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 var predicate = new { Active = true };
                 IList<ISort> sort = new List<ISort>
                 {
-                    Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+                    Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
                 };
 
                 var list = Connection.GetPageAsync<FourLeggedFurryAnimal>(predicate, sort, 0, 3).GetAwaiter().GetResult();
@@ -375,7 +327,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Insert(new FourLeggedFurryAnimal { Active = true, HowItsCalled = "c", DateCreated = DateTime.UtcNow.AddDays(-3) });
                 Connection.Insert(new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-                var predicate = Predicates.Field<FourLeggedFurryAnimal>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
+                var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(f => f.DateCreated, Operator.Lt, DateTime.UtcNow.AddDays(-5));
                 var count = Connection.Count<FourLeggedFurryAnimal>(predicate);
                 Assert.AreEqual(2, count);
             }

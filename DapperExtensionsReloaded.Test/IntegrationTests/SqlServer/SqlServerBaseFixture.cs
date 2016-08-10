@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using Dapper;
 using DapperExtensions.Mapper;
-using DapperExtensions.Sql;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.IntegrationTests.SqlServer
@@ -17,8 +16,6 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
         [SetUp]
         public virtual void Setup()
         {
-            DapperExtensions.Configure(new DapperExtensionsConfiguration(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect()));
-
             Connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
             Connection.Open();
 

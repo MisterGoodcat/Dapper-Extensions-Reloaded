@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using DapperExtensions.Internal;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test

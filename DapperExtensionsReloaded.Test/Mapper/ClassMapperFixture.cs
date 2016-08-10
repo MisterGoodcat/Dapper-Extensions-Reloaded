@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
+using DapperExtensions.Internal;
 using DapperExtensions.Mapper;
+using DapperExtensions.Mapper.Internal;
 using DapperExtensions.Test.Helpers;
 using Moq;
 using NUnit.Framework;
@@ -11,7 +13,7 @@ using NUnit.Framework;
 namespace DapperExtensions.Test.Mapper
 {
     [TestFixture]
-    public class ClassMapperFixture
+    internal class ClassMapperFixture
     {
         public abstract class ClassMapperFixtureBase
         {

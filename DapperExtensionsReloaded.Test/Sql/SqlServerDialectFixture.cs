@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using DapperExtensions.Sql;
+using DapperExtensions.Internal.Sql;
 using DapperExtensions.Test.Helpers;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.Sql
 {
     [TestFixture]
-    public class SqlServerDialectFixture
+    internal class SqlServerDialectFixture
     {
         public abstract class SqlServerDialectFixtureBase
         {

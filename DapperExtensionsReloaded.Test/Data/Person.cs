@@ -11,6 +11,8 @@ namespace DapperExtensions.Test.Data
         public string LastName { get; set; }
         public DateTime DateCreated { get; set; }
         public bool Active { get; set; }
+
+        [DatabaseColumn(IsIgnored = true)]
         public IEnumerable<Phone> Phones { get; private set; }
     }
 
@@ -18,15 +20,5 @@ namespace DapperExtensions.Test.Data
     {
         public int Id { get; set; }
         public string Value { get; set; }
-    }
-
-    public class PersonMapper : ClassMapper<Person>
-    {
-        public PersonMapper()
-        {
-            Table("Person");
-            Map(m => m.Phones).Ignore();
-            AutoMap();
-        }
     }
 }

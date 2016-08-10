@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using DapperExtensions.Mapper;
+using DapperExtensions.Mapper.Internal;
 
 namespace DapperExtensions.Test.Data
 {
-    public class CustomMapper : ClassMapper<Foo>
+    internal class CustomMapper : ClassMapper<Foo>
     {
         public CustomMapper()
         {

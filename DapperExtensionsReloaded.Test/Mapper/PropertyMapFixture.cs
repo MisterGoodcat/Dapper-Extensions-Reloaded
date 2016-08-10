@@ -1,7 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using DapperExtensions.Internal;
 using DapperExtensions.Mapper;
+using DapperExtensions.Mapper.Internal;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.Mapper

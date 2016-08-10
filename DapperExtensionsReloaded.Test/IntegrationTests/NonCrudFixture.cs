@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using DapperExtensions.Mapper;
+using DapperExtensions.Mapper.Internal;
 using DapperExtensions.Test.Entities;
-using DapperExtensions.Test.Maps;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.IntegrationTests
@@ -50,18 +50,6 @@ namespace DapperExtensions.Test.IntegrationTests
             {
                 var mapper = DapperExtensions.GetMap<EntityWithInterfaceMapper>();
                 Assert.AreEqual(typeof(EntityWithInterfaceMapperMapper), mapper.GetType());
-            }
-
-            [Test]
-            public void MappingClass_ReturnsFromDifferentAssembly()
-            {
-                DapperExtensions.SetMappingAssemblies(new[] { typeof(ExternallyMappedMap).Assembly });
-                var mapper = DapperExtensions.GetMap<ExternallyMapped>();
-                Assert.AreEqual(typeof(ExternallyMappedMap.ExternallyMappedMapper), mapper.GetType());
-
-                DapperExtensions.SetMappingAssemblies(null);
-                mapper = DapperExtensions.GetMap<ExternallyMapped>();
-                Assert.AreEqual(typeof(AttributeClassMapper<ExternallyMapped>), mapper.GetType());
             }
 
             private class EntityWithoutMapper
