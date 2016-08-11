@@ -12,6 +12,10 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
 
         public class InsertTimes : SqlServerBaseFixture
         {
+            public InsertTimes() : base(false)
+            {
+            }
+
             [Test]
             public void IdentityKey_UsingEntity()
             {

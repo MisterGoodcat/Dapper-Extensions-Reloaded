@@ -1,16 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Dapper;
-using DapperExtensions.Mapper;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace DapperExtensions.Test.IntegrationTests.SqlServer
 {
     public class SqlServerBaseFixture
     {
+        private readonly bool _logSql;
+
+        protected SqlServerBaseFixture(bool logSql = true)
+        {
+            _logSql = logSql;
+        }
+
         protected SqlConnection Connection { get; set; }
 
         [SetUp]
@@ -32,6 +40,30 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             foreach (var setupFile in files)
             {
                 Connection.Execute(setupFile);
+            }
+
+            if (_logSql)
+            {
+                DapperExtensions.SqlLogger = (sql, parameters) =>
+                {
+                    string parametersText;
+
+                    var dynamicParameters = parameters as DynamicParameters;
+                    if (dynamicParameters != null)
+                    {
+                        parametersText = dynamicParameters.ToJson();
+                    }
+                    else
+                    {
+                        parametersText = JsonConvert.SerializeObject(parameters, Formatting.Indented);
+                    }
+
+                    Console.WriteLine($"SQL: {sql}{Environment.NewLine}Parameters:{Environment.NewLine}{parametersText}{Environment.NewLine}");
+                };
+            }
+            else
+            {
+                DapperExtensions.SqlLogger = null;
             }
         }
 

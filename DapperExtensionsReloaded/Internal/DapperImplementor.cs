@@ -49,7 +49,7 @@ namespace DapperExtensions.Internal
 
             var sql = SqlGenerator.Insert(classMap);
 
-            connection.Execute(sql, entities, transaction, commandTimeout, CommandType.Text);
+            Execute(connection, sql, entities, transaction, commandTimeout, CommandType.Text);
         }
 
         public dynamic Insert<T>(IDbConnection connection, T entity, IDbTransaction transaction, int? commandTimeout) where T : class
@@ -74,13 +74,13 @@ namespace DapperExtensions.Internal
                 if (SqlGenerator.SupportsMultipleStatements())
                 {
                     sql += SqlGenerator.Configuration.Dialect.BatchSeperator + SqlGenerator.IdentitySql(classMap);
-                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = Query<long>(connection, sql, entity, transaction, false, commandTimeout, CommandType.Text);
                 }
                 else
                 {
-                    connection.Execute(sql, entity, transaction, commandTimeout, CommandType.Text);
+                    Execute(connection, sql, entity, transaction, commandTimeout, CommandType.Text);
                     sql = SqlGenerator.IdentitySql(classMap);
-                    result = connection.Query<long>(sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = Query<long>(connection, sql, entity, transaction, false, commandTimeout, CommandType.Text);
                 }
 
                 var identityValue = result.First();
@@ -90,7 +90,7 @@ namespace DapperExtensions.Internal
             }
             else
             {
-                connection.Execute(sql, entity, transaction, commandTimeout, CommandType.Text);
+                Execute(connection, sql, entity, transaction, commandTimeout, CommandType.Text);
             }
 
             foreach (var column in nonIdentityKeyProperties)
@@ -125,7 +125,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return connection.Execute(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
+            return Execute(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
         }
 
         public bool Delete<T>(IDbConnection connection, T entity, IDbTransaction transaction, int? commandTimeout) where T : class
@@ -174,8 +174,8 @@ namespace DapperExtensions.Internal
             {
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
-
-            return (int)connection.Query(sql, dynamicParameters, transaction, false, commandTimeout, CommandType.Text).Single().Total;
+            
+            return (int)Query(connection, sql, dynamicParameters, transaction, false, commandTimeout, CommandType.Text).Single().Total;
         }
 
         public IMultipleResultReader GetMultiple(IDbConnection connection, GetMultiplePredicate predicate, IDbTransaction transaction, int? commandTimeout)
@@ -188,7 +188,7 @@ namespace DapperExtensions.Internal
             return GetMultipleBySequence(connection, predicate, transaction, commandTimeout);
         }
 
-        #region Implementation of IDapperAsyncImplementor
+        #region Async implementation
 
         /// <summary>
         /// The asynchronous counterpart to <see cref="IDapperImplementor.Get{T}"/>.
@@ -245,7 +245,8 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return (int)(await connection.QueryAsync(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text)).Single().Total;
+            var result = await QueryAsync(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
+            return (int)result.Single().Total;
         }
         
         #region Helpers
@@ -263,7 +264,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return await connection.QueryAsync<T>(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
+            return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
         }
 
         /// <summary>
@@ -279,7 +280,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return await connection.QueryAsync<T>(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
+            return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
         }
 
         /// <summary>
@@ -295,7 +296,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return await connection.QueryAsync<T>(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
+            return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
         }
 
         #endregion
@@ -312,7 +313,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return connection.Query<T>(sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
+            return Query<T>(connection, sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
         }
 
         protected IEnumerable<T> GetPage<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction, int? commandTimeout, bool buffered) where T : class
@@ -325,7 +326,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return connection.Query<T>(sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
+            return Query<T>(connection, sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
         }
 
         protected IEnumerable<T> GetSet<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int firstResult, int maxResults, IDbTransaction transaction, int? commandTimeout, bool buffered) where T : class
@@ -338,7 +339,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return connection.Query<T>(sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
+            return Query<T>(connection, sql, dynamicParameters, transaction, buffered, commandTimeout, CommandType.Text);
         }
 
         protected bool Delete(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IDbTransaction transaction, int? commandTimeout)
@@ -351,7 +352,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            return connection.Execute(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
+            return Execute(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
         }
 
         protected IPredicate GetPredicate(IClassMapper classMap, object predicate)
@@ -474,7 +475,7 @@ namespace DapperExtensions.Internal
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
 
-            var grid = connection.QueryMultiple(sql.ToString(), dynamicParameters, transaction, commandTimeout, CommandType.Text);
+            var grid = QueryMultiple(connection, sql.ToString(), dynamicParameters, transaction, commandTimeout, CommandType.Text);
             return new GridReaderResultReader(grid);
         }
 
@@ -498,11 +499,53 @@ namespace DapperExtensions.Internal
                     dynamicParameters.Add(parameter.Key, parameter.Value);
                 }
 
-                var queryResult = connection.QueryMultiple(sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
+                var queryResult = QueryMultiple(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
                 items.Add(queryResult);
             }
 
             return new SequenceReaderResultReader(items);
+        }
+
+        private IEnumerable<dynamic> Query(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.Query(sql, param, transaction, buffered, commandTimeout, commandType);
+        }
+
+        private IEnumerable<T> Query<T>(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType);
+        }
+
+        private Task<IEnumerable<dynamic>> QueryAsync(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.QueryAsync(sql, param, transaction, commandTimeout, commandType);
+        }
+
+        private Task<IEnumerable<T>> QueryAsync<T>(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType);
+        }
+
+        private SqlMapper.GridReader QueryMultiple(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.QueryMultiple(sql, param, transaction, commandTimeout, commandType);
+        }
+
+        private int Execute(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            Log(sql, param);
+            return connection.Execute(sql, param, transaction, commandTimeout, commandType);
+        }
+
+        private void Log(string sql, object param)
+        {
+            var logger = SqlGenerator.Configuration.SqlLogger;
+            logger?.Invoke(sql, param);
         }
     }
 }

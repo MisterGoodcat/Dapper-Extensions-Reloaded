@@ -12,20 +12,22 @@ namespace DapperExtensions.Internal
     {
         private readonly ConcurrentDictionary<Type, IClassMapper> _classMaps = new ConcurrentDictionary<Type, IClassMapper>();
 
-        public DapperExtensionsConfiguration() : this(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect())
+        public DapperExtensionsConfiguration() : this(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect(), null)
         {
         }
 
-        public DapperExtensionsConfiguration(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect)
+        public DapperExtensionsConfiguration(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect, Action<string, object> sqlLogger)
         {
             DefaultMapper = defaultMapper;
             MappingAssemblies = mappingAssemblies ?? new List<Assembly>();
             Dialect = sqlDialect;
+            SqlLogger = sqlLogger;
         }
 
         public Type DefaultMapper { get; }
         public IList<Assembly> MappingAssemblies { get; }
         public ISqlDialect Dialect { get; }
+        public Action<string, object> SqlLogger { get; }
 
         public IClassMapper GetMap(Type entityType)
         {

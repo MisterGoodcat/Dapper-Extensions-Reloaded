@@ -190,11 +190,12 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
                 Connection.Insert(new FourLeggedFurryAnimal { Active = false, HowItsCalled = "b", DateCreated = DateTime.UtcNow });
                 Connection.Insert(new FourLeggedFurryAnimal { Active = true, HowItsCalled = "c", DateCreated = DateTime.UtcNow });
                 Connection.Insert(new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow });
+                Connection.Insert(new FourLeggedFurryAnimal { Active = true, HowItsCalled = null, DateCreated = DateTime.UtcNow });
 
-                var predicate = new { Active = true, HowItsCalled = "c" };
+                var predicate = new { Active = true, HowItsCalled = (string)null };
                 var list = Connection.GetListAsync<FourLeggedFurryAnimal>(predicate, null).GetAwaiter().GetResult();
                 Assert.AreEqual(1, list.Count());
-                Assert.IsTrue(list.All(p => p.HowItsCalled == "c"));
+                Assert.IsTrue(list.All(p => p.HowItsCalled == null));
             }
         }
 

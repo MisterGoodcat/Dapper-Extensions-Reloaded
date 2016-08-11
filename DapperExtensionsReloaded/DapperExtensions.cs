@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DapperExtensions.Internal;
 using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper;
 using DapperExtensions.Mapper.Internal;
 using DapperExtensions.Predicates;
 
@@ -19,6 +18,12 @@ namespace DapperExtensions
         private static IDapperImplementor s_instance;
         private static IDapperExtensionsConfiguration s_configuration;
 
+        public static Action<string, object> SqlLogger
+        {
+            get { return s_configuration.SqlLogger; }
+            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect, value); }
+        }
+
         /// <summary>
         /// Gets or sets the default class mapper to use when generating class maps. If not specified, AutoClassMapper&lt;T&gt; is used.
         /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
@@ -26,7 +31,7 @@ namespace DapperExtensions
         internal static Type DefaultMapper
         {
             get { return s_configuration.DefaultMapper; }
-            set { Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect); }
+            set { Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect, s_configuration.SqlLogger); }
         }
 
         /// <summary>
@@ -36,7 +41,16 @@ namespace DapperExtensions
         internal static ISqlDialect SqlDialect
         {
             get { return s_configuration.Dialect; }
-            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value); }
+            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value, s_configuration.SqlLogger); }
+        }
+
+        /// <summary>
+        /// Add other assemblies that Dapper Extensions will search if a mapping is not found in the same assembly of the POCO.
+        /// </summary>
+        /// <param name="assemblies"></param>
+        internal static void SetMappingAssemblies(IList<Assembly> assemblies)
+        {
+            Configure(s_configuration.DefaultMapper, assemblies, s_configuration.Dialect, s_configuration.SqlLogger);
         }
 
         /// <summary>
@@ -51,8 +65,29 @@ namespace DapperExtensions
             set
             {
                 s_instanceFactory = value;
-                Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect);
+                Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect, s_configuration.SqlLogger);
             }
+        }
+
+        /// <summary>
+        /// Configure DapperExtensions extension methods.
+        /// </summary>
+        internal static void Configure(IDapperExtensionsConfiguration configuration)
+        {
+            s_instance = null;
+            s_configuration = configuration;
+        }
+
+        /// <summary>
+        /// Configure DapperExtensions extension methods.
+        /// </summary>
+        /// <param name="defaultMapper"></param>
+        /// <param name="mappingAssemblies"></param>
+        /// <param name="sqlDialect"></param>
+        /// <param name="sqlLogger"></param>
+        internal static void Configure(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect, Action<string, object> sqlLogger)
+        {
+            Configure(new DapperExtensionsConfiguration(defaultMapper, mappingAssemblies, sqlDialect, sqlLogger));
         }
 
         /// <summary>
@@ -79,36 +114,7 @@ namespace DapperExtensions
 
         static DapperExtensions()
         {
-            Configure(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect());
-        }
-
-        /// <summary>
-        /// Add other assemblies that Dapper Extensions will search if a mapping is not found in the same assembly of the POCO.
-        /// </summary>
-        /// <param name="assemblies"></param>
-        internal static void SetMappingAssemblies(IList<Assembly> assemblies)
-        {
-            Configure(s_configuration.DefaultMapper, assemblies, s_configuration.Dialect);
-        }
-
-        /// <summary>
-        /// Configure DapperExtensions extension methods.
-        /// </summary>
-        internal static void Configure(IDapperExtensionsConfiguration configuration)
-        {
-            s_instance = null;
-            s_configuration = configuration;
-        }
-
-        /// <summary>
-        /// Configure DapperExtensions extension methods.
-        /// </summary>
-        /// <param name="defaultMapper"></param>
-        /// <param name="mappingAssemblies"></param>
-        /// <param name="sqlDialect"></param>
-        internal static void Configure(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect)
-        {
-            Configure(new DapperExtensionsConfiguration(defaultMapper, mappingAssemblies, sqlDialect));
+            Configure(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect(), null);
         }
 
         /// <summary>

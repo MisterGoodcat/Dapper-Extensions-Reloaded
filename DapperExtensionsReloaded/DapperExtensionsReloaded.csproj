@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicParametersExtensions.cs" />
     <Compile Include="Internal\DapperExtensionsConfiguration.cs" />
     <Compile Include="Internal\DapperImplementor.cs" />
     <Compile Include="IMultipleResultReader.cs" />

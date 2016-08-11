@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata schemaVersion="2">
     <id>DapperExtensionsReloaded</id>
-    <version>1.6.2</version>
+    <version>1.6.3</version>
     <authors>Thad Smith, Page Brooks, Jörg Battermann, Peter Kuhn</authors>
     <owners>Peter Kuhn</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -10,6 +10,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A small library that complements Dapper by adding basic CRUD operations (Get, Insert, Update, Delete) for your POCOs. For more advanced querying scenarios, Dapper Extensions provides a predicate system. Forked from the Dapper-Extensions project.</description>
     <releaseNotes>
+    1.6.3
+      * Add possibility to provide logger for SQL statements and parameters
+      * Add extension method to format DynamicParameters content as Json
     1.6.2
       * Add feature to Predicates static class to create ISort for a property name without using expressions.
       * Fix issue with Predicates' group method to actually set a "real" IList that supports adding further entries.
