@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using DapperExtensions.Internal;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Predicates.Internal;
+using DapperExtensionsReloaded.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Predicates.Internal;
 
-namespace DapperExtensions.Predicates
+namespace DapperExtensionsReloaded.Predicates
 {
     public static class Predicates
     {

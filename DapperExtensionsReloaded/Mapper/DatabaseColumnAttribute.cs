@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DapperExtensions.Mapper
+namespace DapperExtensionsReloaded.Mapper
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class DatabaseColumnAttribute : Attribute

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using DapperExtensions.Mapper;
-using DapperExtensions.Mapper.Internal;
+﻿using DapperExtensionsReloaded.Mapper.Internal;
 
-namespace DapperExtensions.Test.Data
+namespace DapperExtensionsReloaded.Test.Data
 {
     internal class CustomMapper : ClassMapper<Foo>
     {
@@ -17,26 +14,5 @@ namespace DapperExtensions.Test.Data
             Map(f => f.FullName).Ignore();
             Map(f => f.BarList).Ignore();
         }
-    }
-
-    public class Foo
-    {
-        public int Id { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public string FullName
-        {
-            get { return string.Format("{0} {1}", FirstName, LastName); }
-        }
-
-        public List<Bar> BarList { get; set; }
-    }
-
-    public class Bar
-    {
-        public int BarId { get; set; }
-        public string Name { get; set; }
     }
 }

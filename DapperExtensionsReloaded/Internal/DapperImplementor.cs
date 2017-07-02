@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper.Internal;
-using DapperExtensions.Predicates;
-using DapperExtensions.Predicates.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Mapper.Internal;
+using DapperExtensionsReloaded.Predicates;
+using DapperExtensionsReloaded.Predicates.Internal;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal class DapperImplementor : IDapperImplementor
     {

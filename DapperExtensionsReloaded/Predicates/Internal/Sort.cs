@@ -1,4 +1,4 @@
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal sealed class Sort : ISort
     {

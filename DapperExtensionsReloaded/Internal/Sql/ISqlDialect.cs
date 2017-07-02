@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DapperExtensions.Internal.Sql
+namespace DapperExtensionsReloaded.Internal.Sql
 {
     internal interface ISqlDialect
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using DapperExtensions.Mapper;
+using DapperExtensionsReloaded.Mapper;
 
-namespace DapperExtensions.Test.Data
+namespace DapperExtensionsReloaded.Test.Data
 {
     [DatabaseEntity("Cat")]
     public class FourLeggedFurryAnimal

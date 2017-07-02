@@ -1,7 +1,7 @@
 ﻿using System.Data;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Test.Helpers
+namespace DapperExtensionsReloaded.Test.Helpers
 {
     internal class DatabaseInfo
     {

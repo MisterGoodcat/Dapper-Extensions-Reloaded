@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DapperExtensions.Mapper.Internal;
-using DapperExtensions.Predicates;
+using DapperExtensionsReloaded.Mapper.Internal;
+using DapperExtensionsReloaded.Predicates;
 
-namespace DapperExtensions.Internal.Sql
+namespace DapperExtensionsReloaded.Internal.Sql
 {
     internal class SqlGeneratorImpl : ISqlGenerator
     {
@@ -187,7 +187,7 @@ namespace DapperExtensions.Internal.Sql
 
         public virtual string GetColumnName(IClassMapper map, string propertyName, bool includeAlias)
         {
-            var propertyMap = map.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+            var propertyMap = map.Properties.SingleOrDefault(p => p.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
             if (propertyMap == null)
             {
                 throw new ArgumentException($"Could not find '{propertyName}' in Mapping.");

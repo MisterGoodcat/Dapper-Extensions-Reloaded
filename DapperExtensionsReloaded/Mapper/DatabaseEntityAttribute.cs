@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DapperExtensions.Mapper
+namespace DapperExtensionsReloaded.Mapper
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class DatabaseEntityAttribute : Attribute

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
-using DapperExtensions.Internal;
+using DapperExtensionsReloaded.Internal;
 
-namespace DapperExtensions.Mapper.Internal
+namespace DapperExtensionsReloaded.Mapper.Internal
 {
     /// <summary>
     /// Maps an entity to a table through a collection of property maps.
@@ -75,7 +74,7 @@ namespace DapperExtensions.Mapper.Internal
             PropertyMap keyMap = null;
             foreach (var propertyInfo in type.GetProperties())
             {
-                if (Properties.Any(p => p.Name.Equals(propertyInfo.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (Properties.Any(p => p.Name.Equals(propertyInfo.Name, StringComparison.OrdinalIgnoreCase)))
                 {
                     continue;
                 }
@@ -88,12 +87,12 @@ namespace DapperExtensions.Mapper.Internal
                 var map = Map(propertyInfo);
                 if (!hasDefinedKey)
                 {
-                    if (string.Equals(map.PropertyInfo.Name, "id", StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(map.PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase))
                     {
                         keyMap = map;
                     }
 
-                    if (keyMap == null && map.PropertyInfo.Name.EndsWith("id", true, CultureInfo.InvariantCulture))
+                    if (keyMap == null && map.PropertyInfo.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase))
                     {
                         keyMap = map;
                     }

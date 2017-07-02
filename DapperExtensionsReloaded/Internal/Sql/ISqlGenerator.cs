@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using DapperExtensions.Mapper.Internal;
-using DapperExtensions.Predicates;
+using DapperExtensionsReloaded.Mapper.Internal;
+using DapperExtensionsReloaded.Predicates;
 
-namespace DapperExtensions.Internal.Sql
+namespace DapperExtensionsReloaded.Internal.Sql
 {
     internal interface ISqlGenerator
     {

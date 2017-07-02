@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DapperExtensions.Sql;
-using DapperExtensions.Test.Data;
-using DapperExtensions.Test.Helpers;
-using NUnit.Framework;
+﻿//using DapperExtensions.Sql;
 
-namespace DapperExtensions.Test.IntegrationTests
+namespace DapperExtensionsReloaded.Test.IntegrationTests
 {
-    [TestFixture]
+    
     public class DatabaseTestsFixture
     {/*
         public class PredicateTests : DatabaseConnection
         {
-            [Test]
+            [Fact]
             public void Eq_EnumerableType_GeneratesAndRunsProperSql()
             {
                 Person p1 = new Person { Active = true, FirstName = "Alpha", LastName = "Bar", DateCreated = DateTime.UtcNow };
@@ -23,12 +17,12 @@ namespace DapperExtensions.Test.IntegrationTests
 
                 var predicate = Predicates.Field<Person>(p => p.FirstName, Operator.Eq, new[] { "Alpha", "Gamma" });
                 var result = Impl.GetList<Person>(Connection, predicate, null, null, null, true);
-                Assert.AreEqual(2, result.Count());
-                Assert.IsTrue(result.Any(r => r.FirstName == "Alpha"));
-                Assert.IsTrue(result.Any(r => r.FirstName == "Gamma"));
+                Assert.Equal(2, result.Count());
+                Assert.True(result.Any(r => r.FirstName == "Alpha"));
+                Assert.True(result.Any(r => r.FirstName == "Gamma"));
             }
 
-            [Test]
+            [Fact]
             public void Exists_GeneratesAndRunsProperSql()
             {
                 Person p1 = new Person { Active = true, FirstName = "Alpha", LastName = "Bar", DateCreated = DateTime.UtcNow };
@@ -44,12 +38,12 @@ namespace DapperExtensions.Test.IntegrationTests
                 var predicate = Predicates.Exists<Animal>(subPredicate);
 
                 var result = Impl.GetList<Person>(Connection, predicate, null, null, null, true);
-                Assert.AreEqual(2, result.Count());
-                Assert.IsTrue(result.Any(r => r.FirstName == "Beta"));
-                Assert.IsTrue(result.Any(r => r.FirstName == "Gamma"));
+                Assert.Equal(2, result.Count());
+                Assert.True(result.Any(r => r.FirstName == "Beta"));
+                Assert.True(result.Any(r => r.FirstName == "Gamma"));
             }
 
-            [Test]
+            [Fact]
             public void Between_GeneratesAndRunsProperSql()
             {
                 Person p1 = new Person { Active = true, FirstName = "Alpha", LastName = "Bar", DateCreated = DateTime.UtcNow };
@@ -60,15 +54,15 @@ namespace DapperExtensions.Test.IntegrationTests
                 var pred = Predicates.Between<Person>(p => p.LastName,
                                                       new BetweenValues { Value1 = "Aaa", Value2 = "Bzz" });
                 var result = Impl.GetList<Person>(Connection, pred, null, null, null, true).ToList();
-                Assert.AreEqual(2, result.Count);
-                Assert.AreEqual("Alpha", result[0].FirstName);
-                Assert.AreEqual("Beta", result[1].FirstName);
+                Assert.Equal(2, result.Count);
+                Assert.Equal("Alpha", result[0].FirstName);
+                Assert.Equal("Beta", result[1].FirstName);
             }
         }
 
         public class CustomMapperTests : DatabaseConnection
         {
-            [Test]
+            [Fact]
             public void GeneratesAndRunsProperSql()
             {
                 Impl = new DapperExtensions.DapperExtensionsImpl(typeof(CustomMapper), TestHelpers.GetGenerator());

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     /// <summary>
     ///     Groups IPredicates together using the specified group operator.

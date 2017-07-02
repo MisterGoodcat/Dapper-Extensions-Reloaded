@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DapperExtensions.Internal.Sql
+namespace DapperExtensionsReloaded.Internal.Sql
 {
     internal abstract class SqlDialectBase : ISqlDialect
     {

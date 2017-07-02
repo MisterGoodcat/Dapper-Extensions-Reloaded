@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using DapperExtensions.Internal;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper.Internal;
+using DapperExtensionsReloaded.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Mapper.Internal;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal sealed class ExistsPredicate<TSub> : IExistsPredicate where TSub : class
     {

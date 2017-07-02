@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Dapper;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal class SequenceReaderResultReader : IMultipleResultReader
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace DapperExtensions.Mapper.Internal
+namespace DapperExtensionsReloaded.Mapper.Internal
 {
     /// <summary>
     /// This class mapper looks for <see cref="DatabaseEntityAttribute"/> to determine the table and schema names as well as
@@ -28,7 +28,7 @@ namespace DapperExtensions.Mapper.Internal
 
         private void MapEntityInfo(Type entityType)
         {
-            var entityAttribute = entityType.GetCustomAttribute<DatabaseEntityAttribute>();
+            var entityAttribute = entityType.GetTypeInfo().GetCustomAttribute<DatabaseEntityAttribute>();
             if (entityAttribute != null)
             {
                 Table(entityAttribute.TableName);

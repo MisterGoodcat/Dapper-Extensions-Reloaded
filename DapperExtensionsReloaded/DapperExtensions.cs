@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
-using DapperExtensions.Internal;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper.Internal;
-using DapperExtensions.Predicates;
+using DapperExtensionsReloaded.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Mapper.Internal;
+using DapperExtensionsReloaded.Predicates;
 
-namespace DapperExtensions
+namespace DapperExtensionsReloaded
 {
     public static class DapperExtensions
     {

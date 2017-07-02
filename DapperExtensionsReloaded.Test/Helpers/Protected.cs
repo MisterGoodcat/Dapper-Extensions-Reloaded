@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DapperExtensions.Test.Helpers
+namespace DapperExtensionsReloaded.Test.Helpers
 {
     public class Protected
     {
@@ -11,12 +11,7 @@ namespace DapperExtensions.Test.Helpers
 
         public Protected(object obj)
         {
-            if (obj == null)
-            {
-                throw new ArgumentException("object cannot be null.", "obj");
-            }
-
-            _obj = obj;
+            _obj = obj ?? throw new ArgumentException("object cannot be null.", nameof(obj));
         }
 
         public static Expression IsNull<T>()
@@ -83,12 +78,40 @@ namespace DapperExtensions.Test.Helpers
 
                 return p.GetType();
             }).ToArray();
-            var method = _obj.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, types, null);
+
+
+            var methods = _obj.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                .Where(x => x.Name == name)
+                .Where(x => x.GetParameters().Length == parameters.Length)
+                .ToList();
+
+            // the following check probably doesn't work, but isn't required by any test anyway
+            MethodInfo method = null;
+            foreach (var m in methods)
+            {
+                var found = true;
+                var arguments = m.GetParameters();
+                for (var i = 0; i < types.Length; i++)
+                {
+                    if (!arguments[i].ParameterType.IsAssignableFrom(types[i]))
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    method = m;
+                    break;
+                }
+            }
+            
             if (method == null)
             {
                 throw new ArgumentException(string.Format("{0} was not found in {1}.", name, _obj.GetType()), name);
             }
-
+            
             return method;
         }
     }

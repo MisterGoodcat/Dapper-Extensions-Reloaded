@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Predicates;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Predicates;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal interface IDapperImplementor
     {

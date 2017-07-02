@@ -2,7 +2,7 @@
 using System.Linq;
 using Dapper;
 
-namespace DapperExtensions
+namespace DapperExtensionsReloaded
 {
     public static class DynamicParametersExtensions
     {

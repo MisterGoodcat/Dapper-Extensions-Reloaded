@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Dapper;
+using DapperExtensions;
 using Newtonsoft.Json;
-using NUnit.Framework;
+using Xunit;
 
-namespace DapperExtensions.Test.IntegrationTests.SqlServer
+namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 {
-    public class SqlServerBaseFixture
+    [Collection("SqlServerIntegrationTests")]
+    public class SqlServerBaseFixture : IDisposable
     {
-        private readonly bool _logSql;
-
-        protected SqlServerBaseFixture(bool logSql = true)
-        {
-            _logSql = logSql;
-        }
-
         protected SqlConnection Connection { get; set; }
 
-        [SetUp]
-        public virtual void Setup()
+        public SqlServerBaseFixture()
         {
             Connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
             Connection.Open();
@@ -41,34 +34,26 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
             {
                 Connection.Execute(setupFile);
             }
-
-            if (_logSql)
+            
+            DapperExtensions.SqlLogger = (sql, parameters) =>
             {
-                DapperExtensions.SqlLogger = (sql, parameters) =>
+                string parametersText;
+
+                var dynamicParameters = parameters as DynamicParameters;
+                if (dynamicParameters != null)
                 {
-                    string parametersText;
+                    parametersText = dynamicParameters.ToJson();
+                }
+                else
+                {
+                    parametersText = JsonConvert.SerializeObject(parameters, Formatting.Indented);
+                }
 
-                    var dynamicParameters = parameters as DynamicParameters;
-                    if (dynamicParameters != null)
-                    {
-                        parametersText = dynamicParameters.ToJson();
-                    }
-                    else
-                    {
-                        parametersText = JsonConvert.SerializeObject(parameters, Formatting.Indented);
-                    }
-
-                    Console.WriteLine($"SQL: {sql}{Environment.NewLine}Parameters:{Environment.NewLine}{parametersText}{Environment.NewLine}");
-                };
-            }
-            else
-            {
-                DapperExtensions.SqlLogger = null;
-            }
+                Console.WriteLine($"SQL: {sql}{Environment.NewLine}Parameters:{Environment.NewLine}{parametersText}{Environment.NewLine}");
+            };
         }
-
-        [TearDown]
-        public virtual void TearDown()
+        
+        public void Dispose()
         {
             Connection?.Close();
             Connection = null;
@@ -77,7 +62,7 @@ namespace DapperExtensions.Test.IntegrationTests.SqlServer
         private string ReadScriptFile(string name)
         {
             var fileName = GetType().Namespace + ".Sql." + name + ".sql";
-            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            using (var s = GetType().GetTypeInfo().Assembly.GetManifestResourceStream(fileName))
             using (var sr = new StreamReader(s))
             {
                 return sr.ReadToEnd();

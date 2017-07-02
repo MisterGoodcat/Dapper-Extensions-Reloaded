@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using DapperExtensions.Internal;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal sealed class BetweenPredicate<T> : BasePredicate, IBetweenPredicate where T : class
     {

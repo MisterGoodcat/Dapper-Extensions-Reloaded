@@ -1,4 +1,4 @@
-﻿namespace DapperExtensions.Test.Helpers
+﻿namespace DapperExtensionsReloaded.Test.Helpers
 {
     public static class TestHelpers
     {

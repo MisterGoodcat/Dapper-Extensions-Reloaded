@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DapperExtensions.Mapper;
+using DapperExtensionsReloaded.Mapper;
 
-namespace DapperExtensions.Test.Data
+namespace DapperExtensionsReloaded.Test.Data
 {
     public class Person
     {
@@ -14,11 +14,5 @@ namespace DapperExtensions.Test.Data
 
         [DatabaseColumn(IsIgnored = true)]
         public IEnumerable<Phone> Phones { get; private set; }
-    }
-
-    public class Phone
-    {
-        public int Id { get; set; }
-        public string Value { get; set; }
     }
 }

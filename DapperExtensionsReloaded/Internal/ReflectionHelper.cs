@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal static class ReflectionHelper
     {
@@ -84,7 +84,7 @@ namespace DapperExtensions.Internal
         public static bool IsSimpleType(Type type)
         {
             var actualType = type;
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 actualType = type.GetGenericArguments()[0];
             }

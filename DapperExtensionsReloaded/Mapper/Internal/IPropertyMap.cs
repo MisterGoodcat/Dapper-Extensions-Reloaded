@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace DapperExtensions.Mapper.Internal
+namespace DapperExtensionsReloaded.Mapper.Internal
 {
     /// <summary>
     /// Maps an entity property to its corresponding column in the database.

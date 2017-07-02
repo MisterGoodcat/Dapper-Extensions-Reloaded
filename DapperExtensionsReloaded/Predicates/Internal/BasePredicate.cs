@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal abstract class BasePredicate : IBasePredicate
     {

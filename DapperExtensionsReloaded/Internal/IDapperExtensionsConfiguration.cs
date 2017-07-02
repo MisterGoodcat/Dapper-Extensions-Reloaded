@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Mapper.Internal;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal interface IDapperExtensionsConfiguration
     {

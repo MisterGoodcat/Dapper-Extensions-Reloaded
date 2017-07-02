@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DapperExtensions.Mapper.Internal
+namespace DapperExtensionsReloaded.Mapper.Internal
 {
     internal interface IClassMapper
     {

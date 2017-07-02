@@ -1,4 +1,4 @@
-namespace DapperExtensions.Predicates
+namespace DapperExtensionsReloaded.Predicates
 {
     /// <summary>
     /// Comparison operator for predicates.

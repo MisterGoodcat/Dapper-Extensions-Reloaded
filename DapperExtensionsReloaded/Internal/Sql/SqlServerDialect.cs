@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DapperExtensions.Internal.Sql
+namespace DapperExtensionsReloaded.Internal.Sql
 {
     internal sealed class SqlServerDialect : SqlDialectBase
     {
@@ -51,7 +51,7 @@ namespace DapperExtensions.Internal.Sql
 
         private string GetOrderByClause(string sql)
         {
-            var orderByIndex = sql.LastIndexOf(" ORDER BY ", StringComparison.InvariantCultureIgnoreCase);
+            var orderByIndex = sql.LastIndexOf(" ORDER BY ", StringComparison.OrdinalIgnoreCase);
             if (orderByIndex == -1)
             {
                 return null;
@@ -59,7 +59,7 @@ namespace DapperExtensions.Internal.Sql
 
             var result = sql.Substring(orderByIndex).Trim();
 
-            var whereIndex = result.IndexOf(" WHERE ", StringComparison.InvariantCultureIgnoreCase);
+            var whereIndex = result.IndexOf(" WHERE ", StringComparison.OrdinalIgnoreCase);
             if (whereIndex == -1)
             {
                 return result;
@@ -75,12 +75,12 @@ namespace DapperExtensions.Internal.Sql
             var fromIndex = 0;
             foreach (var word in words)
             {
-                if (word.Equals("SELECT", StringComparison.InvariantCultureIgnoreCase))
+                if (word.Equals("SELECT", StringComparison.OrdinalIgnoreCase))
                 {
                     selectCount++;
                 }
 
-                if (word.Equals("FROM", StringComparison.InvariantCultureIgnoreCase))
+                if (word.Equals("FROM", StringComparison.OrdinalIgnoreCase))
                 {
                     selectCount--;
                     if (selectCount == 0)
@@ -97,12 +97,12 @@ namespace DapperExtensions.Internal.Sql
 
         private int GetSelectEnd(string sql)
         {
-            if (sql.StartsWith("SELECT DISTINCT", StringComparison.InvariantCultureIgnoreCase))
+            if (sql.StartsWith("SELECT DISTINCT", StringComparison.OrdinalIgnoreCase))
             {
                 return 15;
             }
 
-            if (sql.StartsWith("SELECT", StringComparison.InvariantCultureIgnoreCase))
+            if (sql.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
             {
                 return 6;
             }
@@ -118,7 +118,7 @@ namespace DapperExtensions.Internal.Sql
             var result = new List<string>();
             foreach (var c in columnSql)
             {
-                var index = c.IndexOf(" AS ", StringComparison.InvariantCultureIgnoreCase);
+                var index = c.IndexOf(" AS ", StringComparison.OrdinalIgnoreCase);
                 if (index > 0)
                 {
                     result.Add(c.Substring(index + 4).Trim());

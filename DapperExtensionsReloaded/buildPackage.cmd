@@ -1,1 +1,0 @@
-nuget pack DapperExtensionsReloaded.nuspec /o ..\nuget

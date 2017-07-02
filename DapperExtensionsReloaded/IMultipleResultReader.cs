@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DapperExtensions
+namespace DapperExtensionsReloaded
 {
     public interface IMultipleResultReader
     {

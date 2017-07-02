@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DapperExtensions.Test.Data
+namespace DapperExtensionsReloaded.Test.Data
 {
     class Animal
     {

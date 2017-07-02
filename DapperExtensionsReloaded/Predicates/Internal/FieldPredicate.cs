@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DapperExtensions.Internal;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal sealed class FieldPredicate<T> : ComparePredicate, IFieldPredicate where T : class
     {

@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DapperExtensions.Internal.Sql;
-using DapperExtensions.Mapper.Internal;
+using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Mapper.Internal;
 
-namespace DapperExtensions.Internal
+namespace DapperExtensionsReloaded.Internal
 {
     internal class DapperExtensionsConfiguration : IDapperExtensionsConfiguration
     {
@@ -31,8 +31,7 @@ namespace DapperExtensions.Internal
 
         public IClassMapper GetMap(Type entityType)
         {
-            IClassMapper map;
-            if (!_classMaps.TryGetValue(entityType, out map))
+            if (!_classMaps.TryGetValue(entityType, out IClassMapper map))
             {
                 var mapType = GetMapType(entityType) ?? DefaultMapper.MakeGenericType(entityType);
                 map = Activator.CreateInstance(mapType) as IClassMapper;
@@ -70,18 +69,21 @@ namespace DapperExtensions.Internal
 
         protected virtual Type GetMapType(Type entityType)
         {
-            Func<Assembly, Type> getType = a =>
-            {
-                var types = a.GetTypes();
-                return (from type in types
-                    let interfaceType = type.GetInterface(typeof(IClassMapper<>).FullName)
-                    where
-                    interfaceType != null &&
-                    interfaceType.GetGenericArguments()[0] == entityType
-                    select type).SingleOrDefault();
-            };
+            var entityTypeInfo = entityType.GetTypeInfo();
 
-            var result = getType(entityType.Assembly);
+            Func<Assembly, Type> selectMatchingType = assembly =>
+            {
+                var assemblyTypes = assembly.GetTypes();
+                var matchingType = assemblyTypes
+                    .SingleOrDefault(potentiallyMatchingType => potentiallyMatchingType.GetTypeInfo().ImplementedInterfaces.Any(x =>
+                        x.GetTypeInfo().IsGenericType &&
+                        x.GetTypeInfo().GetGenericTypeDefinition() == typeof(IClassMapper<>) &&
+                        x.GetTypeInfo().GenericTypeArguments.First() == entityType));
+                return matchingType;
+            };
+            
+            var entityTypeAssembly = entityTypeInfo.Assembly;
+            var result = selectMatchingType(entityTypeAssembly);
             if (result != null)
             {
                 return result;
@@ -89,14 +91,43 @@ namespace DapperExtensions.Internal
 
             foreach (var mappingAssembly in MappingAssemblies)
             {
-                result = getType(mappingAssembly);
+                result = selectMatchingType(mappingAssembly);
                 if (result != null)
                 {
                     return result;
                 }
             }
 
-            return getType(entityType.Assembly);
+            return null;
+
+
+            //Func<Assembly, Type> getType = a =>
+            //{
+            //    var types = a.GetTypes();
+            //    return (from type in types
+            //        let interfaceType = type.GetInterface(typeof(IClassMapper<>).FullName)
+            //        where
+            //        interfaceType != null &&
+            //        interfaceType.GetGenericArguments()[0] == entityType
+            //        select type).SingleOrDefault();
+            //};
+
+            //var result = getType(entityType.Assembly);
+            //if (result != null)
+            //{
+            //    return result;
+            //}
+
+            //foreach (var mappingAssembly in MappingAssemblies)
+            //{
+            //    result = getType(mappingAssembly);
+            //    if (result != null)
+            //    {
+            //        return result;
+            //    }
+            //}
+
+            //return getType(entityType.Assembly);
         }
     }
 }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DapperExtensions.Internal.Sql;
+using DapperExtensionsReloaded.Internal.Sql;
 
-namespace DapperExtensions.Predicates.Internal
+namespace DapperExtensionsReloaded.Predicates.Internal
 {
     internal sealed class PropertyPredicate<T, T2> : ComparePredicate, IPropertyPredicate where T : class where T2 : class
     {
