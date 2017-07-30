@@ -13,6 +13,10 @@ namespace DapperExtensionsReloaded
             typeof(float), typeof(double), typeof(decimal)
         };
 
+        /// <summary>
+        /// Poor man's JSON conversion for dynamic parameters. Processes only numeric types, booleans, date types and strings correctly.
+        /// </summary>
+        /// <returns>A simple JSON representation of the dynamic parameters.</returns>
         public static string ToJson(this DynamicParameters dynamicParameters)
         {
             if (dynamicParameters == null)

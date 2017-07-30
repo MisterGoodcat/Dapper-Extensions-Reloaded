@@ -23,7 +23,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             ClassMap.SetupGet(c => c.Properties).Returns(properties).Verifiable();
 
             var result = Generator.Object.BuildSelectColumns(ClassMap.Object);
-            Assert.Equal((string)"Column1, Column2", (string)result);
+            Assert.Equal("Column1, Column2", result);
             ClassMap.Verify();
             Generator.Verify();
         }
@@ -44,7 +44,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             ClassMap.SetupGet(c => c.Properties).Returns(properties).Verifiable();
 
             var result = Generator.Object.BuildSelectColumns(ClassMap.Object);
-            Assert.Equal((string)"Column2", (string)result);
+            Assert.Equal("Column2", result);
             ClassMap.Verify();
             Generator.Verify();
             Generator.Verify(g => g.GetColumnName(ClassMap.Object, property1.Object, true), Times.Never());

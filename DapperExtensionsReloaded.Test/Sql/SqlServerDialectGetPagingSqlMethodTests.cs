@@ -33,7 +33,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             var parameters = new Dictionary<string, object>();
             var sql = "SELECT TOP(10) [_proj].[column] FROM (SELECT ROW_NUMBER() OVER(ORDER BY CURRENT_TIMESTAMP) AS [_row_number], [column] FROM [schema].[table]) [_proj] WHERE [_proj].[_row_number] >= @_pageStartRow ORDER BY [_proj].[_row_number]";
             var result = Dialect.GetPagingSql("SELECT [column] FROM [schema].[table]", 0, 10, parameters);
-            Assert.Equal(sql, (string)result);
+            Assert.Equal(sql, result);
             Assert.Equal(1, parameters.Count);
             Assert.Equal(1, parameters["@_pageStartRow"]);
         }
@@ -44,7 +44,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             var parameters = new Dictionary<string, object>();
             var sql = "SELECT TOP(10) [_proj].[column] FROM (SELECT DISTINCT ROW_NUMBER() OVER(ORDER BY CURRENT_TIMESTAMP) AS [_row_number], [column] FROM [schema].[table]) [_proj] WHERE [_proj].[_row_number] >= @_pageStartRow ORDER BY [_proj].[_row_number]";
             var result = Dialect.GetPagingSql("SELECT DISTINCT [column] FROM [schema].[table]", 0, 10, parameters);
-            Assert.Equal(sql, (string)result);
+            Assert.Equal(sql, result);
             Assert.Equal(1, parameters.Count);
             Assert.Equal(1, parameters["@_pageStartRow"]);
         }
@@ -55,7 +55,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             var parameters = new Dictionary<string, object>();
             var sql = "SELECT TOP(10) [_proj].[column] FROM (SELECT ROW_NUMBER() OVER(ORDER BY [column] DESC) AS [_row_number], [column] FROM [schema].[table]) [_proj] WHERE [_proj].[_row_number] >= @_pageStartRow ORDER BY [_proj].[_row_number]";
             var result = Dialect.GetPagingSql("SELECT [column] FROM [schema].[table] ORDER BY [column] DESC", 0, 10, parameters);
-            Assert.Equal(sql, (string)result);
+            Assert.Equal(sql, result);
             Assert.Equal(1, parameters.Count);
             Assert.Equal(1, parameters["@_pageStartRow"]);
         }

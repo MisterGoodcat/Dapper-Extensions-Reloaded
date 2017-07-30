@@ -46,7 +46,7 @@ namespace DapperExtensionsReloaded.Test.Sql
 
             var ex = Assert.Throws<ArgumentException>(() => Generator.Object.Update(ClassMap.Object, predicate.Object, parameters));
 
-            Assert.True(ex.Message.Contains("columns were mapped"));
+            Assert.Contains("columns were mapped", ex.Message);
             ClassMap.Verify();
             property1.Verify();
             property2.Verify();
@@ -81,7 +81,7 @@ namespace DapperExtensionsReloaded.Test.Sql
 
             var result = Generator.Object.Update(ClassMap.Object, predicate.Object, parameters);
 
-            Assert.Equal((string)"UPDATE TableName SET Column = @Name WHERE Predicate", (string)result);
+            Assert.Equal("UPDATE TableName SET Column = @Name WHERE Predicate", result);
 
             predicate.Verify();
             ClassMap.Verify();
@@ -122,7 +122,7 @@ namespace DapperExtensionsReloaded.Test.Sql
 
             var result = Generator.Object.Update(ClassMap.Object, predicate.Object, parameters);
 
-            Assert.Equal((string)"UPDATE TableName SET Column = @Name WHERE Predicate", (string)result);
+            Assert.Equal("UPDATE TableName SET Column = @Name WHERE Predicate", result);
 
             predicate.Verify();
             ClassMap.Verify();
@@ -163,7 +163,7 @@ namespace DapperExtensionsReloaded.Test.Sql
 
             var result = Generator.Object.Update(ClassMap.Object, predicate.Object, parameters);
 
-            Assert.Equal((string)"UPDATE TableName SET Column = @Name WHERE Predicate", (string)result);
+            Assert.Equal("UPDATE TableName SET Column = @Name WHERE Predicate", result);
 
             predicate.Verify();
             ClassMap.Verify();

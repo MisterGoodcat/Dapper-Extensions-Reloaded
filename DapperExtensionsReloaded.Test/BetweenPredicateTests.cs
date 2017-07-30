@@ -24,7 +24,7 @@ namespace DapperExtensionsReloaded.Test
             Assert.Equal(2, parameters.Count);
             Assert.Equal(12, parameters["@Name_0"]);
             Assert.Equal(20, parameters["@Name_1"]);
-            Assert.Equal((string)"(fooCol BETWEEN @Name_0 AND @Name_1)", (string)sql);
+            Assert.Equal("(fooCol BETWEEN @Name_0 AND @Name_1)", sql);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace DapperExtensionsReloaded.Test
             Assert.Equal(2, parameters.Count);
             Assert.Equal(12, parameters["@Name_0"]);
             Assert.Equal(20, parameters["@Name_1"]);
-            Assert.Equal((string)"(fooCol NOT BETWEEN @Name_0 AND @Name_1)", (string)sql);
+            Assert.Equal("(fooCol NOT BETWEEN @Name_0 AND @Name_1)", sql);
         }
 
         internal BetweenPredicate<T> Setup<T>(string propertyName, Operator op, object value1, object value2, bool not) where T : class

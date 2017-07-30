@@ -20,8 +20,8 @@ namespace DapperExtensionsReloaded
 
         public static Action<string, object> SqlLogger
         {
-            get { return s_configuration.SqlLogger; }
-            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect, value); }
+            get => s_configuration.SqlLogger;
+            set => Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, s_configuration.Dialect, value);
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace DapperExtensionsReloaded
         /// </summary>
         internal static Type DefaultMapper
         {
-            get { return s_configuration.DefaultMapper; }
-            set { Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect, s_configuration.SqlLogger); }
+            get => s_configuration.DefaultMapper;
+            set => Configure(value, s_configuration.MappingAssemblies, s_configuration.Dialect, s_configuration.SqlLogger);
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace DapperExtensionsReloaded
         /// </summary>
         internal static ISqlDialect SqlDialect
         {
-            get { return s_configuration.Dialect; }
-            set { Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value, s_configuration.SqlLogger); }
+            get => s_configuration.Dialect;
+            set => Configure(s_configuration.DefaultMapper, s_configuration.MappingAssemblies, value, s_configuration.SqlLogger);
         }
 
         /// <summary>

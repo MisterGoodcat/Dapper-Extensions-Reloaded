@@ -33,7 +33,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetTableName(ClassMap.Object)).Returns("TableName").Verifiable();
 
             var result = Generator.Object.Delete(ClassMap.Object, predicate.Object, parameters);
-            Assert.Equal((string)"DELETE FROM TableName WHERE PredicateWhere", (string)result);
+            Assert.Equal("DELETE FROM TableName WHERE PredicateWhere", result);
             ClassMap.Verify();
             predicate.Verify();
             Generator.Verify();

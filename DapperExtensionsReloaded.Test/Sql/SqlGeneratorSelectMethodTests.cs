@@ -27,7 +27,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.BuildSelectColumns(ClassMap.Object)).Returns("Columns").Verifiable();
 
             var result = Generator.Object.Select(ClassMap.Object, null, null, parameters);
-            Assert.Equal((string)"SELECT Columns FROM TableName", (string)result);
+            Assert.Equal("SELECT Columns FROM TableName", result);
             ClassMap.Verify();
             Generator.Verify();
         }
@@ -43,7 +43,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.BuildSelectColumns(ClassMap.Object)).Returns("Columns").Verifiable();
 
             var result = Generator.Object.Select(ClassMap.Object, predicate.Object, null, parameters);
-            Assert.Equal((string)"SELECT Columns FROM TableName WHERE PredicateWhere", (string)result);
+            Assert.Equal("SELECT Columns FROM TableName WHERE PredicateWhere", result);
             ClassMap.Verify();
             predicate.Verify();
             Generator.Verify();
@@ -67,7 +67,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetColumnName(ClassMap.Object, "SortProperty", false)).Returns("SortColumn").Verifiable();
 
             var result = Generator.Object.Select(ClassMap.Object, null, sort, parameters);
-            Assert.Equal((string)"SELECT Columns FROM TableName ORDER BY SortColumn ASC", (string)result);
+            Assert.Equal("SELECT Columns FROM TableName ORDER BY SortColumn ASC", result);
             ClassMap.Verify();
             sortField.Verify();
             Generator.Verify();
@@ -93,7 +93,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetColumnName(ClassMap.Object, "SortProperty", false)).Returns("SortColumn").Verifiable();
 
             var result = Generator.Object.Select(ClassMap.Object, predicate.Object, sort, parameters);
-            Assert.Equal((string)"SELECT Columns FROM TableName WHERE PredicateWhere ORDER BY SortColumn ASC", (string)result);
+            Assert.Equal("SELECT Columns FROM TableName WHERE PredicateWhere ORDER BY SortColumn ASC", result);
             ClassMap.Verify();
             sortField.Verify();
             predicate.Verify();

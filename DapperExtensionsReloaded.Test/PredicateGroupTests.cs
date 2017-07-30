@@ -25,7 +25,7 @@ namespace DapperExtensionsReloaded.Test
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(1=1)", (string)sql);
+            Assert.Equal("(1=1)", sql);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace DapperExtensionsReloaded.Test
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(subSql AND subSql)", (string)sql);
+            Assert.Equal("(subSql AND subSql)", sql);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace DapperExtensionsReloaded.Test
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(subSql OR subSql)", (string)sql);
+            Assert.Equal("(subSql OR subSql)", sql);
         }
 
         internal PredicateGroup Setup(GroupOperator op, IList<IPredicate> predicates)

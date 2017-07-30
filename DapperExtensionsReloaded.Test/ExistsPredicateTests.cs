@@ -30,7 +30,7 @@ namespace DapperExtensionsReloaded.Test
             Generator.Verify();
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(EXISTS (SELECT 1 FROM subTable WHERE subSql))", (string)sql);
+            Assert.Equal("(EXISTS (SELECT 1 FROM subTable WHERE subSql))", sql);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace DapperExtensionsReloaded.Test
             Generator.Verify();
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(NOT EXISTS (SELECT 1 FROM subTable WHERE subSql))", (string)sql);
+            Assert.Equal("(NOT EXISTS (SELECT 1 FROM subTable WHERE subSql))", sql);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace DapperExtensionsReloaded.Test
 
             Configuration.Verify();
 
-            Assert.True(ex.Message.StartsWith("Map was not found"));
+            Assert.StartsWith("Map was not found", ex.Message);
         }
 
         [Fact]

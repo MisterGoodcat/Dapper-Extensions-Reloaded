@@ -23,28 +23,28 @@ namespace DapperExtensionsReloaded.Test.Sql
         public void TableNameOnly_ReturnsProperlyQuoted()
         {
             var result = Dialect.GetTableName(null, "foo", null);
-            Assert.Equal((string)"\"foo\"", (string)result);
+            Assert.Equal("\"foo\"", result);
         }
 
         [Fact]
         public void SchemaAndTable_ReturnsProperlyQuoted()
         {
             var result = Dialect.GetTableName("bar", "foo", null);
-            Assert.Equal((string)"\"bar\".\"foo\"", (string)result);
+            Assert.Equal("\"bar\".\"foo\"", result);
         }
 
         [Fact]
         public void AllParams_ReturnsProperlyQuoted()
         {
             var result = Dialect.GetTableName("bar", "foo", "al");
-            Assert.Equal((string)"\"bar\".\"foo\" AS \"al\"", (string)result);
+            Assert.Equal("\"bar\".\"foo\" AS \"al\"", result);
         }
 
         [Fact]
         public void ContainsQuotes_DoesNotAddExtraQuotes()
         {
             var result = Dialect.GetTableName("\"bar\"", "\"foo\"", "\"al\"");
-            Assert.Equal((string)"\"bar\".\"foo\" AS \"al\"", (string)result);
+            Assert.Equal("\"bar\".\"foo\" AS \"al\"", result);
         }
     }
 }

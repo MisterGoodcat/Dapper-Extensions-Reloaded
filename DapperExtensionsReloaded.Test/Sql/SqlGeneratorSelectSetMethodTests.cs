@@ -53,7 +53,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.Setup(d => d.GetSetSql("SELECT Columns FROM TableName ORDER BY SortColumn ASC", 2, 10, parameters)).Returns("PagedSQL").Verifiable();
 
             var result = Generator.Object.SelectSet(ClassMap.Object, null, sort, 2, 10, parameters);
-            Assert.Equal((string)"PagedSQL", (string)result);
+            Assert.Equal("PagedSQL", result);
             ClassMap.Verify();
             sortField.Verify();
             Generator.Verify();
@@ -82,7 +82,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.Setup(d => d.GetSetSql("SELECT Columns FROM TableName WHERE PredicateWhere ORDER BY SortColumn ASC", 2, 10, parameters)).Returns("PagedSQL").Verifiable();
 
             var result = Generator.Object.SelectSet(ClassMap.Object, predicate.Object, sort, 2, 10, parameters);
-            Assert.Equal((string)"PagedSQL", (string)result);
+            Assert.Equal("PagedSQL", result);
             ClassMap.Verify();
             sortField.Verify();
             predicate.Verify();

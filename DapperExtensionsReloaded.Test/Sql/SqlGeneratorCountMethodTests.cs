@@ -23,7 +23,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.SetupGet(d => d.CloseQuote).Returns('^').Verifiable();
 
             var result = Generator.Object.Count(ClassMap.Object, null, new Dictionary<string, object>());
-            Assert.Equal((string)"SELECT COUNT(*) AS !Total^ FROM TableName", (string)result);
+            Assert.Equal("SELECT COUNT(*) AS !Total^ FROM TableName", result);
             Generator.Verify();
             Dialect.Verify();
         }
@@ -40,7 +40,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetTableName(ClassMap.Object)).Returns("TableName").Verifiable();
 
             var result = Generator.Object.Count(ClassMap.Object, predicate.Object, parameters);
-            Assert.Equal((string)"SELECT COUNT(*) AS !Total^ FROM TableName WHERE PredicateWhere", (string)result);
+            Assert.Equal("SELECT COUNT(*) AS !Total^ FROM TableName WHERE PredicateWhere", result);
             Generator.Verify();
             predicate.Verify();
             Dialect.Verify();

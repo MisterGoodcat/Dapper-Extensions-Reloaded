@@ -22,7 +22,7 @@ namespace DapperExtensionsReloaded.Test
             var sql = predicate.GetSql(parameters);
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(fooCol = fooCol2)", (string)sql);
+            Assert.Equal("(fooCol = fooCol2)", sql);
         }
 
         internal PropertyPredicate<T, T2> Setup<T, T2>(string propertyName, Operator op, string propertyName2, bool not) where T : class where T2 : class

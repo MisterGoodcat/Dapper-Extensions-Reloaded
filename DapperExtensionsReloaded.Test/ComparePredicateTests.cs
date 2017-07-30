@@ -9,18 +9,18 @@ namespace DapperExtensionsReloaded.Test
         [Fact]
         public void GetOperatorString_ReturnsOperatorStrings()
         {
-            Assert.Equal((string)"=", (string)Setup(Operator.Eq, false).GetOperatorString());
-            Assert.Equal((string)"<>", (string)Setup(Operator.Eq, true).GetOperatorString());
-            Assert.Equal((string)">", (string)Setup(Operator.Gt, false).GetOperatorString());
-            Assert.Equal((string)"<=", (string)Setup(Operator.Gt, true).GetOperatorString());
-            Assert.Equal((string)">=", (string)Setup(Operator.Ge, false).GetOperatorString());
-            Assert.Equal((string)"<", (string)Setup(Operator.Ge, true).GetOperatorString());
-            Assert.Equal((string)"<", (string)Setup(Operator.Lt, false).GetOperatorString());
-            Assert.Equal((string)">=", (string)Setup(Operator.Lt, true).GetOperatorString());
-            Assert.Equal((string)"<=", (string)Setup(Operator.Le, false).GetOperatorString());
-            Assert.Equal((string)">", (string)Setup(Operator.Le, true).GetOperatorString());
-            Assert.Equal((string)"LIKE", (string)Setup(Operator.Like, false).GetOperatorString());
-            Assert.Equal((string)"NOT LIKE", (string)Setup(Operator.Like, true).GetOperatorString());
+            Assert.Equal("=", Setup(Operator.Eq, false).GetOperatorString());
+            Assert.Equal("<>", Setup(Operator.Eq, true).GetOperatorString());
+            Assert.Equal(">", Setup(Operator.Gt, false).GetOperatorString());
+            Assert.Equal("<=", Setup(Operator.Gt, true).GetOperatorString());
+            Assert.Equal(">=", Setup(Operator.Ge, false).GetOperatorString());
+            Assert.Equal("<", Setup(Operator.Ge, true).GetOperatorString());
+            Assert.Equal("<", Setup(Operator.Lt, false).GetOperatorString());
+            Assert.Equal(">=", Setup(Operator.Lt, true).GetOperatorString());
+            Assert.Equal("<=", Setup(Operator.Le, false).GetOperatorString());
+            Assert.Equal(">", Setup(Operator.Le, true).GetOperatorString());
+            Assert.Equal("LIKE", Setup(Operator.Like, false).GetOperatorString());
+            Assert.Equal("NOT LIKE", Setup(Operator.Like, true).GetOperatorString());
         }
 
         internal ComparePredicate Setup(Operator op, bool not)

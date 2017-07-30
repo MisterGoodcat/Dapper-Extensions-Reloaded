@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Dapper;
-using DapperExtensions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -17,7 +16,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 
         public SqlServerBaseFixture()
         {
-            Connection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=dapperTest;Integrated security=True;");
+            Connection = new SqlConnection("Data Source=.\\DEV2016;Initial Catalog=dapperTest;Integrated security=True;");
             Connection.Open();
 
             var files = new List<string>

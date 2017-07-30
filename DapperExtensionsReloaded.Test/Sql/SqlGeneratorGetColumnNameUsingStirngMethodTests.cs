@@ -13,7 +13,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         {
             ClassMap.SetupGet(c => c.Properties).Returns(new List<IPropertyMap>()).Verifiable();
             var ex = Assert.Throws<ArgumentException>(() => Generator.Object.GetColumnName(ClassMap.Object, "property", true));
-            Assert.True(ex.Message.Contains("Could not find 'property'"));
+            Assert.Contains("Could not find 'property'", ex.Message);
             ClassMap.Verify();
         }
 
@@ -25,7 +25,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             ClassMap.SetupGet(c => c.Properties).Returns(new List<IPropertyMap> { property.Object }).Verifiable();
             Generator.Setup(g => g.GetColumnName(ClassMap.Object, property.Object, true)).Returns("ColumnName").Verifiable();
             var result = Generator.Object.GetColumnName(ClassMap.Object, "property", true);
-            Assert.Equal((string)"ColumnName", (string)result);
+            Assert.Equal("ColumnName", result);
             ClassMap.Verify();
             property.Verify();
             Generator.Verify();

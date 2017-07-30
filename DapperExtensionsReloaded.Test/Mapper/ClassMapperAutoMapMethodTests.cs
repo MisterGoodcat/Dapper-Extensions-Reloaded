@@ -16,12 +16,12 @@ namespace DapperExtensionsReloaded.Test.Mapper
             var mapper = GetMapper<FooWithIntId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMap");
             Assert.Equal(3, mapper.Properties.Count);
-            Assert.Equal((string)"FooId", (string)mapper.Properties[0].ColumnName);
-            Assert.Equal((string)"FooId", (string)mapper.Properties[0].Name);
-            Assert.Equal((string)"Value", (string)mapper.Properties[1].ColumnName);
-            Assert.Equal((string)"Value", (string)mapper.Properties[1].Name);
-            Assert.Equal((string)"BarId", (string)mapper.Properties[2].ColumnName);
-            Assert.Equal((string)"BarId", (string)mapper.Properties[2].Name);
+            Assert.Equal("FooId", mapper.Properties[0].ColumnName);
+            Assert.Equal("FooId", mapper.Properties[0].Name);
+            Assert.Equal("Value", mapper.Properties[1].ColumnName);
+            Assert.Equal("Value", mapper.Properties[1].Name);
+            Assert.Equal("BarId", mapper.Properties[2].ColumnName);
+            Assert.Equal("BarId", mapper.Properties[2].Name);
         }
 
         [Fact]

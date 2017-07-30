@@ -13,7 +13,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             ClassMap.SetupGet(c => c.TableName).Returns("TableName").Verifiable();
             Dialect.Setup(d => d.GetTableName("SchemaName", "TableName", null)).Returns("FullTableName").Verifiable();
             var result = Generator.Object.GetTableName(ClassMap.Object);
-            Assert.Equal((string)"FullTableName", (string)result);
+            Assert.Equal("FullTableName", result);
             Dialect.Verify();
             ClassMap.Verify();
         }
@@ -28,7 +28,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetTableName(ClassMap.Object)).Returns("TableName").Verifiable();
             Dialect.Setup(d => d.GetColumnName("TableName", "Column", null)).Returns("FullColumnName").Verifiable();
             var result = Generator.Object.GetColumnName(ClassMap.Object, property.Object, false);
-            Assert.Equal((string)"FullColumnName", (string)result);
+            Assert.Equal("FullColumnName", result);
             property.Verify();
             Generator.Verify();
         }
@@ -43,7 +43,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetTableName(ClassMap.Object)).Returns("TableName").Verifiable();
             Dialect.Setup(d => d.GetColumnName("TableName", "Column", null)).Returns("FullColumnName").Verifiable();
             var result = Generator.Object.GetColumnName(ClassMap.Object, property.Object, true);
-            Assert.Equal((string)"FullColumnName", (string)result);
+            Assert.Equal("FullColumnName", result);
             property.Verify();
             Generator.Verify();
         }
@@ -58,7 +58,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.GetTableName(ClassMap.Object)).Returns("TableName").Verifiable();
             Dialect.Setup(d => d.GetColumnName("TableName", "Column", "Name")).Returns("FullColumnName").Verifiable();
             var result = Generator.Object.GetColumnName(ClassMap.Object, property.Object, true);
-            Assert.Equal((string)"FullColumnName", (string)result);
+            Assert.Equal("FullColumnName", result);
             property.Verify();
             Generator.Verify();
         }

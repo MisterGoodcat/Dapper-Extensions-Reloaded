@@ -7,19 +7,19 @@ namespace DapperExtensionsReloaded.Test.Sql
         [Fact]
         public void WithQuotes_ReturnsTrue()
         {
-            Assert.True((bool)Dialect.IsQuoted("\"foo\""));
+            Assert.True(Dialect.IsQuoted("\"foo\""));
         }
 
         [Fact]
         public void WithOnlyStartQuotes_ReturnsFalse()
         {
-            Assert.False((bool)Dialect.IsQuoted("\"foo"));
+            Assert.False(Dialect.IsQuoted("\"foo"));
         }
 
         [Fact]
         public void WithOnlyCloseQuotes_ReturnsFalse()
         {
-            Assert.False((bool)Dialect.IsQuoted("foo\""));
+            Assert.False(Dialect.IsQuoted("foo\""));
         }
     }
 }

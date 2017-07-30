@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DapperExtensions;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
 

@@ -28,7 +28,7 @@ namespace DapperExtensionsReloaded.Test.Sql
 
             var ex = Assert.Throws<ArgumentException>(() => Generator.Object.Insert(ClassMap.Object));
 
-            Assert.True(ex.Message.Contains("columns were mapped"));
+            Assert.Contains("columns were mapped", ex.Message);
             ClassMap.Verify();
             property1.Verify();
             property2.Verify();
@@ -58,7 +58,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.SetupGet(d => d.SupportsMultipleStatements).Returns(false).Verifiable();
 
             var result = Generator.Object.Insert(ClassMap.Object);
-            Assert.Equal((string)"INSERT INTO TableName (Column) VALUES (@Name)", (string)result);
+            Assert.Equal("INSERT INTO TableName (Column) VALUES (@Name)", result);
 
             ClassMap.Verify();
             property1.Verify();
@@ -93,7 +93,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.SetupGet(d => d.SupportsMultipleStatements).Returns(false).Verifiable();
 
             var result = Generator.Object.Insert(ClassMap.Object);
-            Assert.Equal((string)"INSERT INTO TableName (Column) VALUES (@Name)", (string)result);
+            Assert.Equal("INSERT INTO TableName (Column) VALUES (@Name)", result);
 
             ClassMap.Verify();
             property1.Verify();
@@ -128,7 +128,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             Dialect.SetupGet(d => d.SupportsMultipleStatements).Returns(false).Verifiable();
 
             var result = Generator.Object.Insert(ClassMap.Object);
-            Assert.Equal((string)"INSERT INTO TableName (Column) VALUES (@Name)", (string)result);
+            Assert.Equal("INSERT INTO TableName (Column) VALUES (@Name)", result);
 
             ClassMap.Verify();
             property1.Verify();

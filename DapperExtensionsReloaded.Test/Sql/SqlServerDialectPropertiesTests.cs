@@ -10,9 +10,9 @@ namespace DapperExtensionsReloaded.Test.Sql
         {
             Assert.Equal('[', Dialect.OpenQuote);
             Assert.Equal(']', Dialect.CloseQuote);
-            Assert.Equal(";" + Environment.NewLine, (string)Dialect.BatchSeperator);
+            Assert.Equal(";" + Environment.NewLine, Dialect.BatchSeperator);
             Assert.Equal('@', Dialect.ParameterPrefix);
-            Assert.True((bool)Dialect.SupportsMultipleStatements);
+            Assert.True(Dialect.SupportsMultipleStatements);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DapperExtensionsReloaded.Test
             var sql = predicate.GetSql(parameters);
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(fooCol IS NULL)", (string)sql);
+            Assert.Equal("(fooCol IS NULL)", sql);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace DapperExtensionsReloaded.Test
             var sql = predicate.GetSql(parameters);
 
             Assert.Equal(0, parameters.Count);
-            Assert.Equal((string)"(fooCol IS NOT NULL)", (string)sql);
+            Assert.Equal("(fooCol IS NOT NULL)", sql);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace DapperExtensionsReloaded.Test
 
             var ex = Assert.Throws<ArgumentException>(() => predicate.GetSql(parameters));
 
-            Assert.True(ex.Message.StartsWith("Operator must be set to Eq for Enumerable types"));
+            Assert.StartsWith("Operator must be set to Eq for Enumerable types", ex.Message);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace DapperExtensionsReloaded.Test
             Assert.Equal(2, parameters.Count);
             Assert.Equal("foo", parameters["@Name_0"]);
             Assert.Equal("bar", parameters["@Name_1"]);
-            Assert.Equal((string)"(fooCol IN (@Name_0, @Name_1))", (string)sql);
+            Assert.Equal("(fooCol IN (@Name_0, @Name_1))", sql);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace DapperExtensionsReloaded.Test
             Assert.Equal(2, parameters.Count);
             Assert.Equal("foo", parameters["@Name_0"]);
             Assert.Equal("bar", parameters["@Name_1"]);
-            Assert.Equal((string)"(fooCol NOT IN (@Name_0, @Name_1))", (string)sql);
+            Assert.Equal("(fooCol NOT IN (@Name_0, @Name_1))", sql);
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace DapperExtensionsReloaded.Test
 
             Assert.Equal(1, parameters.Count);
             Assert.Equal(12, parameters["@Name_0"]);
-            Assert.Equal((string)"(fooCol <> @Name_0)", (string)sql);
+            Assert.Equal("(fooCol <> @Name_0)", sql);
         }
 
         internal FieldPredicate<T> Setup<T>(string propertyName, Operator op, object value, bool not) where T : class

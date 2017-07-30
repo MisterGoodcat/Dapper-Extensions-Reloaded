@@ -21,7 +21,7 @@ namespace DapperExtensionsReloaded.Test
 
             Configuration.Verify();
 
-            Assert.True(ex.Message.StartsWith("No map found for"));
+            Assert.StartsWith("No map found for", ex.Message);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace DapperExtensionsReloaded.Test
             Configuration.Verify();
             classMapper.Verify();
 
-            Assert.True(ex.Message.StartsWith("Property Name was not found for type"));
+            Assert.StartsWith("Property Name was not found for type", ex.Message);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace DapperExtensionsReloaded.Test
             propertyMap.Verify();
             Generator.Verify();
 
-            Assert.True(result.StartsWith("foo"));
+            Assert.StartsWith("foo", result);
         }
     }
 }

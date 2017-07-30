@@ -9,7 +9,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         {
             Dialect.SetupGet(d => d.SupportsMultipleStatements).Returns(true).Verifiable();
             var result = Generator.Object.SupportsMultipleStatements();
-            Assert.True((bool)result);
+            Assert.True(result);
             Dialect.Verify();
         }
     }
