@@ -12,28 +12,24 @@ namespace DapperExtensionsReloaded.Internal
     {
         private readonly ConcurrentDictionary<Type, IClassMapper> _classMaps = new ConcurrentDictionary<Type, IClassMapper>();
 
-        public DapperExtensionsConfiguration() : this(typeof(ClassMapper<>), new List<Assembly>(), new SqlServerDialect(), null)
+        public DapperExtensionsConfiguration() : this(new SqlServerDialect(), null)
         {
         }
 
-        public DapperExtensionsConfiguration(Type defaultMapper, IList<Assembly> mappingAssemblies, ISqlDialect sqlDialect, Action<string, object> sqlLogger)
+        public DapperExtensionsConfiguration(ISqlDialect sqlDialect, Action<string, object> sqlLogger)
         {
-            DefaultMapper = defaultMapper;
-            MappingAssemblies = mappingAssemblies ?? new List<Assembly>();
             Dialect = sqlDialect;
             SqlLogger = sqlLogger;
         }
-
-        public Type DefaultMapper { get; }
-        public IList<Assembly> MappingAssemblies { get; }
+        
         public ISqlDialect Dialect { get; }
         public Action<string, object> SqlLogger { get; }
 
         public IClassMapper GetMap(Type entityType)
         {
-            if (!_classMaps.TryGetValue(entityType, out IClassMapper map))
+            if (!_classMaps.TryGetValue(entityType, out var map))
             {
-                var mapType = GetMapType(entityType) ?? DefaultMapper.MakeGenericType(entityType);
+                var mapType = typeof(ClassMapper<>).MakeGenericType(entityType);
                 map = Activator.CreateInstance(mapType) as IClassMapper;
                 _classMaps[entityType] = map;
             }
@@ -65,69 +61,6 @@ namespace DapperExtensionsReloaded.Internal
             Array.Copy(bytes1, bytes1.Length - 2, b, b.Length - 6, 2);
             Array.Copy(bytes2, bytes2.Length - 4, b, b.Length - 4, 4);
             return new Guid(b);
-        }
-
-        protected virtual Type GetMapType(Type entityType)
-        {
-            var entityTypeInfo = entityType.GetTypeInfo();
-
-            Func<Assembly, Type> selectMatchingType = assembly =>
-            {
-                var assemblyTypes = assembly.GetTypes();
-                var matchingType = assemblyTypes
-                    .SingleOrDefault(potentiallyMatchingType => potentiallyMatchingType.GetTypeInfo().ImplementedInterfaces.Any(x =>
-                        x.GetTypeInfo().IsGenericType &&
-                        x.GetTypeInfo().GetGenericTypeDefinition() == typeof(IClassMapper<>) &&
-                        x.GetTypeInfo().GenericTypeArguments.First() == entityType));
-                return matchingType;
-            };
-            
-            var entityTypeAssembly = entityTypeInfo.Assembly;
-            var result = selectMatchingType(entityTypeAssembly);
-            if (result != null)
-            {
-                return result;
-            }
-
-            foreach (var mappingAssembly in MappingAssemblies)
-            {
-                result = selectMatchingType(mappingAssembly);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
-
-
-            //Func<Assembly, Type> getType = a =>
-            //{
-            //    var types = a.GetTypes();
-            //    return (from type in types
-            //        let interfaceType = type.GetInterface(typeof(IClassMapper<>).FullName)
-            //        where
-            //        interfaceType != null &&
-            //        interfaceType.GetGenericArguments()[0] == entityType
-            //        select type).SingleOrDefault();
-            //};
-
-            //var result = getType(entityType.Assembly);
-            //if (result != null)
-            //{
-            //    return result;
-            //}
-
-            //foreach (var mappingAssembly in MappingAssemblies)
-            //{
-            //    result = getType(mappingAssembly);
-            //    if (result != null)
-            //    {
-            //        return result;
-            //    }
-            //}
-
-            //return getType(entityType.Assembly);
         }
     }
 }
