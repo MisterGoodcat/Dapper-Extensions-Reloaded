@@ -7,7 +7,7 @@ namespace DapperExtensionsReloaded.Mapper.Internal
     {
         string SchemaName { get; }
         string TableName { get; }
-        IList<IPropertyMap> Properties { get; }
+        IReadOnlyCollection<IPropertyMap> Properties { get; }
         Type EntityType { get; }
     }
 

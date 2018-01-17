@@ -66,7 +66,7 @@ namespace DapperExtensionsReloaded.Test
 
             Configuration.Verify();
 
-            Assert.StartsWith("Map was not found", ex.Message);
+            Assert.StartsWith("CreatePropertyMap was not found", ex.Message);
         }
 
         [Fact]

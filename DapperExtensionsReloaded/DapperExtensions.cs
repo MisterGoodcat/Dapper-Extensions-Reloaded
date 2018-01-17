@@ -114,7 +114,7 @@ namespace DapperExtensionsReloaded
 
         static DapperExtensions()
         {
-            Configure(typeof(AttributeClassMapper<>), new List<Assembly>(), new SqlServerDialect(), null);
+            Configure(typeof(ClassMapper<>), new List<Assembly>(), new SqlServerDialect(), null);
         }
 
         /// <summary>

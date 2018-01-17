@@ -1,73 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Numerics;
 using System.Reflection;
-using DapperExtensionsReloaded.Internal;
 
 namespace DapperExtensionsReloaded.Mapper.Internal
 {
     /// <summary>
-    /// Maps an entity to a table through a collection of property maps.
+    /// This class mapper looks for <see cref="DatabaseEntityAttribute"/> to determine the table and schema names as well as
+    /// <see cref="DatabaseColumnAttribute"/> to determine column names, ignored and read-only properties and identity columns.
+    /// For columns or other data that has not been mapped using attributes, a generic mapping is used.
     /// </summary>
-    internal class ClassMapper<T> : IClassMapper<T> where T : class
+    internal sealed class ClassMapper<T> : IClassMapper<T> where T : class
     {
+        private readonly List<IPropertyMap> _properties = new List<IPropertyMap>();
+
         /// <summary>
         /// Gets or sets the schema to use when referring to the corresponding table name in the database.
         /// </summary>
-        public string SchemaName { get; protected set; }
+        public string SchemaName { get; private set; }
 
         /// <summary>
         /// Gets or sets the table to use in the database.
         /// </summary>
-        public string TableName { get; protected set; }
+        public string TableName { get; private set; }
 
         /// <summary>
         /// A collection of properties that will map to columns in the database table.
         /// </summary>
-        public IList<IPropertyMap> Properties { get; }
+        public IReadOnlyCollection<IPropertyMap> Properties => _properties;
 
         public Type EntityType => typeof(T);
 
         public ClassMapper()
         {
-            PropertyTypeKeyTypeMapping = new Dictionary<Type, KeyType>
+            Map();
+        }
+
+        private void Map()
+        {
+            var entityType = typeof(T);
+
+            MapEntityInfo(entityType);
+            MapPropertiesByAttribute(entityType);
+            AutoMapRemainingProperties();
+        }
+
+        private void MapEntityInfo(Type entityType)
+        {
+            var entityAttribute = entityType.GetTypeInfo().GetCustomAttribute<DatabaseEntityAttribute>();
+            if (entityAttribute != null)
             {
-                { typeof(byte), KeyType.Identity }, { typeof(byte?), KeyType.Identity },
-                { typeof(sbyte), KeyType.Identity }, { typeof(sbyte?), KeyType.Identity },
-                { typeof(short), KeyType.Identity }, { typeof(short?), KeyType.Identity },
-                { typeof(ushort), KeyType.Identity }, { typeof(ushort?), KeyType.Identity },
-                { typeof(int), KeyType.Identity }, { typeof(int?), KeyType.Identity },
-                { typeof(uint), KeyType.Identity }, { typeof(uint?), KeyType.Identity },
-                { typeof(long), KeyType.Identity }, { typeof(long?), KeyType.Identity },
-                { typeof(ulong), KeyType.Identity }, { typeof(ulong?), KeyType.Identity },
-                { typeof(BigInteger), KeyType.Identity }, { typeof(BigInteger?), KeyType.Identity },
-                { typeof(Guid), KeyType.Guid }, { typeof(Guid?), KeyType.Guid }
-            };
-
-            Properties = new List<IPropertyMap>();
-            Table(typeof(T).Name);
+                TableName = entityAttribute.TableName;
+                SchemaName = entityAttribute.SchemaName;
+            }
+            else
+            {
+                TableName = entityType.Name;
+            }
         }
 
-        protected Dictionary<Type, KeyType> PropertyTypeKeyTypeMapping { get; }
-
-        public virtual void Schema(string schemaName)
+        private void MapPropertiesByAttribute(Type entityType)
         {
-            SchemaName = schemaName;
-        }
+            var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
+            foreach (var property in properties)
+            {
+                var attribute = property.GetCustomAttributes<DatabaseColumnAttribute>(false).FirstOrDefault();
+                if (attribute != null)
+                {
+                    var propertyMap = CreatePropertyMap(property);
 
-        public virtual void Table(string tableName)
-        {
-            TableName = tableName;
-        }
+                    if (!string.IsNullOrEmpty(attribute.ColumnName))
+                    {
+                        propertyMap.Column(attribute.ColumnName);
+                    }
 
-        protected virtual void AutoMap()
-        {
-            AutoMap(null);
-        }
+                    if (attribute.IsIdentity)
+                    {
+                        propertyMap.Key(KeyType.Identity);
+                    }
+                    else
+                    {
+                        propertyMap.Key(KeyType.NotAKey);
+                    }
 
-        protected virtual void AutoMap(Func<Type, PropertyInfo, bool> canMap)
+                    if (attribute.IsIgnored)
+                    {
+                        propertyMap.Ignore();
+                    }
+
+                    if (attribute.IsReadOnly)
+                    {
+                        propertyMap.ReadOnly();
+                    }
+                }
+            }
+        }
+        
+        private void AutoMapRemainingProperties()
         {
             var type = typeof(T);
             var hasDefinedKey = Properties.Any(p => p.KeyType != KeyType.NotAKey);
@@ -79,12 +108,7 @@ namespace DapperExtensionsReloaded.Mapper.Internal
                     continue;
                 }
 
-                if ((canMap != null && !canMap(type, propertyInfo)))
-                {
-                    continue;
-                }
-
-                var map = Map(propertyInfo);
+                var map = CreatePropertyMap(propertyInfo);
                 if (!hasDefinedKey)
                 {
                     if (string.Equals(map.PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase))
@@ -99,34 +123,28 @@ namespace DapperExtensionsReloaded.Mapper.Internal
                 }
             }
 
-            keyMap?.Key(PropertyTypeKeyTypeMapping.ContainsKey(keyMap.PropertyInfo.PropertyType)
-                            ? PropertyTypeKeyTypeMapping[keyMap.PropertyInfo.PropertyType]
-                            : KeyType.Assigned);
-        }
+            if (keyMap != null)
+            {
+                if (!PropertyTypeToKeyTypeMapping.Map.TryGetValue(keyMap.PropertyInfo.PropertyType, out var keyType))
+                {
+                    keyType = KeyType.Assigned;
+                }
 
-        /// <summary>
-        /// Fluently, maps an entity property to a column
-        /// </summary>
-        protected PropertyMap Map(Expression<Func<T, object>> expression)
-        {
-            var propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
-            return Map(propertyInfo);
+                keyMap.Key(keyType);
+            }
         }
-
-        /// <summary>
-        /// Fluently, maps an entity property to a column
-        /// </summary>
-        protected PropertyMap Map(PropertyInfo propertyInfo)
+        
+        private PropertyMap CreatePropertyMap(PropertyInfo propertyInfo)
         {
             var result = new PropertyMap(propertyInfo);
             GuardForDuplicatePropertyMap(result);
-            Properties.Add(result);
+            _properties.Add(result);
             return result;
         }
 
         private void GuardForDuplicatePropertyMap(PropertyMap result)
         {
-            if (Properties.Any(p => p.Name.Equals(result.Name)))
+            if (_properties.Any(p => p.Name.Equals(result.Name)))
             {
                 throw new ArgumentException($"Duplicate mapping for property {result.Name} detected.");
             }

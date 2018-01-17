@@ -30,7 +30,7 @@ namespace DapperExtensionsReloaded.Predicates.Internal
             var map = configuration.GetMap(type);
             if (map == null)
             {
-                throw new NullReferenceException($"Map was not found for {type}");
+                throw new NullReferenceException($"CreatePropertyMap was not found for {type}");
             }
 
             return map;

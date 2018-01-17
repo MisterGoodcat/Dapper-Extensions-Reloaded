@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DapperExtensionsReloaded.Test.Mapper
 {
-    public class AttributeClassMapperTests
+    public class ClassMapperAttributeTests
     {
         [Fact]
         public void Constructor_ReturnsProperName()
@@ -61,10 +61,10 @@ namespace DapperExtensionsReloaded.Test.Mapper
             Assert.True(map.ColumnName == "Name");
         }
         
-        private static AttributeClassMapper<T> GetMapper<T>() where T : class
+        private static ClassMapper<T> GetMapper<T>() where T : class
 
         {
-            return new AttributeClassMapper<T>();
+            return new ClassMapper<T>();
         }
 
         private class Foo
