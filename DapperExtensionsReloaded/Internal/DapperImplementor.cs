@@ -13,7 +13,7 @@ using DapperExtensionsReloaded.Predicates.Internal;
 
 namespace DapperExtensionsReloaded.Internal
 {
-    internal class DapperImplementor : IDapperImplementor
+    internal sealed class DapperImplementor : IDapperImplementor
     {
         public DapperImplementor(ISqlGenerator sqlGenerator)
         {
@@ -66,13 +66,13 @@ namespace DapperExtensionsReloaded.Internal
                 if (SqlGenerator.SupportsMultipleStatements())
                 {
                     sql += SqlGenerator.Configuration.Dialect.BatchSeperator + SqlGenerator.IdentitySql(classMap);
-                    result = Query<long>(connection, sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = await QueryAsync<long>(connection, sql, entity, transaction, commandTimeout, CommandType.Text);
                 }
                 else
                 {
                     await ExecuteAsync(connection, sql, entity, transaction, commandTimeout, CommandType.Text);
                     sql = SqlGenerator.IdentitySql(classMap);
-                    result = Query<long>(connection, sql, entity, transaction, false, commandTimeout, CommandType.Text);
+                    result = await QueryAsync<long>(connection, sql, entity, transaction, commandTimeout, CommandType.Text);
                 }
 
                 var identityValue = result.First();
@@ -193,7 +193,7 @@ namespace DapperExtensionsReloaded.Internal
 
         #region Helpers
         
-        protected async Task<IEnumerable<T>> GetListAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, IDbTransaction transaction, int? commandTimeout) where T : class
+        private async Task<IEnumerable<T>> GetListAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var parameters = new Dictionary<string, object>();
             var sql = SqlGenerator.Select(classMap, predicate, sort, parameters);
@@ -206,7 +206,7 @@ namespace DapperExtensionsReloaded.Internal
             return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
         }
 
-        protected async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction, int? commandTimeout) where T : class
+        private async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var parameters = new Dictionary<string, object>();
             var sql = SqlGenerator.SelectPaged(classMap, predicate, sort, page, resultsPerPage, parameters);
@@ -219,7 +219,7 @@ namespace DapperExtensionsReloaded.Internal
             return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
         }
         
-        protected async Task<IEnumerable<T>> GetSetAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int firstResult, int maxResults, IDbTransaction transaction, int? commandTimeout) where T : class
+        private async Task<IEnumerable<T>> GetSetAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int firstResult, int maxResults, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var parameters = new Dictionary<string, object>();
             var sql = SqlGenerator.SelectSet(classMap, predicate, sort, firstResult, maxResults, parameters);
@@ -236,7 +236,7 @@ namespace DapperExtensionsReloaded.Internal
 
         #endregion
         
-        protected async Task<bool> DeleteAsync(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IDbTransaction transaction, int? commandTimeout)
+        private async Task<bool> DeleteAsync(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IDbTransaction transaction, int? commandTimeout)
         {
             var parameters = new Dictionary<string, object>();
             var sql = SqlGenerator.Delete(classMap, predicate, parameters);
@@ -249,7 +249,7 @@ namespace DapperExtensionsReloaded.Internal
             return await ExecuteAsync(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
         }
         
-        protected IPredicate GetIdPredicate(IClassMapper classMap, object id)
+        private IPredicate GetIdPredicate(IClassMapper classMap, object id)
         {
             var isSimpleType = ReflectionHelper.IsSimpleType(id.GetType());
             var keys = classMap.Properties.Where(p => p.KeyType != KeyType.NotAKey);
@@ -287,7 +287,7 @@ namespace DapperExtensionsReloaded.Internal
                 };
         }
 
-        protected IPredicate GetKeyPredicate<T>(IClassMapper classMap, T entity) where T : class
+        private IPredicate GetKeyPredicate<T>(IClassMapper classMap, T entity) where T : class
         {
             var whereFields = classMap.Properties.Where(p => p.KeyType != KeyType.NotAKey).ToList();
             if (!whereFields.Any())
@@ -313,7 +313,7 @@ namespace DapperExtensionsReloaded.Internal
                 };
         }
         
-        protected async Task<IMultipleResultReader> GetMultipleByBatchAsync(IDbConnection connection, GetMultiplePredicate predicate, IDbTransaction transaction, int? commandTimeout)
+        private async Task<IMultipleResultReader> GetMultipleByBatchAsync(IDbConnection connection, GetMultiplePredicate predicate, IDbTransaction transaction, int? commandTimeout)
         {
             var parameters = new Dictionary<string, object>();
             var sql = new StringBuilder();
@@ -333,7 +333,7 @@ namespace DapperExtensionsReloaded.Internal
             return new GridReaderResultReader(grid);
         }
 
-        protected async Task<IMultipleResultReader> GetMultipleBySequenceAsync(IDbConnection connection, GetMultiplePredicate predicate, IDbTransaction transaction, int? commandTimeout)
+        private async Task<IMultipleResultReader> GetMultipleBySequenceAsync(IDbConnection connection, GetMultiplePredicate predicate, IDbTransaction transaction, int? commandTimeout)
         {
             IList<SqlMapper.GridReader> items = new List<SqlMapper.GridReader>();
             foreach (var item in predicate.Items)
@@ -353,17 +353,7 @@ namespace DapperExtensionsReloaded.Internal
 
             return new SequenceReaderResultReader(items);
         }
-
-        private IEnumerable<dynamic> Query(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
-        {
-            return connection.Query(sql, param, transaction, buffered, commandTimeout, commandType);
-        }
-
-        private IEnumerable<T> Query<T>(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
-        {
-            return connection.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType);
-        }
-
+        
         private Task<IEnumerable<dynamic>> QueryAsync(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
             return connection.QueryAsync(sql, param, transaction, commandTimeout, commandType);
