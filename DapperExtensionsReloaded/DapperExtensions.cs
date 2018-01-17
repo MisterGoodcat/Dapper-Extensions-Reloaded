@@ -173,6 +173,14 @@ namespace DapperExtensionsReloaded
         }
 
         /// <summary>
+        /// Executes a query for the specified predicate, returning the data typed as per T.
+        /// </summary>
+        public static async Task<T> GetAsync<T>(this IDbConnection connection, IPredicate predicate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return await Instance.GetAsync<T>(connection, predicate, transaction, commandTimeout);
+        }
+
+        /// <summary>
         /// Executes a select query using the specified predicate, returning an IEnumerable data typed as per T.
         /// </summary>
         public static async Task<IEnumerable<T>> GetListAsync<T>(this IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class

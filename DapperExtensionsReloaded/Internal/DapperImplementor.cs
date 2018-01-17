@@ -151,6 +151,12 @@ namespace DapperExtensionsReloaded.Internal
             var predicate = GetIdPredicate(classMap, id);
             return (await GetListAsync<T>(connection, classMap, predicate, null, transaction, commandTimeout)).SingleOrDefault();
         }
+
+        public async Task<T> GetAsync<T>(IDbConnection connection, IPredicate predicate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            var classMap = SqlGenerator.Configuration.GetMap<T>();
+            return (await GetListAsync<T>(connection, classMap, predicate, null, transaction, commandTimeout)).SingleOrDefault();
+        }
         
         public async Task<IEnumerable<T>> GetListAsync<T>(IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
