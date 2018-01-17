@@ -48,7 +48,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_DeletesRows()
+        public async Task UsingEqualsPredicate_DeletesRows()
         {
             var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
             var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
@@ -60,7 +60,8 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             var list = await DapperExtensions.GetListAsync<Person>(Connection);
             Assert.Equal(3, list.Count());
 
-            var result = await DapperExtensions.DeleteAsync<Person>(Connection, new { LastName = "Bar" });
+            var predicate = Predicates.Predicates.Field<Person>(x => x.LastName, Operator.Eq, "Bar");
+            var result = await DapperExtensions.DeleteAsync<Person>(Connection, predicate);
             Assert.True(result);
 
             list = await DapperExtensions.GetListAsync<Person>(Connection);

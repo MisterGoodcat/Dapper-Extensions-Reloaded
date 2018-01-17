@@ -47,7 +47,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_DeletesRows()
+        public async Task UsingEqualsPredicate_DeletesRows()
         {
             var p1 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
             var p2 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
@@ -59,7 +59,8 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(3, list.Count());
 
-            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, new { HowItsCalled = "Foo2" });
+            var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.HowItsCalled, Operator.Eq, "Foo2");
+            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, predicate);
             Assert.True(result);
 
             list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);

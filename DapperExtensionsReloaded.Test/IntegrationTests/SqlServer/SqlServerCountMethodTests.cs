@@ -34,14 +34,14 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_Returns_Count()
+        public async Task UsingEqualsPredicate_Returns_Count()
         {
             await DapperExtensions.InsertAsync(Connection, new Person { Active = true, FirstName = "a", LastName = "a1", DateCreated = DateTime.UtcNow.AddDays(-10) });
             await DapperExtensions.InsertAsync(Connection, new Person { Active = false, FirstName = "b", LastName = "b1", DateCreated = DateTime.UtcNow.AddDays(-10) });
             await DapperExtensions.InsertAsync(Connection, new Person { Active = true, FirstName = "c", LastName = "c1", DateCreated = DateTime.UtcNow.AddDays(-3) });
             await DapperExtensions.InsertAsync(Connection, new Person { Active = false, FirstName = "d", LastName = "d1", DateCreated = DateTime.UtcNow.AddDays(-1) });
 
-            var predicate = new { FirstName = new[] { "b", "d" } };
+            var predicate = Predicates.Predicates.Field<Person>(x => x.FirstName, Operator.Eq, new[] { "b", "d" });
             var count = await DapperExtensions.CountAsync<Person>(Connection, predicate);
             Assert.Equal(2, count);
         }

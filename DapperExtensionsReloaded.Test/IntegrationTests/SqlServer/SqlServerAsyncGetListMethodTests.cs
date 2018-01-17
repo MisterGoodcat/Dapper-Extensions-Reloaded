@@ -36,7 +36,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_ReturnsMatching()
+        public async Task UsingEqualsPredicate_ReturnsMatching()
         {
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "a", DateCreated = DateTime.UtcNow });
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "b", DateCreated = DateTime.UtcNow });
@@ -44,7 +44,10 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow });
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = null, DateCreated = DateTime.UtcNow });
 
-            var predicate = new { Active = true, HowItsCalled = (string)null };
+            var predicate = Predicates.Predicates.Group(GroupOperator.And,
+                                        Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.Active, Operator.Eq, true),
+                                        Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.HowItsCalled, Operator.Eq, null));
+            
             var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection, predicate, null).GetAwaiter().GetResult();
             Assert.Single(list);
             Assert.True(list.All(p => p.HowItsCalled == null));

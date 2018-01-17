@@ -94,14 +94,15 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_ReturnsMatching()
+        public async Task UsingEqualsPredicate_ReturnsMatching()
         {
             var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
             var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
             var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
             var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
-            var predicate = new { Active = true };
+            var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.Active, Operator.Eq, true);
+
             IList<ISort> sort = new List<ISort>
             {
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)

@@ -18,24 +18,15 @@ namespace DapperExtensionsReloaded.Predicates
         {
             _items.Add(new GetMultiplePredicateItem
             {
-                Value = predicate,
+                Predicate = predicate,
                 Type = typeof(T),
                 Sort = sort
             });
         }
 
-        public void Add<T>(object id) where T : class
-        {
-            _items.Add(new GetMultiplePredicateItem
-            {
-                Value = id,
-                Type = typeof(T)
-            });
-        }
-
         public class GetMultiplePredicateItem
         {
-            public object Value { get; set; }
+            public IPredicate Predicate { get; set; }
             public Type Type { get; set; }
             public IList<ISort> Sort { get; set; }
         }

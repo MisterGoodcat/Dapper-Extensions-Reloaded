@@ -71,14 +71,14 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task UsingObject_ReturnsMatching()
+        public async Task UsingEqualsPredicate_ReturnsMatching()
         {
             var id1 = await DapperExtensions.InsertAsync(Connection, new Person { Active = true, FirstName = "Sigma", LastName = "Alpha", DateCreated = DateTime.UtcNow });
             var id2 = await DapperExtensions.InsertAsync(Connection, new Person { Active = false, FirstName = "Delta", LastName = "Alpha", DateCreated = DateTime.UtcNow });
             var id3 = await DapperExtensions.InsertAsync(Connection, new Person { Active = true, FirstName = "Theta", LastName = "Gamma", DateCreated = DateTime.UtcNow });
             var id4 = await DapperExtensions.InsertAsync(Connection, new Person { Active = false, FirstName = "Iota", LastName = "Beta", DateCreated = DateTime.UtcNow });
-
-            var predicate = new { Active = true };
+            
+            var predicate = Predicates.Predicates.Field<Person>(x => x.Active, Operator.Eq, true);
             IList<ISort> sort = new List<ISort>
             {
                 Predicates.Predicates.Sort<Person>(p => p.LastName),
