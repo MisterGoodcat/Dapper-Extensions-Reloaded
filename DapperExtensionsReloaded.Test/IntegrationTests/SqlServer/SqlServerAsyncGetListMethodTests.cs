@@ -17,7 +17,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "c", DateCreated = DateTime.UtcNow });
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow });
 
-            var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(4, list.Count());
         }
 
@@ -30,7 +30,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "d", DateCreated = DateTime.UtcNow });
 
             var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
-            var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection, predicate, null).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection, predicate);
             Assert.Equal(2, list.Count());
             Assert.True(list.All(p => p.HowItsCalled == "a" || p.HowItsCalled == "c"));
         }
@@ -48,7 +48,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                                         Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.Active, Operator.Eq, true),
                                         Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.HowItsCalled, Operator.Eq, null));
             
-            var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection, predicate, null).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection, predicate);
             Assert.Single(list);
             Assert.True(list.All(p => p.HowItsCalled == null));
         }

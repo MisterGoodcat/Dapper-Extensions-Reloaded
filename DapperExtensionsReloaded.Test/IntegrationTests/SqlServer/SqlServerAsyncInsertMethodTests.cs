@@ -23,7 +23,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             var a1 = new Animal { Id = Guid.NewGuid(), Name = "Foo" };
             await Connection.InsertAsync(a1);
 
-            var a2 = Connection.GetAsync<Animal>(a1.Id).GetAwaiter().GetResult();
+            var a2 = await Connection.GetAsync<Animal>(a1.Id);
             Assert.NotEqual(Guid.Empty, a2.Id);
             Assert.Equal(a1.Id, a2.Id);
         }
@@ -37,8 +37,8 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 
             await Connection.InsertAsync<Animal>(new[] { a1, a2, a3 });
 
-            var animals = Connection.GetListAsync<Animal>().GetAwaiter().GetResult().ToList();
-            Assert.Equal(3, animals.Count);
+            var animals = await Connection.GetListAsync<Animal>();
+            Assert.Equal(3, animals.Count());
         }
     }
 }

@@ -30,7 +30,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
             };
 
-            var list = DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort);
             Assert.Equal(10, list.Count());
             Assert.Equal(id1, list.First().Id);
             Assert.Equal(id10, list.Last().Id);
@@ -49,7 +49,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
             };
 
-            var list = DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort, 0, 2).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort, 0, 2);
             Assert.Equal(2, list.Count());
             Assert.Equal(id2, list.First().Id);
             Assert.Equal(id4, list.Skip(1).First().Id);
@@ -69,7 +69,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
             };
 
-            var list = DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, predicate, sort, 0, 3).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, predicate, sort, 0, 3);
             Assert.Equal(2, list.Count());
             Assert.True(list.All(p => p.HowItsCalled == "Sigma" || p.HowItsCalled == "Theta"));
         }
@@ -87,7 +87,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
             };
 
-            var list = DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort, 1, 2).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort, 1, 2);
             Assert.Equal(2, list.Count());
             Assert.Equal(id1, list.First().Id);
             Assert.Equal(id3, list.Skip(1).First().Id);
@@ -108,7 +108,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
             };
 
-            var list = DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, predicate, sort, 0, 3).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, predicate, sort, 0, 3);
             Assert.Equal(2, list.Count());
             Assert.True(list.All(p => p.HowItsCalled == "Sigma" || p.HowItsCalled == "Theta"));
         }

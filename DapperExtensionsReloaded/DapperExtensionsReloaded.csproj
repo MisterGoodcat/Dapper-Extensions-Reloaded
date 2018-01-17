@@ -4,11 +4,26 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Thad Smith, Page Brooks, Jörg Battermann, Peter Kuhn</Authors>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MisterGoodcat/Dapper-Extensions</PackageProjectUrl>
     <Description>A small library that complements Dapper by adding basic CRUD operations (Get, Insert, Update, Delete) for your POCOs. For more advanced querying scenarios, Dapper Extensions provides a predicate system. Forked from the Dapper-Extensions project.</Description>
     <PackageReleaseNotes>
+3.0.0
+ * Add set-based update operation, rename set-based delete operation.
+ * Add feature to define key columns by respective attribute.
+ * Add overload to get a single entity with predicate argument to avoid excessive use of reflection. 
+ * Convert remaining APIs to async, remove synchronous APIs.
+ * Remove magic that arbitrarily chooses identity and key columns.
+ * Remove automatic GUID handling magic.
+ * Remove implicit object to predicate conversion magic.
+ * Remove logger in preparation of better implementation.
+ * Remove unused mapper features and semantics from configuration.
+ * Fix Xunit warnings and rework tests to make proper use of async features.
+ * Changed target framework to .NET Standard 2.0.
+ * Update all dependencies to latest version.
+ * More code clean-up.
+
 2.0.0
  * Changed target framework to .NET Standard 1.3
  * Migrate unit tests to Xunit
