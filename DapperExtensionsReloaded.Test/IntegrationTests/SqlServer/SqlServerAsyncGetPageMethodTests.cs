@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Predicates;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
@@ -10,19 +11,19 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
     public class SqlServerAsyncGetPageMethodTests : SqlServerBaseFixture
     {
         [Fact]
-        public void UsingDefaultPageValues_ReturnsFirstPage()
+        public async Task UsingDefaultPageValues_ReturnsFirstPage()
         {
-            var id1 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "01", DateCreated = DateTime.UtcNow });
-            var id2 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "02", DateCreated = DateTime.UtcNow });
-            var id3 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "03", DateCreated = DateTime.UtcNow });
-            var id4 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "04", DateCreated = DateTime.UtcNow });
-            var id5 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "05", DateCreated = DateTime.UtcNow });
-            var id6 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "06", DateCreated = DateTime.UtcNow });
-            var id7 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "07", DateCreated = DateTime.UtcNow });
-            var id8 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "08", DateCreated = DateTime.UtcNow });
-            var id9 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "09", DateCreated = DateTime.UtcNow });
-            var id10 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "10", DateCreated = DateTime.UtcNow });
-            var id11 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "11", DateCreated = DateTime.UtcNow });
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "01", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "02", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "03", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "04", DateCreated = DateTime.UtcNow });
+            var id5 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "05", DateCreated = DateTime.UtcNow });
+            var id6 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "06", DateCreated = DateTime.UtcNow });
+            var id7 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "07", DateCreated = DateTime.UtcNow });
+            var id8 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "08", DateCreated = DateTime.UtcNow });
+            var id9 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "09", DateCreated = DateTime.UtcNow });
+            var id10 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "10", DateCreated = DateTime.UtcNow });
+            var id11 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "11", DateCreated = DateTime.UtcNow });
 
             IList<ISort> sort = new List<ISort>
             {
@@ -36,12 +37,12 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void UsingNullPredicate_ReturnsMatching()
+        public async Task UsingNullPredicate_ReturnsMatching()
         {
-            var id1 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
-            var id2 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
-            var id3 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
-            var id4 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
             IList<ISort> sort = new List<ISort>
             {
@@ -55,12 +56,12 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void UsingPredicate_ReturnsMatching()
+        public async Task UsingPredicate_ReturnsMatching()
         {
-            var id1 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
-            var id2 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
-            var id3 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
-            var id4 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
             var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(f => f.Active, Operator.Eq, true);
             IList<ISort> sort = new List<ISort>
@@ -74,12 +75,12 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void NotFirstPage_Returns_NextResults()
+        public async Task NotFirstPage_Returns_NextResults()
         {
-            var id1 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
-            var id2 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
-            var id3 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
-            var id4 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
             IList<ISort> sort = new List<ISort>
             {
@@ -93,12 +94,12 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void UsingObject_ReturnsMatching()
+        public async Task UsingObject_ReturnsMatching()
         {
-            var id1 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
-            var id2 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
-            var id3 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
-            var id4 = DapperExtensions.Insert(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
 
             var predicate = new { Active = true };
             IList<ISort> sort = new List<ISort>

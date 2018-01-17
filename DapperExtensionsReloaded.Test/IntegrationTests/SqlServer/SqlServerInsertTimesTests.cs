@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
 
@@ -10,7 +11,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         private static readonly int cnt = 1000;
         
         [Fact]
-        public void IdentityKey_UsingEntity()
+        public async Task IdentityKey_UsingEntity()
         {
             var p = new Person
             {
@@ -19,7 +20,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 DateCreated = DateTime.Now,
                 Active = true
             };
-            Connection.Insert(p);
+            await Connection.InsertAsync(p);
             var start = DateTime.Now;
             var ids = new List<int>();
             for (var i = 0; i < cnt; i++)
@@ -31,7 +32,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                     DateCreated = DateTime.Now,
                     Active = true
                 };
-                Connection.Insert(p2);
+                await Connection.InsertAsync(p2);
                 ids.Add(p2.Id);
             }
 
@@ -41,7 +42,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void IdentityKey_UsingReturnValue()
+        public async Task IdentityKey_UsingReturnValue()
         {
             var p = new Person
             {
@@ -50,7 +51,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 DateCreated = DateTime.Now,
                 Active = true
             };
-            Connection.Insert(p);
+            await Connection.InsertAsync(p);
             var start = DateTime.Now;
             var ids = new List<int>();
             for (var i = 0; i < cnt; i++)
@@ -62,7 +63,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                     DateCreated = DateTime.Now,
                     Active = true
                 };
-                var id = Connection.Insert(p2);
+                var id = await Connection.InsertAsync(p2);
                 ids.Add(id);
             }
 
@@ -72,16 +73,16 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void GuidKey_UsingEntity()
+        public async Task GuidKey_UsingEntity()
         {
             var a = new Animal { Name = "Name" };
-            Connection.Insert(a);
+            await Connection.InsertAsync(a);
             var start = DateTime.Now;
             var ids = new List<Guid>();
             for (var i = 0; i < cnt; i++)
             {
                 var a2 = new Animal { Name = "Name" + i };
-                Connection.Insert(a2);
+                await Connection.InsertAsync(a2);
                 ids.Add(a2.Id);
             }
 
@@ -91,16 +92,16 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void GuidKey_UsingReturnValue()
+        public async Task GuidKey_UsingReturnValue()
         {
             var a = new Animal { Name = "Name" };
-            Connection.Insert(a);
+            await Connection.InsertAsync(a);
             var start = DateTime.Now;
             var ids = new List<Guid>();
             for (var i = 0; i < cnt; i++)
             {
                 var a2 = new Animal { Name = "Name" + i };
-                var id = Connection.Insert(a2);
+                var id = await Connection.InsertAsync(a2);
                 ids.Add(id);
             }
 
@@ -110,17 +111,17 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void AssignKey_UsingEntity()
+        public async Task AssignKey_UsingEntity()
         {
             var ca = new Car { Id = string.Empty.PadLeft(15, '0'), Name = "Name" };
-            Connection.Insert(ca);
+            await Connection.InsertAsync(ca);
             var start = DateTime.Now;
             var ids = new List<string>();
             for (var i = 0; i < cnt; i++)
             {
                 var key = (i + 1).ToString().PadLeft(15, '0');
                 var ca2 = new Car { Id = key, Name = "Name" + i };
-                Connection.Insert(ca2);
+                await Connection.InsertAsync(ca2);
                 ids.Add(ca2.Id);
             }
 
@@ -130,17 +131,17 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public void AssignKey_UsingReturnValue()
+        public async Task AssignKey_UsingReturnValue()
         {
             var ca = new Car { Id = string.Empty.PadLeft(15, '0'), Name = "Name" };
-            Connection.Insert(ca);
+            await Connection.InsertAsync(ca);
             var start = DateTime.Now;
             var ids = new List<string>();
             for (var i = 0; i < cnt; i++)
             {
                 var key = (i + 1).ToString().PadLeft(15, '0');
                 var ca2 = new Car { Id = key, Name = "Name" + i };
-                var id = Connection.Insert(ca2);
+                var id = await Connection.InsertAsync(ca2);
                 ids.Add(id);
             }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Predicates;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
@@ -9,7 +10,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
     public class SqlServerDeleteMethodTests : SqlServerBaseFixture
     {
         [Fact]
-        public void UsingKey_DeletesFromDatabase()
+        public async Task UsingKey_DeletesFromDatabase()
         {
             var p1 = new Person
             {
@@ -18,51 +19,51 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 LastName = "Bar",
                 DateCreated = DateTime.UtcNow
             };
-            int id = DapperExtensions.Insert(Connection, p1);
+            int id = await DapperExtensions.InsertAsync(Connection, p1);
 
-            var p2 = DapperExtensions.Get<Person>(Connection, id);
-            DapperExtensions.Delete(Connection, p2);
-            Assert.Null(DapperExtensions.Get<Person>(Connection, id));
+            var p2 = await DapperExtensions.GetAsync<Person>(Connection, id);
+            await DapperExtensions.DeleteAsync(Connection, p2);
+            Assert.Null(await DapperExtensions.GetAsync<Person>(Connection, id));
         }
 
         [Fact]
-        public void UsingPredicate_DeletesRows()
+        public async Task UsingPredicate_DeletesRows()
         {
             var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
             var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
             var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
-            DapperExtensions.Insert(Connection, p1);
-            DapperExtensions.Insert(Connection, p2);
-            DapperExtensions.Insert(Connection, p3);
+            await DapperExtensions.InsertAsync(Connection, p1);
+            await DapperExtensions.InsertAsync(Connection, p2);
+            await DapperExtensions.InsertAsync(Connection, p3);
 
-            var list = DapperExtensions.GetList<Person>(Connection);
+            var list = await DapperExtensions.GetListAsync<Person>(Connection);
             Assert.Equal(3, list.Count());
 
             IPredicate pred = Predicates.Predicates.Field<Person>(p => p.LastName, Operator.Eq, "Bar");
-            var result = DapperExtensions.Delete<Person>(Connection, pred);
+            var result = await DapperExtensions.DeleteAsync<Person>(Connection, pred);
             Assert.True(result);
 
-            list = DapperExtensions.GetList<Person>(Connection);
+            list = await DapperExtensions.GetListAsync<Person>(Connection);
             Assert.Single(list);
         }
 
         [Fact]
-        public void UsingObject_DeletesRows()
+        public async Task UsingObject_DeletesRows()
         {
             var p1 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
             var p2 = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
             var p3 = new Person { Active = true, FirstName = "Foo", LastName = "Barz", DateCreated = DateTime.UtcNow };
-            DapperExtensions.Insert(Connection, p1);
-            DapperExtensions.Insert(Connection, p2);
-            DapperExtensions.Insert(Connection, p3);
+            await DapperExtensions.InsertAsync(Connection, p1);
+            await DapperExtensions.InsertAsync(Connection, p2);
+            await DapperExtensions.InsertAsync(Connection, p3);
 
-            var list = DapperExtensions.GetList<Person>(Connection);
+            var list = await DapperExtensions.GetListAsync<Person>(Connection);
             Assert.Equal(3, list.Count());
 
-            var result = DapperExtensions.Delete<Person>(Connection, new { LastName = "Bar" });
+            var result = await DapperExtensions.DeleteAsync<Person>(Connection, new { LastName = "Bar" });
             Assert.True(result);
 
-            list = DapperExtensions.GetList<Person>(Connection);
+            list = await DapperExtensions.GetListAsync<Person>(Connection);
             Assert.Single(list);
         }
     }

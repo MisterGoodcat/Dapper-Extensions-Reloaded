@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
 
@@ -8,36 +9,36 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
     public class SqlServerInsertMethodTests : SqlServerBaseFixture
     {
         [Fact]
-        public void AddsEntityToDatabase_ReturnsKey()
+        public async Task AddsEntityToDatabase_ReturnsKey()
         {
             var p = new Person { Active = true, FirstName = "Foo", LastName = "Bar", DateCreated = DateTime.UtcNow };
-            int id = Connection.Insert(p);
+            int id = await Connection.InsertAsync(p);
             Assert.Equal(1, id);
             Assert.Equal(1, p.Id);
         }
 
         [Fact]
-        public void AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
+        public async Task AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
         {
             var a1 = new Animal { Name = "Foo" };
-            Connection.Insert(a1);
+            await Connection.InsertAsync(a1);
 
-            var a2 = Connection.Get<Animal>(a1.Id);
+            var a2 = await Connection.GetAsync<Animal>(a1.Id);
             Assert.NotEqual(Guid.Empty, a2.Id);
             Assert.Equal(a1.Id, a2.Id);
         }
 
         [Fact]
-        public void AddsMultipleEntitiesToDatabase()
+        public async Task AddsMultipleEntitiesToDatabase()
         {
             var a1 = new Animal { Name = "Foo" };
             var a2 = new Animal { Name = "Bar" };
             var a3 = new Animal { Name = "Baz" };
 
-            Connection.Insert<Animal>(new[] { a1, a2, a3 });
+            await Connection.InsertAsync<Animal>(new[] { a1, a2, a3 });
 
-            var animals = Connection.GetList<Animal>().ToList();
-            Assert.Equal(3, animals.Count);
+            var animals = await Connection.GetListAsync<Animal>();
+            Assert.Equal(3, animals.Count());
         }
     }
 }

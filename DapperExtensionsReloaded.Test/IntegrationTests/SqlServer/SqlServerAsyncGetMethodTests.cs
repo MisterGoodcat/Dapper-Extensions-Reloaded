@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
 
@@ -7,7 +8,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
     public class SqlServerAsyncGetMethodTests : SqlServerBaseFixture
     {
         [Fact]
-        public void UsingKey_ReturnsEntity()
+        public async Task UsingKey_ReturnsEntity()
         {
             var p1 = new FourLeggedFurryAnimal
             {
@@ -15,9 +16,9 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 HowItsCalled = "Foo",
                 DateCreated = DateTime.UtcNow
             };
-            int id = DapperExtensions.Insert(Connection, p1);
+            int id = await DapperExtensions.InsertAsync(Connection, p1);
 
-            var p2 = DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id).GetAwaiter().GetResult();
+            var p2 = await DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id);
             Assert.Equal(id, p2.Id);
             Assert.Equal("Foo", p2.HowItsCalled);
         }

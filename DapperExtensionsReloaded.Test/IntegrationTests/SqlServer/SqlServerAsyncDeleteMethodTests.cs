@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DapperExtensionsReloaded.Predicates;
 using DapperExtensionsReloaded.Test.Data;
 using Xunit;
@@ -9,7 +10,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
     public class SqlServerAsyncDeleteMethodTests : SqlServerBaseFixture
     {
         [Fact]
-        public void UsingKey_DeletesFromDatabase()
+        public async Task UsingKey_DeletesFromDatabase()
         {
             var p1 = new FourLeggedFurryAnimal
             {
@@ -17,51 +18,51 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 HowItsCalled = "Foo",
                 DateCreated = DateTime.UtcNow
             };
-            int id = DapperExtensions.Insert(Connection, p1);
+            int id = await DapperExtensions.InsertAsync(Connection, p1);
 
-            var p2 = DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id).GetAwaiter().GetResult();
-            DapperExtensions.Delete(Connection, p2);
-            Assert.Null(DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id).GetAwaiter().GetResult());
+            var p2 = await DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id);
+            await DapperExtensions.DeleteAsync(Connection, p2);
+            Assert.Null(await DapperExtensions.GetAsync<FourLeggedFurryAnimal>(Connection, id));
         }
 
         [Fact]
-        public void UsingPredicate_DeletesRows()
+        public async Task UsingPredicate_DeletesRows()
         {
             var p1 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
             var p2 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
             var p3 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo2", DateCreated = DateTime.UtcNow };
-            DapperExtensions.Insert(Connection, p1);
-            DapperExtensions.Insert(Connection, p2);
-            DapperExtensions.Insert(Connection, p3);
+            await DapperExtensions.InsertAsync(Connection, p1);
+            await DapperExtensions.InsertAsync(Connection, p2);
+            await DapperExtensions.InsertAsync(Connection, p3);
 
-            var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(3, list.Count());
 
             IPredicate pred = Predicates.Predicates.Field<FourLeggedFurryAnimal>(p => p.HowItsCalled, Operator.Eq, "Foo2");
-            var result = DapperExtensions.Delete<FourLeggedFurryAnimal>(Connection, pred);
+            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, pred);
             Assert.True(result);
 
-            list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection).GetAwaiter().GetResult();
+            list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(2, list.Count());
         }
 
         [Fact]
-        public void UsingObject_DeletesRows()
+        public async Task UsingObject_DeletesRows()
         {
             var p1 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
             var p2 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo", DateCreated = DateTime.UtcNow };
             var p3 = new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Foo2", DateCreated = DateTime.UtcNow };
-            DapperExtensions.Insert(Connection, p1);
-            DapperExtensions.Insert(Connection, p2);
-            DapperExtensions.Insert(Connection, p3);
+            await DapperExtensions.InsertAsync(Connection, p1);
+            await DapperExtensions.InsertAsync(Connection, p2);
+            await DapperExtensions.InsertAsync(Connection, p3);
 
-            var list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection).GetAwaiter().GetResult();
+            var list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(3, list.Count());
 
-            var result = DapperExtensions.Delete<FourLeggedFurryAnimal>(Connection, new { HowItsCalled = "Foo2" });
+            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, new { HowItsCalled = "Foo2" });
             Assert.True(result);
 
-            list = DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection).GetAwaiter().GetResult();
+            list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
             Assert.Equal(2, list.Count());
         }
     }
