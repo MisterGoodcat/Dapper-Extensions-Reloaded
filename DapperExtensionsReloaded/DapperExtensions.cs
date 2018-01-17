@@ -116,6 +116,14 @@ namespace DapperExtensionsReloaded
         }
 
         /// <summary>
+        /// Executes an update query for the specified predicate.
+        /// </summary>
+        public static Task<bool> UpdateSetAsync<T>(this IDbConnection connection, object values, IPredicate wherePredicate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        {
+            return Instance.UpdateSetAsync<T>(connection, values, wherePredicate, transaction, commandTimeout);
+        }
+
+        /// <summary>
         /// Executes a delete query for the specified entity.
         /// </summary>
         public static Task<bool> DeleteAsync<T>(this IDbConnection connection, T entity, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
@@ -126,9 +134,9 @@ namespace DapperExtensionsReloaded
         /// <summary>
         /// Executes a delete query using the specified predicate.
         /// </summary>
-        public static Task<bool> DeleteAsync<T>(this IDbConnection connection, IPredicate predicate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static Task<bool> DeleteSetAsync<T>(this IDbConnection connection, IPredicate wherePredicate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            return Instance.DeleteAsync<T>(connection, predicate, transaction, commandTimeout);
+            return Instance.DeleteSetAsync<T>(connection, wherePredicate, transaction, commandTimeout);
         }
         
         /// <summary>

@@ -79,6 +79,7 @@ namespace DapperExtensionsReloaded.Internal
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
             var predicate = GetKeyPredicate(classMap, entity);
+
             var parameters = new Dictionary<string, object>();
             var sql = SqlGenerator.Update(classMap, predicate, parameters);
             var dynamicParameters = new DynamicParameters();
@@ -97,6 +98,35 @@ namespace DapperExtensionsReloaded.Internal
             return await ExecuteAsync(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
         }
 
+        public async Task<bool> UpdateSetAsync<T>(IDbConnection connection, object values, IPredicate wherePredicate, IDbTransaction transaction, int? commandTimeout) where T : class
+        {
+            var classMap = SqlGenerator.Configuration.GetMap<T>();
+
+            var updateValues = ReflectionHelper.GetObjectValues(values);
+            var propertiesToUpdate = classMap.Properties.Where(x => updateValues.Any(y => x.Name.Equals(y.Key, StringComparison.OrdinalIgnoreCase))).ToList();
+
+            if (propertiesToUpdate.Count != updateValues.Count)
+            {
+                throw new ArgumentException($"Not all properties to update could be matched to actual properties on the entity type {typeof(T).Name}.");
+            }
+
+            var parameters = new Dictionary<string, object>();
+            var sql = SqlGenerator.UpdateSet(classMap, propertiesToUpdate, wherePredicate, parameters);
+           
+            var dynamicParameters = new DynamicParameters();
+            foreach (var property in propertiesToUpdate)
+            {
+                dynamicParameters.Add(property.Name, updateValues[property.Name]);
+            }
+
+            foreach (var parameter in parameters)
+            {
+                dynamicParameters.Add(parameter.Key, parameter.Value);
+            }
+
+            return await ExecuteAsync(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text) > 0;
+        }
+
         public Task<bool> DeleteAsync<T>(IDbConnection connection, T entity, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
@@ -104,7 +134,7 @@ namespace DapperExtensionsReloaded.Internal
             return DeleteAsync(connection, classMap, predicate, transaction, commandTimeout);
         }
 
-        public Task<bool> DeleteAsync<T>(IDbConnection connection, IPredicate predicate, IDbTransaction transaction, int? commandTimeout) where T : class
+        public Task<bool> DeleteSetAsync<T>(IDbConnection connection, IPredicate predicate, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
             return DeleteAsync(connection, classMap, predicate, transaction, commandTimeout);

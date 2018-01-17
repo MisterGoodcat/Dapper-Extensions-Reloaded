@@ -12,7 +12,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         public void WithNullPredicate_ThrowsException()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => Generator.Object.Delete(ClassMap.Object, null, new Dictionary<string, object>()));
-            Assert.Equal("predicate", ex.ParamName);
+            Assert.Equal("wherePredicate", ex.ParamName);
         }
 
         [Fact]

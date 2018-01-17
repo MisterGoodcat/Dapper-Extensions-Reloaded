@@ -15,7 +15,8 @@ namespace DapperExtensionsReloaded.Internal.Sql
 
         string Insert(IClassMapper classMap);
         string Update(IClassMapper classMap, IPredicate predicate, IDictionary<string, object> parameters);
-        string Delete(IClassMapper classMap, IPredicate predicate, IDictionary<string, object> parameters);
+        string UpdateSet(IClassMapper classMap, IList<IPropertyMap> propertiesToUpdate, IPredicate wherePredicate, IDictionary<string, object> parameters);
+        string Delete(IClassMapper classMap, IPredicate wherePredicate, IDictionary<string, object> parameters);
 
         string IdentitySql(IClassMapper classMap);
         string GetTableName(IClassMapper map);

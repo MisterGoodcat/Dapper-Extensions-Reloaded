@@ -147,11 +147,38 @@ namespace DapperExtensionsReloaded.Internal.Sql
             return $"UPDATE {GetTableName(classMap)} SET {setSql.AppendStrings()} WHERE {predicate.GetSql(parameters)}";
         }
 
-        public virtual string Delete(IClassMapper classMap, IPredicate predicate, IDictionary<string, object> parameters)
+        public virtual string UpdateSet(IClassMapper classMap, IList<IPropertyMap> propertiesToUpdate, IPredicate wherePredicate, IDictionary<string, object> parameters)
         {
-            if (predicate == null)
+            if (propertiesToUpdate == null || !propertiesToUpdate.Any())
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentException(nameof(propertiesToUpdate));
+            }
+
+            if (wherePredicate == null)
+            {
+                throw new ArgumentNullException(nameof(wherePredicate));
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            if (propertiesToUpdate.Any(p => p.Ignored || p.IsReadOnly || p.KeyType == KeyType.Identity))
+            {
+                throw new ArgumentException("Ignored, read-only and identity properties cannot be updated.");
+            }
+
+            var setSql = propertiesToUpdate.Select(p => $"{GetColumnName(classMap, p, false)} = {Configuration.Dialect.ParameterPrefix}{p.Name}");
+
+            return $"UPDATE {GetTableName(classMap)} SET {setSql.AppendStrings()} WHERE {wherePredicate.GetSql(parameters)}";
+        }
+
+        public virtual string Delete(IClassMapper classMap, IPredicate wherePredicate, IDictionary<string, object> parameters)
+        {
+            if (wherePredicate == null)
+            {
+                throw new ArgumentNullException(nameof(wherePredicate));
             }
 
             if (parameters == null)
@@ -160,7 +187,7 @@ namespace DapperExtensionsReloaded.Internal.Sql
             }
 
             var sql = new StringBuilder($"DELETE FROM {GetTableName(classMap)}");
-            sql.Append(" WHERE ").Append(predicate.GetSql(parameters));
+            sql.Append(" WHERE ").Append(wherePredicate.GetSql(parameters));
             return sql.ToString();
         }
 

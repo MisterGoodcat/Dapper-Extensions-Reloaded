@@ -60,6 +60,14 @@ namespace DapperExtensionsReloaded.Test.Mapper
             var map = m.Properties.SingleOrDefault(p => p.Ignored);
             Assert.True(map.ColumnName == "Name");
         }
+
+        [Fact]
+        public void Sets_KeyPropertyToKey()
+        {
+            var m = GetMapper<Foo2>();
+            var map = m.Properties.Single(x => x.ColumnName == "SomeStringKey");
+            Assert.True(map.KeyType == KeyType.Assigned);
+        }
         
         private static ClassMapper<T> GetMapper<T>() where T : class
 
@@ -83,6 +91,9 @@ namespace DapperExtensionsReloaded.Test.Mapper
 
             [DatabaseColumn(ColumnName = "Blubber", IsReadOnly = true)]
             public string Name { get; set; }
+
+            [DatabaseColumn(IsKey = true)]
+            public string SomeStringKey { get; set; }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             Assert.Equal(3, list.Count());
 
             IPredicate pred = Predicates.Predicates.Field<FourLeggedFurryAnimal>(p => p.HowItsCalled, Operator.Eq, "Foo2");
-            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, pred);
+            var result = await DapperExtensions.DeleteSetAsync<FourLeggedFurryAnimal>(Connection, pred);
             Assert.True(result);
 
             list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
@@ -60,7 +60,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             Assert.Equal(3, list.Count());
 
             var predicate = Predicates.Predicates.Field<FourLeggedFurryAnimal>(x => x.HowItsCalled, Operator.Eq, "Foo2");
-            var result = await DapperExtensions.DeleteAsync<FourLeggedFurryAnimal>(Connection, predicate);
+            var result = await DapperExtensions.DeleteSetAsync<FourLeggedFurryAnimal>(Connection, predicate);
             Assert.True(result);
 
             list = await DapperExtensions.GetListAsync<FourLeggedFurryAnimal>(Connection);
