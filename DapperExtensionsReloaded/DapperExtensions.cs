@@ -205,14 +205,5 @@ namespace DapperExtensionsReloaded
         {
             return await Instance.GetSetAsync<T>(connection, predicate, sort, firstResult, maxResults, transaction, commandTimeout);
         }
-
-        /// <summary>
-        /// Generates a COMB Guid which solves the fragmented index issue.
-        /// See: http://davybrion.com/blog/2009/05/using-the-guidcomb-identifier-strategy
-        /// </summary>
-        internal static Guid GetNextGuid()
-        {
-            return Instance.SqlGenerator.Configuration.GetNextGuid();
-        }
     }
 }

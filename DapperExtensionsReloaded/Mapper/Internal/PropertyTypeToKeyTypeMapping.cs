@@ -26,8 +26,8 @@ namespace DapperExtensionsReloaded.Mapper.Internal
             { typeof(ulong?), KeyType.Identity },
             { typeof(BigInteger), KeyType.Identity }, 
             { typeof(BigInteger?), KeyType.Identity },
-            { typeof(Guid), KeyType.Guid },
-            { typeof(Guid?), KeyType.Guid }
+            { typeof(Guid), KeyType.Assigned },
+            { typeof(Guid?), KeyType.Assigned }
         };
     }
 }

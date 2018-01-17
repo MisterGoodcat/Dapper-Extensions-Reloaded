@@ -10,6 +10,5 @@ namespace DapperExtensionsReloaded.Internal
         IClassMapper GetMap(Type entityType);
         IClassMapper GetMap<T>() where T : class;
         void ClearCache();
-        Guid GetNextGuid();
     }
 }

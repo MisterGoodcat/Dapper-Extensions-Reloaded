@@ -122,11 +122,11 @@ namespace DapperExtensionsReloaded.Test.Mapper
         {
             var mapper = GetMapper<Test1<Guid>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
-            Assert.Equal(KeyType.Guid, mapper.Properties.ElementAt(0).KeyType);
+            Assert.Equal(KeyType.Assigned, mapper.Properties.ElementAt(0).KeyType);
 
             var mapper2 = GetMapper<Test1<Guid?>>();
             mapper2.TestProtected().RunMethod("AutoMapRemainingProperties");
-            Assert.Equal(KeyType.Guid, mapper2.Properties.ElementAt(0).KeyType);
+            Assert.Equal(KeyType.Assigned, mapper2.Properties.ElementAt(0).KeyType);
         }
 
         [Fact]

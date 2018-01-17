@@ -18,7 +18,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
+        public async Task AddsEntityToDatabase_ReturnsPreGeneratedPrimaryKey()
         {
             var a1 = new Animal { Name = "Foo" };
             await Connection.InsertAsync(a1);

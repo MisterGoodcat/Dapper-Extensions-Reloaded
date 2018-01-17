@@ -116,12 +116,7 @@ namespace DapperExtensionsReloaded.Mapper.Internal
         /// The property is an integery-based identity generated from the database.
         /// </summary>
         Identity,
-
-        /// <summary>
-        /// The property is a Guid identity which is automatically managed.
-        /// </summary>
-        Guid,
-
+        
         /// <summary>
         /// The property is a key that is not automatically managed.
         /// </summary>

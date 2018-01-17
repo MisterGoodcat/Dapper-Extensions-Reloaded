@@ -35,7 +35,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         {
             var mapper = GetMapper<FooWithGuidId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMapRemainingProperties");
-            Assert.Equal(KeyType.Guid, mapper.Properties.ElementAt(0).KeyType);
+            Assert.Equal(KeyType.Assigned, mapper.Properties.ElementAt(0).KeyType);
             Assert.Equal(KeyType.NotAKey, mapper.Properties.ElementAt(2).KeyType);
         }
 

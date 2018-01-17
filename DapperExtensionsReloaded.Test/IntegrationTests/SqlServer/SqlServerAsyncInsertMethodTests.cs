@@ -18,9 +18,9 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
-        public async Task AddsEntityToDatabase_ReturnsGeneratedPrimaryKey()
+        public async Task AddsEntityToDatabase_ReturnsPreGeneratedPrimaryKey()
         {
-            var a1 = new Animal { Name = "Foo" };
+            var a1 = new Animal { Id = Guid.NewGuid(), Name = "Foo" };
             await Connection.InsertAsync(a1);
 
             var a2 = Connection.GetAsync<Animal>(a1.Id).GetAwaiter().GetResult();
@@ -31,9 +31,9 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         [Fact]
         public async Task AddsMultipleEntitiesToDatabase()
         {
-            var a1 = new Animal { Name = "Foo" };
-            var a2 = new Animal { Name = "Bar" };
-            var a3 = new Animal { Name = "Baz" };
+            var a1 = new Animal { Id = Guid.NewGuid(), Name = "Foo" };
+            var a2 = new Animal { Id = Guid.NewGuid(), Name = "Bar" };
+            var a3 = new Animal { Id = Guid.NewGuid(), Name = "Baz" };
 
             await Connection.InsertAsync<Animal>(new[] { a1, a2, a3 });
 

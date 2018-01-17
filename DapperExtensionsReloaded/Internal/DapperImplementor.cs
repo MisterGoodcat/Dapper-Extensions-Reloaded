@@ -25,38 +25,15 @@ namespace DapperExtensionsReloaded.Internal
         public async Task InsertAsync<T>(IDbConnection connection, IEnumerable<T> entities, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
-            var properties = classMap.Properties.Where(p => p.KeyType != KeyType.NotAKey).ToList();
-
-            foreach (var e in entities)
-            {
-                foreach (var column in properties)
-                {
-                    if (column.KeyType == KeyType.Guid)
-                    {
-                        var comb = SqlGenerator.Configuration.GetNextGuid();
-                        column.PropertyInfo.SetValue(e, comb, null);
-                    }
-                }
-            }
-
             var sql = SqlGenerator.Insert(classMap);
-
             await ExecuteAsync(connection, sql, entities, transaction, commandTimeout, CommandType.Text);
         }
 
         public async Task<dynamic> InsertAsync<T>(IDbConnection connection, T entity, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
-            var nonIdentityKeyProperties = classMap.Properties.Where(p => p.KeyType == KeyType.Guid || p.KeyType == KeyType.Assigned).ToList();
+            var nonIdentityKeyProperties = classMap.Properties.Where(p => p.KeyType == KeyType.Assigned).ToList();
             var identityColumn = classMap.Properties.SingleOrDefault(p => p.KeyType == KeyType.Identity);
-            foreach (var column in nonIdentityKeyProperties)
-            {
-                if (column.KeyType == KeyType.Guid)
-                {
-                    var comb = SqlGenerator.Configuration.GetNextGuid();
-                    column.PropertyInfo.SetValue(entity, comb, null);
-                }
-            }
 
             IDictionary<string, object> keyValues = new ExpandoObject();
             var sql = SqlGenerator.Insert(classMap);
@@ -89,7 +66,7 @@ namespace DapperExtensionsReloaded.Internal
             {
                 keyValues.Add(column.Name, column.PropertyInfo.GetValue(entity, null));
             }
-
+            
             if (keyValues.Count == 1)
             {
                 return keyValues.First().Value;
