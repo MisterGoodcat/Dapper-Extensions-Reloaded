@@ -21,7 +21,7 @@ namespace DapperExtensionsReloaded.Test
 
             var sql = predicate.GetSql(parameters);
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(fooCol IS NULL)", sql);
         }
 
@@ -35,7 +35,7 @@ namespace DapperExtensionsReloaded.Test
 
             var sql = predicate.GetSql(parameters);
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(fooCol IS NOT NULL)", sql);
         }
 
@@ -94,7 +94,7 @@ namespace DapperExtensionsReloaded.Test
 
             var sql = predicate.GetSql(parameters);
 
-            Assert.Equal(1, parameters.Count);
+            Assert.Single(parameters);
             Assert.Equal(12, parameters["@Name_0"]);
             Assert.Equal("(fooCol <> @Name_0)", sql);
         }

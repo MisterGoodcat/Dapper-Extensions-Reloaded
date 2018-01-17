@@ -24,7 +24,7 @@ namespace DapperExtensionsReloaded.Test
             SqlDialect.Verify();
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(1=1)", sql);
         }
 
@@ -41,7 +41,7 @@ namespace DapperExtensionsReloaded.Test
 
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(subSql AND subSql)", sql);
         }
 
@@ -58,7 +58,7 @@ namespace DapperExtensionsReloaded.Test
 
             subPredicate1.Verify(s => s.GetSql(parameters), Times.AtMost(2));
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(subSql OR subSql)", sql);
         }
 

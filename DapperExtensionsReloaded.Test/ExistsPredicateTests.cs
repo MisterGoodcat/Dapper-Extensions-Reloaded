@@ -28,8 +28,8 @@ namespace DapperExtensionsReloaded.Test
 
             subPredicate.Verify();
             Generator.Verify();
-
-            Assert.Equal(0, parameters.Count);
+            
+            Assert.Empty(parameters);
             Assert.Equal("(EXISTS (SELECT 1 FROM subTable WHERE subSql))", sql);
         }
 
@@ -51,7 +51,7 @@ namespace DapperExtensionsReloaded.Test
             subPredicate.Verify();
             Generator.Verify();
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(NOT EXISTS (SELECT 1 FROM subTable WHERE subSql))", sql);
         }
 

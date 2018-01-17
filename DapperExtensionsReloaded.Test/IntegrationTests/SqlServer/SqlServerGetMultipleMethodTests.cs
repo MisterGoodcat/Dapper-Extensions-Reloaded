@@ -32,7 +32,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 
             Assert.Equal(4, people.Count);
             Assert.Equal(2, animals.Count);
-            Assert.Equal(1, people2.Count);
+            Assert.Single(people2);
         }
     }
 }

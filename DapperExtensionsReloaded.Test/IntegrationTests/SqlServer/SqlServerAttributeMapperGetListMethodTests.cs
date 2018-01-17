@@ -44,7 +44,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 
             var predicate = new { Active = true, HowItsCalled = "c" };
             var list = DapperExtensions.GetList<FourLeggedFurryAnimal>(Connection, predicate, null);
-            Assert.Equal(1, list.Count());
+            Assert.Single(list);
             Assert.True(list.All(p => p.HowItsCalled == "c"));
         }
     }

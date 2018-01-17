@@ -13,7 +13,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests
             for (var i = 0; i < 1000; i++)
             {
                 var id = DapperExtensions.GetNextGuid();
-                Assert.False(list.Contains(id));
+                Assert.DoesNotContain(id, list);
                 list.Add(id);
             }
         }

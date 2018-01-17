@@ -21,7 +21,7 @@ namespace DapperExtensionsReloaded.Test
 
             var sql = predicate.GetSql(parameters);
 
-            Assert.Equal(0, parameters.Count);
+            Assert.Empty(parameters);
             Assert.Equal("(fooCol = fooCol2)", sql);
         }
 

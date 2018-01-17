@@ -43,7 +43,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             Assert.True(result);
 
             list = DapperExtensions.GetList<Person>(Connection);
-            Assert.Equal(1, list.Count());
+            Assert.Single(list);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             Assert.True(result);
 
             list = DapperExtensions.GetList<Person>(Connection);
-            Assert.Equal(1, list.Count());
+            Assert.Single(list);
         }
     }
 }
