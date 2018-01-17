@@ -21,8 +21,13 @@ namespace DapperExtensionsReloaded.Mapper
         public bool IsReadOnly { get; set; }
 
         /// <summary>
-        /// Whether this property is the identity, i.e. it's read after insert but never written to.
+        /// Whether this property is the identity (integer-based), i.e. it's read after insert but never written to.
         /// </summary>
         public bool IsIdentity { get; set; }
+
+        /// <summary>
+        /// Whether this property is the key or a part of the key (non-integer-based). Needs to be handled/assigned manually.
+        /// </summary>
+        public bool IsKey { get; set; }
     }
 }

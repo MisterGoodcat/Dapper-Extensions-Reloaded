@@ -13,8 +13,8 @@ namespace DapperExtensionsReloaded.Test.Mapper
             var mapper = GetMapper<FooWithIntId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMapRemainingProperties");
             Assert.Equal(3, mapper.Properties.Count);
-            Assert.Equal("FooId", mapper.Properties.ElementAt(0).ColumnName);
-            Assert.Equal("FooId", mapper.Properties.ElementAt(0).Name);
+            Assert.Equal("Id", mapper.Properties.ElementAt(0).ColumnName);
+            Assert.Equal("Id", mapper.Properties.ElementAt(0).Name);
             Assert.Equal("Value", mapper.Properties.ElementAt(1).ColumnName);
             Assert.Equal("Value", mapper.Properties.ElementAt(1).Name);
             Assert.Equal("BarId", mapper.Properties.ElementAt(2).ColumnName);
@@ -22,7 +22,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void MakesFirstIntId_AIdentityKey()
+        public void MakesIntId_AIdentityKey()
         {
             var mapper = GetMapper<FooWithIntId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMapRemainingProperties");
@@ -31,7 +31,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void MakesFirstGuidId_AGuidKey()
+        public void MakesGuidId_AGuidKey()
         {
             var mapper = GetMapper<FooWithGuidId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMapRemainingProperties");
@@ -40,7 +40,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void MakesFirstStringId_AAssignedKey()
+        public void MakesStringId_AnAssignedKey()
         {
             var mapper = GetMapper<FooWithStringId>();
             TestHelpers.TestProtected(mapper).RunMethod("AutoMapRemainingProperties");

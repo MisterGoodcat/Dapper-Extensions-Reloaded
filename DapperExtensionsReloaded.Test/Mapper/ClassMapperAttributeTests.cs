@@ -22,7 +22,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void Sets_IdPropertyToKeyWhenFirstProperty()
+        public void Sets_IdPropertyToKey()
         {
             var m = GetMapper<Foo>();
             var map = m.Properties.Single(p => p.KeyType == KeyType.Identity);

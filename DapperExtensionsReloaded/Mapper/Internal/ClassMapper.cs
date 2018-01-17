@@ -74,9 +74,18 @@ namespace DapperExtensionsReloaded.Mapper.Internal
                         propertyMap.Column(attribute.ColumnName);
                     }
 
+                    if (attribute.IsIdentity && attribute.IsKey)
+                    {
+                        throw new ArgumentException($"A property cannot be both identity and (part of) the key: {property.Name}");
+                    }
+
                     if (attribute.IsIdentity)
                     {
                         propertyMap.Key(KeyType.Identity);
+                    }
+                    else if (attribute.IsKey)
+                    {
+                        propertyMap.Key(KeyType.Assigned);
                     }
                     else
                     {
@@ -112,11 +121,6 @@ namespace DapperExtensionsReloaded.Mapper.Internal
                 if (!hasDefinedKey)
                 {
                     if (string.Equals(map.PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase))
-                    {
-                        keyMap = map;
-                    }
-
-                    if (keyMap == null && map.PropertyInfo.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase))
                     {
                         keyMap = map;
                     }

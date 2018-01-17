@@ -4,7 +4,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
 {
     public class Foo
     {
-        public int FooId { get; set; }
+        public int Id { get; set; }
         public IEnumerable<string> List { get; set; }
     }
 }

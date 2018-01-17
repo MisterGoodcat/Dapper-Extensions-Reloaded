@@ -10,7 +10,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
     public class ClassMapperAutoMapIdTests
     {
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenByte()
+        public void AutoMapSetsIdToIdentityWhenByte()
         {
             var mapper = GetMapper<Test1<byte>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -22,7 +22,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenSByte()
+        public void AutoMapSetsIdToIdentityWhenSByte()
         {
             var mapper = GetMapper<Test1<sbyte>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -34,7 +34,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenInt16()
+        public void AutoMapSetsIdToIdentityWhenInt16()
         {
             var mapper = GetMapper<Test1<short>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -46,7 +46,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenUnsignedInt16()
+        public void AutoMapSetsIdToIdentityWhenUnsignedInt16()
         {
             var mapper = GetMapper<Test1<ushort>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -58,7 +58,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenInt32()
+        public void AutoMapSetsIdToIdentityWhenInt32()
         {
             var mapper = GetMapper<Test1<int>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -70,7 +70,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenUnsignedInt32()
+        public void AutoMapSetsIdToIdentityWhenUnsignedInt32()
         {
             var mapper = GetMapper<Test1<uint>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -82,7 +82,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenInt64()
+        public void AutoMapSetsIdToIdentityWhenInt64()
         {
             var mapper = GetMapper<Test1<long>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -94,7 +94,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenUnsignedInt64()
+        public void AutoMapSetsIdToIdentityWhenUnsignedInt64()
         {
             var mapper = GetMapper<Test1<ulong>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -106,7 +106,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToIdentityWhenBigInteger()
+        public void AutoMapSetsIdToIdentityWhenBigInteger()
         {
             var mapper = GetMapper<Test1<BigInteger>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -118,7 +118,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToGuidWhenGuid()
+        public void AutoMapSetsGuidAsAssignedKeyWhenGuid()
         {
             var mapper = GetMapper<Test1<Guid>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -130,7 +130,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
         }
 
         [Fact]
-        public void AutoMapSetsFirstIdToAssignedWhenNotKeyType()
+        public void AutoMapSetsIdToAssignedWhenNotKeyType()
         {
             var mapper = GetMapper<Test1<string>>();
             mapper.TestProtected().RunMethod("AutoMapRemainingProperties");
@@ -152,7 +152,7 @@ namespace DapperExtensionsReloaded.Test.Mapper
 
         private class Test1<T>
         {
-            public T SomeId { get; set; }
+            public T Id { get; set; }
         }
     }
 }
