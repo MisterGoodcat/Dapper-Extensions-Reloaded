@@ -174,7 +174,7 @@ namespace DapperExtensionsReloaded.Internal
             {
                 dynamicParameters.Add(parameter.Key, parameter.Value);
             }
-            
+
             return (int)Query(connection, sql, dynamicParameters, transaction, false, commandTimeout, CommandType.Text).Single().Total;
         }
 
@@ -196,7 +196,7 @@ namespace DapperExtensionsReloaded.Internal
         public async Task<T> GetAsync<T>(IDbConnection connection, object id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
-            IPredicate predicate = GetIdPredicate(classMap, id);
+            var predicate = GetIdPredicate(classMap, id);
             return (await GetListAsync<T>(connection, classMap, predicate, null, transaction, commandTimeout)).SingleOrDefault();
         }
 
@@ -248,7 +248,7 @@ namespace DapperExtensionsReloaded.Internal
             var result = await QueryAsync(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text);
             return (int)result.Single().Total;
         }
-        
+
         #region Helpers
 
         /// <summary>
@@ -413,13 +413,13 @@ namespace DapperExtensionsReloaded.Internal
             }
 
             IList<IPredicate> predicates = (from field in whereFields
-                select new FieldPredicate<T>(() => SqlGenerator)
-                {
-                    Not = false,
-                    Operator = Operator.Eq,
-                    PropertyName = field.Name,
-                    Value = field.PropertyInfo.GetValue(entity, null)
-                }).Cast<IPredicate>().ToList();
+                                            select new FieldPredicate<T>(() => SqlGenerator)
+                                            {
+                                                Not = false,
+                                                Operator = Operator.Eq,
+                                                PropertyName = field.Name,
+                                                Value = field.PropertyInfo.GetValue(entity, null)
+                                            }).Cast<IPredicate>().ToList();
 
             return predicates.Count == 1
                 ? predicates[0]
@@ -508,44 +508,32 @@ namespace DapperExtensionsReloaded.Internal
 
         private IEnumerable<dynamic> Query(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.Query(sql, param, transaction, buffered, commandTimeout, commandType);
         }
 
         private IEnumerable<T> Query<T>(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType);
         }
 
         private Task<IEnumerable<dynamic>> QueryAsync(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.QueryAsync(sql, param, transaction, commandTimeout, commandType);
         }
 
         private Task<IEnumerable<T>> QueryAsync<T>(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType);
         }
 
         private SqlMapper.GridReader QueryMultiple(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.QueryMultiple(sql, param, transaction, commandTimeout, commandType);
         }
 
         private int Execute(IDbConnection connection, string sql, object param = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            Log(sql, param);
             return connection.Execute(sql, param, transaction, commandTimeout, commandType);
-        }
-
-        private void Log(string sql, object param)
-        {
-            var logger = SqlGenerator.Configuration.SqlLogger;
-            logger?.Invoke(sql, param);
         }
     }
 }

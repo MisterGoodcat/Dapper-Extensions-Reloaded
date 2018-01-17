@@ -16,12 +16,6 @@ namespace DapperExtensionsReloaded
         private static Func<IDapperExtensionsConfiguration, IDapperImplementor> s_instanceFactory;
         private static IDapperImplementor s_instance;
         private static IDapperExtensionsConfiguration s_configuration;
-
-        public static Action<string, object> SqlLogger
-        {
-            get => s_configuration.SqlLogger;
-            set => Configure(s_configuration.Dialect, value);
-        }
         
         /// <summary>
         /// Gets or sets the type of sql to be generated.
@@ -30,7 +24,7 @@ namespace DapperExtensionsReloaded
         internal static ISqlDialect SqlDialect
         {
             get => s_configuration.Dialect;
-            set => Configure(value, s_configuration.SqlLogger);
+            set => Configure(value);
         }
         
         /// <summary>
@@ -45,7 +39,7 @@ namespace DapperExtensionsReloaded
             set
             {
                 s_instanceFactory = value;
-                Configure(s_configuration.Dialect, s_configuration.SqlLogger);
+                Configure(s_configuration.Dialect);
             }
         }
 
@@ -62,10 +56,9 @@ namespace DapperExtensionsReloaded
         /// Configure DapperExtensions extension methods.
         /// </summary>
         /// <param name="sqlDialect"></param>
-        /// <param name="sqlLogger"></param>
-        internal static void Configure(ISqlDialect sqlDialect, Action<string, object> sqlLogger)
+        internal static void Configure(ISqlDialect sqlDialect)
         {
-            Configure(new DapperExtensionsConfiguration(sqlDialect, sqlLogger));
+            Configure(new DapperExtensionsConfiguration(sqlDialect));
         }
 
         /// <summary>
@@ -92,7 +85,7 @@ namespace DapperExtensionsReloaded
 
         static DapperExtensions()
         {
-            Configure(new SqlServerDialect(), null);
+            Configure(new SqlServerDialect());
         }
 
         /// <summary>

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using DapperExtensionsReloaded.Internal.Sql;
 using DapperExtensionsReloaded.Mapper.Internal;
 
@@ -12,18 +9,16 @@ namespace DapperExtensionsReloaded.Internal
     {
         private readonly ConcurrentDictionary<Type, IClassMapper> _classMaps = new ConcurrentDictionary<Type, IClassMapper>();
 
-        public DapperExtensionsConfiguration() : this(new SqlServerDialect(), null)
+        public DapperExtensionsConfiguration() : this(new SqlServerDialect())
         {
         }
 
-        public DapperExtensionsConfiguration(ISqlDialect sqlDialect, Action<string, object> sqlLogger)
+        public DapperExtensionsConfiguration(ISqlDialect sqlDialect)
         {
             Dialect = sqlDialect;
-            SqlLogger = sqlLogger;
         }
         
         public ISqlDialect Dialect { get; }
-        public Action<string, object> SqlLogger { get; }
 
         public IClassMapper GetMap(Type entityType)
         {

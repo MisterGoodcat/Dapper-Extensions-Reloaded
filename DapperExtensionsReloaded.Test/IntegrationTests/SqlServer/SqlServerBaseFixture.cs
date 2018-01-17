@@ -33,23 +33,6 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             {
                 Connection.Execute(setupFile);
             }
-            
-            DapperExtensions.SqlLogger = (sql, parameters) =>
-            {
-                string parametersText;
-
-                var dynamicParameters = parameters as DynamicParameters;
-                if (dynamicParameters != null)
-                {
-                    parametersText = dynamicParameters.ToJson();
-                }
-                else
-                {
-                    parametersText = JsonConvert.SerializeObject(parameters, Formatting.Indented);
-                }
-
-                Console.WriteLine($"SQL: {sql}{Environment.NewLine}Parameters:{Environment.NewLine}{parametersText}{Environment.NewLine}");
-            };
         }
         
         public void Dispose()

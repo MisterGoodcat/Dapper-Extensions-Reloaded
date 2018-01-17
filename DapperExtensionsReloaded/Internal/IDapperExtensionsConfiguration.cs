@@ -7,7 +7,6 @@ namespace DapperExtensionsReloaded.Internal
     internal interface IDapperExtensionsConfiguration
     {
         ISqlDialect Dialect { get; }
-        Action<string, object> SqlLogger { get; }
         IClassMapper GetMap(Type entityType);
         IClassMapper GetMap<T>() where T : class;
         void ClearCache();
