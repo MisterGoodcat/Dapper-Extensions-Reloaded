@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Logging.Formatters;
 using DapperExtensionsReloaded.Mapper.Internal;
 
 namespace DapperExtensionsReloaded.Internal
@@ -9,16 +10,18 @@ namespace DapperExtensionsReloaded.Internal
     {
         private readonly ConcurrentDictionary<Type, IClassMapper> _classMaps = new ConcurrentDictionary<Type, IClassMapper>();
 
-        public DapperExtensionsConfiguration() : this(new SqlServerDialect())
+        public DapperExtensionsConfiguration() : this(new SqlServerDialect(), new SqlServerLogFormatter())
         {
         }
 
-        public DapperExtensionsConfiguration(ISqlDialect sqlDialect)
+        public DapperExtensionsConfiguration(ISqlDialect sqlDialect, ILogFormatter logFormatter)
         {
             Dialect = sqlDialect;
+            LogFormatter = logFormatter;
         }
         
         public ISqlDialect Dialect { get; }
+        public ILogFormatter LogFormatter { get; }
 
         public IClassMapper GetMap(Type entityType)
         {

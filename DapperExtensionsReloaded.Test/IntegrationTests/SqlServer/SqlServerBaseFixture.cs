@@ -26,7 +26,8 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                 ReadScriptFile("CreateMultikeyTable"),
                 ReadScriptFile("CreatePersonTable"),
                 ReadScriptFile("CreateCarTable"),
-                ReadScriptFile("CreateCatTable")
+                ReadScriptFile("CreateCatTable"),
+                ReadScriptFile("CreateManyDataTypesTable")
             };
 
             foreach (var setupFile in files)

@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using DapperExtensionsReloaded.Internal;
 using DapperExtensionsReloaded.Internal.Sql;
+using DapperExtensionsReloaded.Logging.Formatters;
 using DapperExtensionsReloaded.Mapper.Internal;
 using DapperExtensionsReloaded.Predicates;
 
@@ -17,19 +18,18 @@ namespace DapperExtensionsReloaded
         private static IDapperImplementor s_instance;
         private static IDapperExtensionsConfiguration s_configuration;
         
-        /// <summary>
-        /// Gets or sets the type of sql to be generated.
-        /// DapperExtensions.Configure(Type, IList&lt;Assembly&gt;, ISqlDialect) can be used instead to set all values at once
-        /// </summary>
         internal static ISqlDialect SqlDialect
         {
             get => s_configuration.Dialect;
-            set => Configure(value);
+            set => Configure(value, s_configuration.LogFormatter);
+        }
+
+        internal static ILogFormatter LogFormatter
+        {
+            get => s_configuration.LogFormatter;
+            set => Configure(s_configuration.Dialect, value);
         }
         
-        /// <summary>
-        /// Get or sets the Dapper Extensions Implementation Factory.
-        /// </summary>
         internal static Func<IDapperExtensionsConfiguration, IDapperImplementor> InstanceFactory
         {
             get
@@ -39,31 +39,21 @@ namespace DapperExtensionsReloaded
             set
             {
                 s_instanceFactory = value;
-                Configure(s_configuration.Dialect);
+                Configure(s_configuration.Dialect, s_configuration.LogFormatter);
             }
         }
-
-        /// <summary>
-        /// Configure DapperExtensions extension methods.
-        /// </summary>
+        
         internal static void Configure(IDapperExtensionsConfiguration configuration)
         {
             s_instance = null;
             s_configuration = configuration;
         }
-
-        /// <summary>
-        /// Configure DapperExtensions extension methods.
-        /// </summary>
-        /// <param name="sqlDialect"></param>
-        internal static void Configure(ISqlDialect sqlDialect)
+        
+        internal static void Configure(ISqlDialect sqlDialect, ILogFormatter logFormatter)
         {
-            Configure(new DapperExtensionsConfiguration(sqlDialect));
+            Configure(new DapperExtensionsConfiguration(sqlDialect, logFormatter));
         }
-
-        /// <summary>
-        /// Gets the Dapper Extensions Implementation
-        /// </summary>
+        
         internal static IDapperImplementor Instance
         {
             get
@@ -85,7 +75,7 @@ namespace DapperExtensionsReloaded
 
         static DapperExtensions()
         {
-            Configure(new SqlServerDialect());
+            Configure(new SqlServerDialect(), new SqlServerLogFormatter());
         }
         
         /// <summary>

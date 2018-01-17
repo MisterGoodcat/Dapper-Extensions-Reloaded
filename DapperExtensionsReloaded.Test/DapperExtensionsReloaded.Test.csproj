@@ -9,6 +9,7 @@
     <None Remove="IntegrationTests\SqlServer\Sql\CreateCarTable.sql" />
     <None Remove="IntegrationTests\SqlServer\Sql\CreateCatTable.sql" />
     <None Remove="IntegrationTests\SqlServer\Sql\CreateFooTable.sql" />
+    <None Remove="IntegrationTests\SqlServer\Sql\CreateManyDataTypesTable.sql" />
     <None Remove="IntegrationTests\SqlServer\Sql\CreateMultikeyTable.sql" />
     <None Remove="IntegrationTests\SqlServer\Sql\CreatePersonTable.sql" />
   </ItemGroup>
@@ -16,6 +17,7 @@
   <ItemGroup>
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateAnimalTable.sql" />
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateCarTable.sql" />
+    <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateManyDataTypesTable.sql" />
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateCatTable.sql" />
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateFooTable.sql" />
     <EmbeddedResource Include="IntegrationTests\SqlServer\Sql\CreateMultikeyTable.sql" />
@@ -33,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DapperExtensionsReloaded.Test.Entities\DapperExtensionsReloaded.Test.Entities.csproj" />
     <ProjectReference Include="..\DapperExtensionsReloaded\DapperExtensionsReloaded.csproj" />
   </ItemGroup>
 
