@@ -16,7 +16,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
 
         public SqlServerBaseFixture()
         {
-            Connection = new SqlConnection("Data Source=.\\DEV2016;Initial Catalog=dapperTest;Integrated security=True;");
+            Connection = new SqlConnection("Data Source=.;Initial Catalog=DapperTest;Integrated security=True;");
             Connection.Open();
 
             var files = new List<string>

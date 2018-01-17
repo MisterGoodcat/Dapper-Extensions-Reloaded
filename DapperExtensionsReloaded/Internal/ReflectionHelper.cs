@@ -99,7 +99,7 @@ namespace DapperExtensionsReloaded.Internal
 
         public static string SetParameterName(this IDictionary<string, object> parameters, string parameterName, object value, char parameterPrefix)
         {
-            string name = parameters.GetParameterName(parameterName, parameterPrefix);
+            var name = parameters.GetParameterName(parameterName, parameterPrefix);
             parameters.Add(name, value);
             return name;
         }
