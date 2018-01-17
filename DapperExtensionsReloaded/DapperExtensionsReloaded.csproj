@@ -10,6 +10,7 @@
     <Description>A small library that complements Dapper by adding basic CRUD operations (Get, Insert, Update, Delete) for your POCOs. For more advanced querying scenarios, Dapper Extensions provides a predicate system. Forked from the Dapper-Extensions project.</Description>
     <PackageReleaseNotes>
 3.0.0
+ * Add new logging feature based on proxies of connections and commands.
  * Add set-based update operation, rename set-based delete operation.
  * Add feature to define key columns by respective attribute.
  * Add overload to get a single entity with predicate argument to avoid excessive use of reflection. 
