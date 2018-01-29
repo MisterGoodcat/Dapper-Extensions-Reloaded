@@ -206,7 +206,11 @@ namespace DapperExtensionsReloaded.Logging
 
         protected override void Dispose(bool disposing)
         {
-            _command.Dispose();
+            if (disposing)
+            {
+                _command.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 

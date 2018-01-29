@@ -88,10 +88,14 @@ namespace DapperExtensionsReloaded.Logging
         {
             return new DbCommandProxy(this, _databaseOperationMonitor, _connection.CreateCommand());
         }
-
+        
         protected override void Dispose(bool disposing)
         {
-            _connection.Dispose();
+            if (disposing)
+            {
+                _connection.Dispose();
+            } 
+            
             base.Dispose(disposing);
         }
     }
