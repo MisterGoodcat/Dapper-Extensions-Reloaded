@@ -2,11 +2,8 @@
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DapperExtensionsReloaded.Internal.Sql;
 
 namespace DapperExtensionsReloaded.Logging
 {
@@ -20,10 +17,10 @@ namespace DapperExtensionsReloaded.Logging
             get => _connection;
             set
             {
-                if (value is DbConnectionProxy proxy)
+                if (value is MonitoringDbConnection monitoringDbConnection)
                 {
-                    _databaseOperationMonitor = proxy.DatabaseOperationMonitor;
-                    _connection = proxy.InnerConnection;
+                    _databaseOperationMonitor = monitoringDbConnection.DatabaseOperationMonitor;
+                    _connection = monitoringDbConnection.MonitoredDbConnection;
                 }
                 else
                 {
@@ -78,9 +75,9 @@ namespace DapperExtensionsReloaded.Logging
             set => _command.Site = value;
         }
 
-        public DbCommandProxy(DbConnectionProxy connection, DatabaseOperationMonitor databaseOperationMonitor, DbCommand command)
+        public DbCommandProxy(MonitoringDbConnection connection, DatabaseOperationMonitor databaseOperationMonitor, DbCommand command)
         {
-            _connection = connection.InnerConnection;
+            _connection = connection.MonitoredDbConnection;
             _databaseOperationMonitor = databaseOperationMonitor;
             _command = command;
         }

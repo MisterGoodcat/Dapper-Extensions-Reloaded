@@ -4,9 +4,9 @@ namespace DapperExtensionsReloaded.Logging
 {
     public sealed class DatabaseConnectionFactory
     {
-        public DbConnection CreateMonitoringConnection(DbConnection connection, DatabaseOperationMonitor monitor)
+        public MonitoringDbConnection CreateMonitoringConnection(DbConnection connection, DatabaseOperationMonitor monitor)
         {
-            return new DbConnectionProxy(connection, monitor);
+            return new MonitoringDbConnection(connection, monitor);
         }
     }
 }

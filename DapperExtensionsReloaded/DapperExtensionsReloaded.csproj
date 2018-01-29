@@ -4,11 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Thad Smith, Page Brooks, Jörg Battermann, Peter Kuhn</Authors>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MisterGoodcat/Dapper-Extensions</PackageProjectUrl>
     <Description>A small library that complements Dapper by adding basic CRUD operations (Get, Insert, Update, Delete) for your POCOs. For more advanced querying scenarios, Dapper Extensions provides a predicate system. Forked from the Dapper-Extensions project.</Description>
     <PackageReleaseNotes>
+3.1.0
+ * Make MonitoringDbConnection type as well as its MonitoredDbConnection public to enable scenarios that need to access the underlying connection directly. Example: use bulk insert of SqlConnection.
+
 3.0.0
  * Add new logging feature based on proxies of connections and commands.
  * Add set-based update operation, rename set-based delete operation.
