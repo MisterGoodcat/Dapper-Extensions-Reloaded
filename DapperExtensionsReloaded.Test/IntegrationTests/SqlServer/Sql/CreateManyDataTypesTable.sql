@@ -21,5 +21,6 @@ CREATE TABLE ManyDataTypes (
 	c14 decimal,
 	c15 money,
 	c16 real,
-    C17 bit
+    C17 bit,
+	C18 int null
 )

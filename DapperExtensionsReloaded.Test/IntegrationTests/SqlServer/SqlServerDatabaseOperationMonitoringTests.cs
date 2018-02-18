@@ -39,8 +39,10 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
                     C14 = 1.234m,
                     C15 = 2.345m,
                     C16 = 1.23456f,
-                    C17 = true
+                    C17 = true,
+                    C18 = null
                 });
+
                 await DapperExtensions.CountAsync<ManyDataTypes>(monitoringConnection);
             }
             
@@ -68,6 +70,7 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
             public decimal C15 { get; set; }
             public float C16 { get; set; }
             public bool C17 { get; set; }
+            public int? C18 { get; set; }
         }
     }
 }

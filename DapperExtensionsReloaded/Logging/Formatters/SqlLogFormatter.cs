@@ -47,7 +47,7 @@ namespace DapperExtensionsReloaded.Logging.Formatters
 
         protected override string CreateCommandParameterValueText(DbParameter parameter)
         {
-            if (parameter.Value == null)
+            if (parameter.Value == null || parameter.Value is DBNull)
             {
                 return "NULL";
             }
