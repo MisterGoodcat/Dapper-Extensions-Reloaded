@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace DapperExtensionsReloaded.Logging
     {
         private DbConnection _connection;
         private DatabaseOperationMonitor _databaseOperationMonitor;
+        private readonly DatabaseOperationMonitoringOptions _options;
         private readonly DbCommand _command;
         
         protected override DbConnection DbConnection { 
@@ -75,10 +77,11 @@ namespace DapperExtensionsReloaded.Logging
             set => _command.Site = value;
         }
 
-        public DbCommandProxy(MonitoringDbConnection connection, DatabaseOperationMonitor databaseOperationMonitor, DbCommand command)
+        public DbCommandProxy(MonitoringDbConnection connection, DatabaseOperationMonitor databaseOperationMonitor, DatabaseOperationMonitoringOptions options, DbCommand command)
         {
             _connection = connection.MonitoredDbConnection;
             _databaseOperationMonitor = databaseOperationMonitor;
+            _options = options;
             _command = command;
         }
 
@@ -87,38 +90,14 @@ namespace DapperExtensionsReloaded.Logging
             return _command.InitializeLifetimeService();
         }
         
-        public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+        public override Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                var result = await _command.ExecuteNonQueryAsync(cancellationToken);
-
-                NotifyMonitoringOfExecutedCommand();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                NotifyMonitoringOfExecutedCommand(ex);
-                throw;
-            }
+            return DoExecuteCommandAsync(() => _command.ExecuteNonQueryAsync(cancellationToken));
         }
 
-        public override async Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
+        public override Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                var result =  await _command.ExecuteScalarAsync(cancellationToken);
-                
-                NotifyMonitoringOfExecutedCommand();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                NotifyMonitoringOfExecutedCommand(ex);
-                throw;
-            }
+            return DoExecuteCommandAsync(() => _command.ExecuteScalarAsync(cancellationToken));
         }
 
         public override void Cancel()
@@ -128,36 +107,12 @@ namespace DapperExtensionsReloaded.Logging
 
         public override int ExecuteNonQuery()
         {
-            try
-            {
-                var result = _command.ExecuteNonQuery();
-                
-                NotifyMonitoringOfExecutedCommand();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                NotifyMonitoringOfExecutedCommand(ex);
-                throw;
-            }
+            return DoExecuteCommand(_command.ExecuteNonQuery);
         }
         
         public override object ExecuteScalar()
         {
-            try
-            {
-                var result = _command.ExecuteScalar();
-                
-                NotifyMonitoringOfExecutedCommand();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                NotifyMonitoringOfExecutedCommand(ex);
-                throw;
-            }
+            return DoExecuteCommand(_command.ExecuteScalar);
         }
 
         public override void Prepare()
@@ -165,36 +120,52 @@ namespace DapperExtensionsReloaded.Logging
             _command.Prepare();
         }
 
-        protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+        protected override Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            try
-            {
-                var result = await _command.ExecuteReaderAsync(behavior, cancellationToken);
-                
-                NotifyMonitoringOfExecutedCommand();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                NotifyMonitoringOfExecutedCommand(ex);
-                throw;
-            }
+            return DoExecuteCommandAsync(() => _command.ExecuteReaderAsync(behavior, cancellationToken));
         }
         
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
+            return DoExecuteCommand(() => _command.ExecuteReader(behavior));
+        }
+
+        private T DoExecuteCommand<T>(Func<T> func)
+        {
+            var sw = _options.ProfileExecution ? Stopwatch.StartNew() : null;
+
             try
             {
-                var result =  _command.ExecuteReader(behavior);
-                
-                NotifyMonitoringOfExecutedCommand();
+                var result = func();
+                var duration = sw != null ? Math.Max(1, sw.ElapsedMilliseconds) : 0;
+                NotifyMonitoringOfExecutedCommand(duration);
 
                 return result;
             }
             catch (Exception ex)
             {
-                NotifyMonitoringOfExecutedCommand(ex);
+                var duration = sw != null ? Math.Max(1, sw.ElapsedMilliseconds) : 0;
+                NotifyMonitoringOfExecutedCommand(duration, ex);
+                throw;
+            }
+        }
+
+        private async Task<T> DoExecuteCommandAsync<T>(Func<Task<T>> func)
+        {
+            var sw = _options.ProfileExecution ? Stopwatch.StartNew() : null;
+
+            try
+            {
+                var result = await func().ConfigureAwait(false);
+                var duration = sw != null ? Math.Max(1, sw.ElapsedMilliseconds) : 0;
+                NotifyMonitoringOfExecutedCommand(duration);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var duration = sw != null ? Math.Max(1, sw.ElapsedMilliseconds) : 0;
+                NotifyMonitoringOfExecutedCommand(duration, ex);
                 throw;
             }
         }
@@ -214,7 +185,7 @@ namespace DapperExtensionsReloaded.Logging
             base.Dispose(disposing);
         }
 
-        private void NotifyMonitoringOfExecutedCommand(Exception ex = null)
+        private void NotifyMonitoringOfExecutedCommand(long duration, Exception ex = null)
         {
             if (_databaseOperationMonitor?.CommandExecuted == null)
             {
@@ -223,7 +194,7 @@ namespace DapperExtensionsReloaded.Logging
 
             var timestamp = DateTimeOffset.Now;
             var executionScript = DapperExtensions.LogFormatter.ToExecutionScript(this, timestamp, ex);
-            var info = DatabaseCommandInfo.From(this, timestamp, executionScript, ex);
+            var info = DatabaseCommandInfo.From(this, timestamp, duration, executionScript, ex);
             _databaseOperationMonitor.CommandExecuted.Invoke(info);
         }
     }

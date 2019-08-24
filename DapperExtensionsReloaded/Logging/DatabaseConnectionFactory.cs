@@ -8,5 +8,10 @@ namespace DapperExtensionsReloaded.Logging
         {
             return new MonitoringDbConnection(connection, monitor);
         }
+
+        public MonitoringDbConnection CreateMonitoringConnection(DbConnection connection, DatabaseOperationMonitor monitor, DatabaseOperationMonitoringOptions options)
+        {
+            return new MonitoringDbConnection(connection, monitor, options);
+        }
     }
 }

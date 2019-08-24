@@ -8,6 +8,7 @@ namespace DapperExtensionsReloaded.Logging
     {
         private readonly List<DatabaseCommandParameterInfo> _parameters = new List<DatabaseCommandParameterInfo>();
         
+        public long Duration { get; private set; }
         public DateTimeOffset Timestamp { get; private set; }
         public string DatabaseName { get; private set; }
         public string CommandType { get; private set; }
@@ -17,11 +18,12 @@ namespace DapperExtensionsReloaded.Logging
 
         public IReadOnlyCollection<DatabaseCommandParameterInfo> Parameters => _parameters;
 
-        internal static DatabaseCommandInfo From(DbCommandProxy command, DateTimeOffset timestamp, string executionScriptText, Exception executionError = null)
+        internal static DatabaseCommandInfo From(DbCommandProxy command, DateTimeOffset timestamp, long duration, string executionScriptText, Exception executionError = null)
         {
             var result = new DatabaseCommandInfo
             {
                 Timestamp = timestamp,
+                Duration = duration,
                 DatabaseName = command.Connection.Database,
                 CommandType = command.CommandType.ToString(),
                 CommandText = command.CommandText,

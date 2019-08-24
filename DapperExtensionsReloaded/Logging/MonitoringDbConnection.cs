@@ -9,6 +9,7 @@ namespace DapperExtensionsReloaded.Logging
     {
         private readonly DbConnection _connection;
         private readonly DatabaseOperationMonitor _databaseOperationMonitor;
+        private DatabaseOperationMonitoringOptions _options;
 
         protected override bool CanRaiseEvents => true;
 
@@ -32,8 +33,24 @@ namespace DapperExtensionsReloaded.Logging
         {
             _connection = connection;
             _databaseOperationMonitor = databaseOperationMonitor;
+            _options = CreateDefaultOptions();
         }
-        
+
+        internal MonitoringDbConnection(DbConnection connection, DatabaseOperationMonitor databaseOperationMonitor, DatabaseOperationMonitoringOptions options)
+        {
+            _connection = connection;
+            _databaseOperationMonitor = databaseOperationMonitor;
+            _options = options ?? CreateDefaultOptions();
+        }
+
+        private DatabaseOperationMonitoringOptions CreateDefaultOptions()
+        {
+            return new DatabaseOperationMonitoringOptions
+            {
+                ProfileExecution = false
+            };
+        }
+
         public override void ChangeDatabase(string databaseName)
         {
             _connection.ChangeDatabase(databaseName);
@@ -86,7 +103,7 @@ namespace DapperExtensionsReloaded.Logging
         
         protected override DbCommand CreateDbCommand()
         {
-            return new DbCommandProxy(this, _databaseOperationMonitor, _connection.CreateCommand());
+            return new DbCommandProxy(this, _databaseOperationMonitor, _options, _connection.CreateCommand());
         }
         
         protected override void Dispose(bool disposing)

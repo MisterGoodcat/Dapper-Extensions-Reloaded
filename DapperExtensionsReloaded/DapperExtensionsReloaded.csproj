@@ -4,11 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Peter Kuhn</Authors>
-    <Version>3.2.0</Version>
+    <Version>3.3.0</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageProjectUrl>
     <Description>A small library that adds generic repository features to Dapper, and additionally predicates and a logging system.</Description>
-    <PackageReleaseNotes>3.2.0: Update Dapper to 1.6. Update other dependencies. Minor code clean-up. 
+    <PackageReleaseNotes>3.3.0: Add feature to profile command execution. 
 Full change log: https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageReleaseNotes>
     <PackageTags>orm sql micro-orm dapper</PackageTags>
     <RepositoryUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</RepositoryUrl>
