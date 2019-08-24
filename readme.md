@@ -28,6 +28,9 @@ TODO
 
 # Change Log
 
+3.3.0
+* Add feature to profile command execution using the monitoring DB connection.
+
 3.2.0
 * Update Dapper to 1.6.
 * Update other dependencies (test projects)
