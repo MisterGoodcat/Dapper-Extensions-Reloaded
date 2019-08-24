@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Dapper;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer

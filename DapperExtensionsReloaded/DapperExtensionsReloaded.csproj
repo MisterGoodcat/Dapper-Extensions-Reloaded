@@ -4,17 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Peter Kuhn</Authors>
-    <Version>3.1.2</Version>
-    <PackageLicenseUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>3.2.0</Version>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageProjectUrl>
     <Description>A small library that adds generic repository features to Dapper, and additionally predicates and a logging system.</Description>
-    <PackageReleaseNotes>3.1.2: Fix handling of DBNull values in standard logger.
-
+    <PackageReleaseNotes>3.2.0: Update Dapper to 1.6. Update other dependencies. Minor code clean-up. 
 Full change log: https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageReleaseNotes>
     <PackageTags>orm sql micro-orm dapper</PackageTags>
     <RepositoryUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</RepositoryUrl>
     <Company>Peter Kuhn</Company>
-    <Copyright>2011-2014 Thad Smith, Page Brooks and contributors, 2016-1018 Peter Kuhn</Copyright>
+    <Copyright>2011-2014 Thad Smith, Page Brooks and contributors, 2016-2019 Peter Kuhn</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -28,8 +28,15 @@ Full change log: https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</Pa
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.4" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+    <PackageReference Include="Dapper" Version="1.60.6" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
