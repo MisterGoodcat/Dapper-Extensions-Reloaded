@@ -28,6 +28,11 @@ TODO
 
 # Change Log
 
+3.2.0
+* Update Dapper to 1.6.
+* Update other dependencies (test projects)
+* Minor code clean-up and removal of unused code.
+
 3.1.2
 * Fix handling of DBNull values in standard logger.
 
