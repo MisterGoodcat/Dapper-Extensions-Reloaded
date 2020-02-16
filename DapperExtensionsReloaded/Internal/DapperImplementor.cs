@@ -42,7 +42,7 @@ namespace DapperExtensionsReloaded.Internal
                 IEnumerable<long> result;
                 if (SqlGenerator.SupportsMultipleStatements())
                 {
-                    sql += SqlGenerator.Configuration.Dialect.BatchSeperator + SqlGenerator.IdentitySql(classMap);
+                    sql += SqlGenerator.Configuration.Dialect.BatchSeparator + SqlGenerator.IdentitySql(classMap);
                     result = await QueryAsync<long>(connection, sql, entity, transaction, commandTimeout, CommandType.Text).ConfigureAwait(false);
                 }
                 else
@@ -171,10 +171,10 @@ namespace DapperExtensionsReloaded.Internal
             return await GetListAsync<T>(connection, classMap, predicate, sort, transaction, commandTimeout).ConfigureAwait(false);
         }
         
-        public async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, int page = 0, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, int page = 0, int itemsPerPage = 10, int resultsToReturn = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var classMap = SqlGenerator.Configuration.GetMap<T>();
-            return await GetPageAsync<T>(connection, classMap, predicate, sort, page, resultsPerPage, transaction, commandTimeout).ConfigureAwait(false);
+            return await GetPageAsync<T>(connection, classMap, predicate, sort, page, itemsPerPage, resultsToReturn, transaction, commandTimeout).ConfigureAwait(false);
         }
         
         public async Task<IEnumerable<T>> GetSetAsync<T>(IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, int firstResult = 1, int maxResults = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
@@ -213,10 +213,10 @@ namespace DapperExtensionsReloaded.Internal
             return await QueryAsync<T>(connection, sql, dynamicParameters, transaction, commandTimeout, CommandType.Text).ConfigureAwait(false);
         }
 
-        private async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction, int? commandTimeout) where T : class
+        private async Task<IEnumerable<T>> GetPageAsync<T>(IDbConnection connection, IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int itemsPerPage, int resultsToReturn, IDbTransaction transaction, int? commandTimeout) where T : class
         {
             var parameters = new Dictionary<string, object>();
-            var sql = SqlGenerator.SelectPaged(classMap, predicate, sort, page, resultsPerPage, parameters);
+            var sql = SqlGenerator.SelectPaged(classMap, predicate, sort, page, itemsPerPage, resultsToReturn, parameters);
             var dynamicParameters = new DynamicParameters();
             foreach (var parameter in parameters)
             {
@@ -327,7 +327,7 @@ namespace DapperExtensionsReloaded.Internal
             foreach (var item in predicate.Items)
             {
                 var classMap = SqlGenerator.Configuration.GetMap(item.Type);
-                sql.AppendLine(SqlGenerator.Select(classMap, item.Predicate, item.Sort, parameters) + SqlGenerator.Configuration.Dialect.BatchSeperator);
+                sql.AppendLine(SqlGenerator.Select(classMap, item.Predicate, item.Sort, parameters) + SqlGenerator.Configuration.Dialect.BatchSeparator);
             }
 
             var dynamicParameters = new DynamicParameters();

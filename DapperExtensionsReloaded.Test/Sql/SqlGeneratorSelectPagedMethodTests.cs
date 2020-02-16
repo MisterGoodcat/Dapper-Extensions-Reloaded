@@ -13,7 +13,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         public void WithNoSort_ThrowsException()
         {
             var ex = Assert.Throws<ArgumentNullException>(
-                () => Generator.Object.SelectPaged(ClassMap.Object, null, null, 0, 1, new Dictionary<string, object>()));
+                () => Generator.Object.SelectPaged(ClassMap.Object, null, null, 0, 1, 1, new Dictionary<string, object>()));
             Assert.Equal("sort", ex.ParamName);
         }
 
@@ -21,7 +21,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         public void WithEmptySort_ThrowsException()
         {
             var ex = Assert.Throws<ArgumentNullException>(
-                () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort>(), 0, 1, new Dictionary<string, object>()));
+                () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort>(), 0, 1, 1, new Dictionary<string, object>()));
             Assert.Equal("sort", ex.ParamName);
         }
 
@@ -30,7 +30,7 @@ namespace DapperExtensionsReloaded.Test.Sql
         {
             var sort = new Sort();
             var ex = Assert.Throws<ArgumentNullException>(
-                () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort> { sort }, 0, 1, null));
+                () => Generator.Object.SelectPaged(ClassMap.Object, null, new List<ISort> { sort }, 0, 1, 1, null));
             Assert.Equal("parameters", ex.ParamName);
         }
 
@@ -50,9 +50,9 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.BuildSelectColumns(ClassMap.Object)).Returns("Columns").Verifiable();
             Generator.Setup(g => g.GetColumnName(ClassMap.Object, "SortProperty", false)).Returns("SortColumn").Verifiable();
 
-            Dialect.Setup(d => d.GetPagingSql("SELECT Columns FROM TableName ORDER BY SortColumn ASC", 2, 10, parameters)).Returns("PagedSQL").Verifiable();
+            Dialect.Setup(d => d.GetPagingSql("SELECT Columns FROM TableName ORDER BY SortColumn ASC", 2, 10, 10, parameters)).Returns("PagedSQL").Verifiable();
 
-            var result = Generator.Object.SelectPaged(ClassMap.Object, null, sort, 2, 10, parameters);
+            var result = Generator.Object.SelectPaged(ClassMap.Object, null, sort, 2, 10, 10, parameters);
             Assert.Equal("PagedSQL", result);
             ClassMap.Verify();
             sortField.Verify();
@@ -79,9 +79,9 @@ namespace DapperExtensionsReloaded.Test.Sql
             Generator.Setup(g => g.BuildSelectColumns(ClassMap.Object)).Returns("Columns").Verifiable();
             Generator.Setup(g => g.GetColumnName(ClassMap.Object, "SortProperty", false)).Returns("SortColumn").Verifiable();
 
-            Dialect.Setup(d => d.GetPagingSql("SELECT Columns FROM TableName WHERE PredicateWhere ORDER BY SortColumn ASC", 2, 10, parameters)).Returns("PagedSQL").Verifiable();
+            Dialect.Setup(d => d.GetPagingSql("SELECT Columns FROM TableName WHERE PredicateWhere ORDER BY SortColumn ASC", 2, 10, 10, parameters)).Returns("PagedSQL").Verifiable();
 
-            var result = Generator.Object.SelectPaged(ClassMap.Object, predicate.Object, sort, 2, 10, parameters);
+            var result = Generator.Object.SelectPaged(ClassMap.Object, predicate.Object, sort, 2, 10, 10, parameters);
             Assert.Equal("PagedSQL", result);
             ClassMap.Verify();
             sortField.Verify();

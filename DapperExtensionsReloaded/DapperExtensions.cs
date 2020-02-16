@@ -185,14 +185,24 @@ namespace DapperExtensionsReloaded
         {
             return await Instance.GetListAsync<T>(connection, predicate, sort, transaction, commandTimeout);
         }
-
+        
         /// <summary>
         /// Executes a select query using the specified predicate, returning an IEnumerable data typed as per T.
-        /// Data returned is dependent upon the specified page and resultsPerPage.
+        /// Data returned is dependent upon the specified page, itemsPerPage and resultsToReturn.
+        /// <param name="page">The page used to calculate the start offset. This argument is zero-based.</param>
+        /// <param name="itemsPerPage">The items per page used to calculate the start offset. If <paramref name="resultsToReturn" /> is <c>null</c>,
+        /// this argument is also used to determine the number of items to return.</param>
+        /// <param name="resultsToReturn">
+        /// This argument allows you to separately control the page size and the actual number of items to return.
+        /// One scenario for this is to peek beyond the page size. Example: your page size is 10, you want to fetch page 6,
+        /// but the number of results to return is set to 11. By that, the items 51-61 (instead of 51-60) are returned, allowing you
+        /// to peek and see if there is a page 7 (if there is a 61st item) or not (if there is no 61st item).
+        /// Leave <c>null</c> to use the value of <paramref name="itemsPerPage"/>.
+        /// </param> 
         /// </summary>
-        public static async Task<IEnumerable<T>> GetPageAsync<T>(this IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, int page = 0, int resultsPerPage = 10, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static async Task<IEnumerable<T>> GetPageAsync<T>(this IDbConnection connection, IPredicate predicate = null, IList<ISort> sort = null, int page = 0, int itemsPerPage = 10, int? resultsToReturn = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            return await Instance.GetPageAsync<T>(connection, predicate, sort, page, resultsPerPage, transaction, commandTimeout);
+            return await Instance.GetPageAsync<T>(connection, predicate, sort, page, itemsPerPage, resultsToReturn ?? itemsPerPage, transaction, commandTimeout);
         }
 
         /// <summary>

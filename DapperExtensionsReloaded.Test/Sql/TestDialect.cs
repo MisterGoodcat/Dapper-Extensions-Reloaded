@@ -11,7 +11,7 @@ namespace DapperExtensionsReloaded.Test.Sql
             throw new NotImplementedException();
         }
 
-        public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)
+        public override string GetPagingSql(string sql, int page, int itemsPerPage, int resultsToReturn, IDictionary<string, object> parameters)
         {
             throw new NotImplementedException();
         }

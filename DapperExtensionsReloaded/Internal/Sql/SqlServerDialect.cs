@@ -16,10 +16,10 @@ namespace DapperExtensionsReloaded.Internal.Sql
             return "SELECT CAST(SCOPE_IDENTITY()  AS BIGINT) AS [Id]";
         }
 
-        public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)
+        public override string GetPagingSql(string sql, int page, int itemsPerPage, int resultsToReturn, IDictionary<string, object> parameters)
         {
-            var startValue = (page * resultsPerPage) + 1;
-            return GetSetSql(sql, startValue, resultsPerPage, parameters);
+            var startValue = (page * itemsPerPage) + 1;
+            return GetSetSql(sql, startValue, resultsToReturn, parameters);
         }
 
         public override string GetSetSql(string sql, int firstResult, int maxResults, IDictionary<string, object> parameters)

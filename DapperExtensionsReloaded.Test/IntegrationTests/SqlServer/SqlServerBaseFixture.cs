@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Xunit;
 
 namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer

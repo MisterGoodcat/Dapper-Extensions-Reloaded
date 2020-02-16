@@ -11,7 +11,7 @@ namespace DapperExtensionsReloaded.Internal.Sql
 
         public virtual char CloseQuote => '"';
 
-        public virtual string BatchSeperator => ";" + Environment.NewLine;
+        public virtual string BatchSeparator => ";" + Environment.NewLine;
 
         public virtual bool SupportsMultipleStatements => true;
 
@@ -65,7 +65,7 @@ namespace DapperExtensionsReloaded.Internal.Sql
         }
 
         public abstract string GetIdentitySql(string tableName);
-        public abstract string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters);
+        public abstract string GetPagingSql(string sql, int page, int itemsPerPage, int resultsToReturn, IDictionary<string, object> parameters);
         public abstract string GetSetSql(string sql, int firstResult, int maxResults, IDictionary<string, object> parameters);
 
         public virtual bool IsQuoted(string value)

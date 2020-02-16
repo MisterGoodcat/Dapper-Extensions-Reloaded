@@ -16,7 +16,7 @@ http://nuget.org/List/Packages/DapperExtensionsReloaded
 PM> Install-Package DapperExtensionsReloaded
 ```
 
-or 
+or
 
 ```
 dotnet add package DapperExtensionsReloaded
@@ -27,6 +27,11 @@ dotnet add package DapperExtensionsReloaded
 TODO
 
 # Change Log
+
+4.0.0
+* Add feature to separately control items per page and results to return when retrieving paged data. This is a breaking change because you have to re-arrange arguments in calls that use non-default arguments for transactions and/or command timeout.
+* Update Dapper to version 2.0.30 (see https://stackexchange.github.io/Dapper/ for change log).
+* As a result of the Dapper update, fixate reference to Microsoft.Data.SqlClient (i.e. remove legacy System.Data.SqlClient reference).
 
 3.3.0
 * Add feature to profile command execution using the monitoring DB connection.
@@ -49,7 +54,7 @@ TODO
 * Add new logging feature based on proxies of connections and commands.
 * Add set-based update operation, rename set-based delete operation.
 * Add feature to define key columns by respective attribute.
-* Add overload to get a single entity with predicate argument to avoid excessive use of reflection. 
+* Add overload to get a single entity with predicate argument to avoid excessive use of reflection.
 * Convert remaining APIs to async, remove synchronous APIs.
 * Remove magic that arbitrarily chooses identity and key columns.
 * Remove automatic GUID handling magic.

@@ -39,7 +39,7 @@ namespace DapperExtensionsReloaded.Internal.Sql
             return sql.ToString();
         }
 
-        public virtual string SelectPaged(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDictionary<string, object> parameters)
+        public virtual string SelectPaged(IClassMapper classMap, IPredicate predicate, IList<ISort> sort, int page, int itemsPerPage, int resultsToReturn, IDictionary<string, object> parameters)
         {
             if (sort == null || !sort.Any())
             {
@@ -61,7 +61,7 @@ namespace DapperExtensionsReloaded.Internal.Sql
             var orderBy = sort.Select(s => GetColumnName(classMap, s.PropertyName, false) + (s.Ascending ? " ASC" : " DESC")).AppendStrings();
             innerSql.Append(" ORDER BY " + orderBy);
 
-            var sql = Configuration.Dialect.GetPagingSql(innerSql.ToString(), page, resultsPerPage, parameters);
+            var sql = Configuration.Dialect.GetPagingSql(innerSql.ToString(), page, itemsPerPage, resultsToReturn, parameters);
             return sql;
         }
 

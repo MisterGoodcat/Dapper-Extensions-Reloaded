@@ -94,6 +94,29 @@ namespace DapperExtensionsReloaded.Test.IntegrationTests.SqlServer
         }
 
         [Fact]
+        public async Task DifferentResultSize_ReturnsDesiredResult()
+        {
+            var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
+            var id2 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Delta", DateCreated = DateTime.UtcNow });
+            var id3 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Theta", DateCreated = DateTime.UtcNow });
+            var id4 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = false, HowItsCalled = "Iota", DateCreated = DateTime.UtcNow });
+            var id5 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Tau", DateCreated = DateTime.UtcNow });
+
+            IList<ISort> sort = new List<ISort>
+            {
+                Predicates.Predicates.Sort<FourLeggedFurryAnimal>(p => p.HowItsCalled)
+            };
+
+            var pageSize = 2;
+            var deviatingResultSize = 3;
+            var list = await DapperExtensions.GetPageAsync<FourLeggedFurryAnimal>(Connection, null, sort, 1, pageSize, deviatingResultSize);
+            Assert.Equal(3, list.Count());
+            Assert.Equal(id1, list.First().Id);
+            Assert.Equal(id5, list.Skip(1).First().Id);
+            Assert.Equal(id3, list.Skip(2).First().Id);
+        }
+
+        [Fact]
         public async Task UsingEqualsPredicate_ReturnsMatching()
         {
             var id1 = await DapperExtensions.InsertAsync(Connection, new FourLeggedFurryAnimal { Active = true, HowItsCalled = "Sigma", DateCreated = DateTime.UtcNow });
