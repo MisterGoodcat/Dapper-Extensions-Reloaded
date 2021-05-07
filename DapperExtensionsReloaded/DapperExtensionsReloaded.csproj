@@ -4,11 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Peter Kuhn</Authors>
-    <Version>4.0.0</Version>
+    <Version>5.0.0</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageProjectUrl>
     <Description>A small library that adds generic repository features to Dapper, and additionally predicates and a logging system.</Description>
-    <PackageReleaseNotes>4.0.0: Add feature to separately control items per page and results to return when retrieving paged data. This is a breaking change because you have to re-arrange arguments in calls that use non-default arguments for transactions and/or command timeout. Also, update Dapper to version 2 (see https://stackexchange.github.io/Dapper/ for implications). 
+    <PackageReleaseNotes>5.0.0: Update dependencies to latest versions. Major update of SqlClient results in a major version update of this library too, but it's not considered a hard breaking change. 
 Full change log: https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</PackageReleaseNotes>
     <PackageTags>orm sql micro-orm dapper</PackageTags>
     <RepositoryUrl>https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</RepositoryUrl>
@@ -28,9 +28,9 @@ Full change log: https://github.com/MisterGoodcat/Dapper-Extensions-Reloaded</Pa
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>

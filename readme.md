@@ -28,6 +28,10 @@ TODO
 
 # Change Log
 
+5.0.0
+* Update dependencies to latest versions: Dapper 2.0.90, Microsoft.Data.SqlClient 2.1.2. 
+* Major update of SqlClient results in a major version update of this library too, but it's not considered a hard breaking change (API stays the same).
+
 4.0.0
 * Add feature to separately control items per page and results to return when retrieving paged data. This is a breaking change because you have to re-arrange arguments in calls that use non-default arguments for transactions and/or command timeout.
 * Update Dapper to version 2.0.30 (see https://stackexchange.github.io/Dapper/ for change log).
